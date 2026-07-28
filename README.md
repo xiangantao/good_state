@@ -12,6 +12,16 @@ uv sync --group dev
 
 ## DAVIS workflow
 
+Download the official TAP-Vid DAVIS pickle:
+
+```bash
+mkdir -p datasets
+curl -L https://storage.googleapis.com/dm-tapnet/tapvid_davis.zip -o /tmp/tapvid_davis.zip
+unzip /tmp/tapvid_davis.zip -d datasets
+```
+
+This creates `datasets/tapvid_davis/tapvid_davis.pkl`.
+
 Machine-specific paths live in the ignored `.env` file:
 
 ```dotenv
