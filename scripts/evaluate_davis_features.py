@@ -7,7 +7,7 @@ import os
 from dataclasses import asdict
 from pathlib import Path
 
-from davis_profiles import DAVIS_PROFILES
+from davis_profiles import DAVIS_PROFILES, select_videos
 from dotenv import load_dotenv
 
 from heft import (
@@ -28,7 +28,7 @@ def main() -> None:
     feature_root = Path(os.environ["HEFT_FEATURE_OUTPUT_ROOT"].format(model=model_name))
     output_path = Path(os.environ["HEFT_EVALUATION_OUTPUT"].format(model=model_name))
     gpu_ids = tuple(map(int, os.environ["HEFT_GPU_IDS"].split(",")))
-    samples = tuple(dataset[index] for index in range(len(dataset)))
+    samples = select_videos(tuple(dataset[index] for index in range(len(dataset))))
     videos = {
         sample.video_id: FeatureVideo.open(feature_root / sample.video_id)
         for sample in samples

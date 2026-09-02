@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-from davis_profiles import DAVIS_PROFILES
+from davis_profiles import DAVIS_PROFILES, select_videos
 from dotenv import load_dotenv
 
 from heft import (
@@ -26,7 +26,7 @@ def main() -> None:
     gpu_ids = tuple(map(int, os.environ["HEFT_GPU_IDS"].split(",")))
 
     dataset = TapVidDavisDataset(dataset_root)
-    samples = tuple(dataset[index] for index in range(len(dataset)))
+    samples = select_videos(tuple(dataset[index] for index in range(len(dataset))))
     tasks = tuple(
         ExtractionTask(
             name=sample.video_id,

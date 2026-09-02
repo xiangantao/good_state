@@ -4,10 +4,19 @@ from __future__ import annotations
 
 import os
 from dataclasses import dataclass, replace
+from pathlib import Path
+from typing import Any
+
+from dotenv import load_dotenv
 
 from heft import COGVIDEOX, COSMOS_2, WAN_2_1, ModelConfig, TrackingConfig
 from heft.attn_hook import CaptureSpec, FeatureKind
 from heft.tracking import FeatureSelection
+
+# DAVIS_PROFILES is built at import time and `_local` reads the environment while
+# building it, so the .env file has to be loaded here rather than inside a
+# script's main(): by then the profiles are already frozen at their Hub ids.
+load_dotenv(Path(__file__).resolve().parents[1] / ".env")
 
 
 def _local(model: ModelConfig) -> ModelConfig:
@@ -88,3 +97,21 @@ DAVIS_PROFILES = {
         ),
     ),
 }
+
+
+def select_videos(samples: tuple[Any, ...]) -> tuple[Any, ...]:
+    """Restrict a DAVIS sample tuple to ``HEFT_VIDEOS`` when that env var is set.
+
+    ``HEFT_VIDEOS`` is a comma-separated list of video ids, for smoke tests that
+    should not spend a full dataset pass to reach the first error. Unset means
+    the whole dataset, which is the normal path.
+    """
+    wanted = os.getenv("HEFT_VIDEOS", "").strip()
+    if not wanted:
+        return samples
+    names = tuple(name.strip() for name in wanted.split(",") if name.strip())
+    available = {sample.video_id for sample in samples}
+    missing = [name for name in names if name not in available]
+    if missing:
+        raise SystemExit(f"HEFT_VIDEOS names no such video: {', '.join(missing)}")
+    return tuple(sample for sample in samples if sample.video_id in set(names))
