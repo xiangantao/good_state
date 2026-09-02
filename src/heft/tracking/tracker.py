@@ -81,7 +81,7 @@ class FeatureTracker:
         ):
             local_start, local_frames = _local_window(chunk)
             volumes = {
-                kind: ops.interpolate_time(volume, local_frames)
+                kind: self._window_volume(volume, chunk, local_frames, ops)
                 for kind, volume in volumes.items()
             }
             local_tracks = tracks[:, local_start : chunk.stop]
@@ -137,6 +137,30 @@ class FeatureTracker:
                     )
 
         return self._result(video, points, tracks, visibility, selection, video_id)
+
+    def _window_volume(
+        self,
+        volume: Tensor,
+        chunk: FrameRange,
+        local_frames: int,
+        ops: TrackingOps,
+    ) -> Tensor:
+        """Lay a chunk's feature volume onto its local window without shifting it.
+
+        Chunks after the first extend one frame backwards so the previous chunk's
+        result can seed the search, but their volume only covers
+        ``[chunk.start, chunk.stop)``. Resampling it across the longer window
+        would slide every frame's features towards later source frames, so the
+        volume is resampled onto its own frames and the seed slot is filled with
+        a copy of the first one.
+        """
+
+        if not self.config.align_chunk_features:
+            return ops.interpolate_time(volume, local_frames)
+        volume = ops.interpolate_time(volume, chunk.stop - chunk.start)
+        if volume.shape[0] == local_frames:
+            return volume
+        return torch.cat((volume[:1], volume))
 
     def _visibility(
         self,

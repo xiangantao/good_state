@@ -34,12 +34,19 @@ class FeatureSelection:
 
 @dataclass(frozen=True, slots=True)
 class TrackingConfig:
-    """Algorithm and memory settings shared by tracking tasks."""
+    """Algorithm and memory settings shared by tracking tasks.
+
+    ``align_chunk_features`` keeps every chunk's features on the source frame
+    they were extracted from. Disabling it restores the original behaviour, which
+    stretched a chunk's volume across the one-frame-longer local window and so
+    made each frame's features run up to one frame ahead of themselves.
+    """
 
     query_feature: FeatureKind = FeatureKind.QUERY
     target_feature: FeatureKind = FeatureKind.KEY
     update_feature: FeatureKind | None = None
     upsample_features: bool = True
+    align_chunk_features: bool = True
     argmax_radius: float = 35.0
     search_radius: float = 100.0
     visibility_threshold: float = 16.0

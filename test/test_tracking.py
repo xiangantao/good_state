@@ -26,6 +26,7 @@ from heft.tracking import (
 )
 from heft.tracking.ops import DescriptorState, TrackingOps
 from heft.tracking.reader import FeatureReader
+from heft.tracking.tracker import _local_window
 
 
 @dataclass(frozen=True, slots=True)
@@ -417,3 +418,69 @@ def test_tracking_pool_routes_new_video_to_the_next_idle_gpu(tmp_path: Path) -> 
         gpu_id: sum(result.gpu_id == gpu_id for result in results) for gpu_id in (2, 6)
     }
     assert sorted(tasks_per_gpu.values()) == [1, 4]
+
+
+def _window_volume(chunk: FrameRange, *, align: bool) -> torch.Tensor:
+    """Run the tracker's own windowing on a volume whose frame t holds the value t."""
+
+    tracker = FeatureTracker(
+        config=TrackingConfig(align_chunk_features=align), device="cpu"
+    )
+    ops = TrackingOps(
+        frame_size=(3, 3),
+        config=tracker.config,
+        device=torch.device("cpu"),
+    )
+    volume = (
+        torch.arange(chunk.start, chunk.stop, dtype=torch.float32)
+        .reshape(-1, 1, 1, 1)
+        .expand(-1, 2, 3, 3)
+        .contiguous()
+    )
+    _, local_frames = _local_window(chunk)
+    return tracker._window_volume(volume, chunk, local_frames, ops)[:, 0, 0, 0]
+
+
+def test_chunk_window_keeps_features_on_their_own_source_frames() -> None:
+    """Local window slot ``i`` must carry the features of source frame ``start + i``."""
+
+    chunk = FrameRange(index=1, start=5, stop=10, feature_frames=5)
+    local_start, local_frames = _local_window(chunk)
+    assert (local_start, local_frames) == (4, 6)
+
+    windowed = _window_volume(chunk, align=True)
+
+    # Slot 0 seeds the search from the previous chunk and has no features here,
+    # so it holds a copy of the first one; every other slot names its own frame.
+    assert windowed[0].item() == float(chunk.start)
+    torch.testing.assert_close(
+        windowed[1:],
+        torch.arange(local_start + 1, chunk.stop, dtype=torch.float32),
+    )
+
+
+def test_first_chunk_window_is_untouched() -> None:
+    chunk = FrameRange(index=0, start=0, stop=5, feature_frames=5)
+
+    for align in (True, False):
+        torch.testing.assert_close(
+            _window_volume(chunk, align=align),
+            torch.arange(0, 5, dtype=torch.float32),
+        )
+
+
+def test_disabling_alignment_restores_the_original_drift() -> None:
+    """The legacy path stretched the volume, running features up to a frame ahead."""
+
+    chunk = FrameRange(index=1, start=5, stop=10, feature_frames=5)
+    local_start, _ = _local_window(chunk)
+
+    windowed = _window_volume(chunk, align=False)
+
+    drift = windowed - torch.arange(local_start, chunk.stop, dtype=torch.float32)
+    # Slot 0 stands in for the previous chunk under either path. The legacy drift
+    # over the remaining slots peaks right after the seam and decays to zero by
+    # the end of the chunk; aligning removes it entirely.
+    torch.testing.assert_close(
+        drift, torch.tensor([1.0, 0.75, 0.5833333, 0.4166667, 0.25, 0.0])
+    )
