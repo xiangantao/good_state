@@ -368,6 +368,22 @@ class WanPipeline(DiffusionPipeline, WanLoraLoaderMixin):
         init_latents = [retrieve_latents(self.vae.encode(vid.unsqueeze(0)), generator) for vid in video]
         init_latents = torch.cat(init_latents, dim=0).to(dtype) # [B, C, F, H, W]
 
+        # Normalize latents
+        # The transformer operates on latents normalized to roughly zero mean / unit
+        # variance; `vae.encode` returns them in raw VAE space. This is the exact
+        # inverse of the denormalization applied in `__call__` before `vae.decode`.
+        latents_mean = (
+            torch.tensor(self.vae.config.latents_mean)
+            .view(1, self.vae.config.z_dim, 1, 1, 1)
+            .to(init_latents.device, dtype)
+        )
+        latents_std = (
+            torch.tensor(self.vae.config.latents_std)
+            .view(1, self.vae.config.z_dim, 1, 1, 1)
+            .to(init_latents.device, dtype)
+        )
+        init_latents = (init_latents - latents_mean) / latents_std
+
         num_latent_frames = (num_frames - 1) // self.vae_scale_factor_temporal + 1
         if add_noise and timestep is not None:
             shape = (
@@ -379,7 +395,9 @@ class WanPipeline(DiffusionPipeline, WanLoraLoaderMixin):
             )
             noise = randn_tensor(shape, generator=generator, device=device, dtype=dtype)
             latents = self.scheduler.add_noise(init_latents, noise, timestep.unsqueeze(0))
-        
+        else:
+            latents = init_latents
+
         latents = latents.to(device)
         return latents
 
