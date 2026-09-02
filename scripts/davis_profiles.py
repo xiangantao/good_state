@@ -2,11 +2,23 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+import os
+from dataclasses import dataclass, replace
 
 from heft import COGVIDEOX, COSMOS_2, WAN_2_1, ModelConfig, TrackingConfig
 from heft.attn_hook import CaptureSpec, FeatureKind
 from heft.tracking import FeatureSelection
+
+
+def _local(model: ModelConfig) -> ModelConfig:
+    """Redirect a profile at an on-disk checkpoint when the env asks for one.
+
+    ``HEFT_MODEL_PATH_<NAME>`` (e.g. ``HEFT_MODEL_PATH_WAN2_1``) overrides the
+    Hub repo id so ``from_pretrained`` loads locally instead of downloading.
+    """
+    key = "HEFT_MODEL_PATH_" + model.name.upper().replace(".", "_").replace("-", "_")
+    path = os.getenv(key)
+    return replace(model, model_id=path) if path else model
 
 
 @dataclass(frozen=True, slots=True)
@@ -32,7 +44,7 @@ class DavisProfile:
 
 DAVIS_PROFILES = {
     "wan": DavisProfile(
-        model=WAN_2_1,
+        model=_local(WAN_2_1),
         layer=15,
         head=2,
         tracking=TrackingConfig(
@@ -47,7 +59,7 @@ DAVIS_PROFILES = {
         ),
     ),
     "cosmos2": DavisProfile(
-        model=COSMOS_2,
+        model=_local(COSMOS_2),
         layer=18,
         head=6,
         tracking=TrackingConfig(
@@ -62,7 +74,7 @@ DAVIS_PROFILES = {
         ),
     ),
     "cogvideox": DavisProfile(
-        model=COGVIDEOX,
+        model=_local(COGVIDEOX),
         layer=15,
         head=16,
         tracking=TrackingConfig(
