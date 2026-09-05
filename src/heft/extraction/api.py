@@ -15,7 +15,9 @@ def extract_feature(
     model: ModelConfig,
     config: ExtractionConfig,
     gpu_ids: Sequence[int],
+    workers_per_gpu: int = 1,
     cache_dir: str | Path | None = None,
+    prompt_embeddings_path: str | Path | None = None,
 ) -> ExtractionResult:
     """Extract one video's chunks across the selected GPUs."""
 
@@ -23,7 +25,9 @@ def extract_feature(
         model=model,
         config=config,
         gpu_ids=gpu_ids,
+        workers_per_gpu=workers_per_gpu,
         cache_dir=cache_dir,
+        prompt_embeddings_path=prompt_embeddings_path,
     ) as pool:
         return pool.map([task])[0]
 
@@ -34,14 +38,18 @@ def extract_features(
     model: ModelConfig,
     config: ExtractionConfig,
     gpu_ids: Sequence[int],
+    workers_per_gpu: int = 1,
     cache_dir: str | Path | None = None,
+    prompt_embeddings_path: str | Path | None = None,
 ) -> tuple[ExtractionResult, ...]:
-    """Extract multiple videos using one persistent worker per selected GPU."""
+    """Extract multiple videos using persistent workers on selected GPUs."""
 
     with FeatureExtractionPool(
         model=model,
         config=config,
         gpu_ids=gpu_ids,
+        workers_per_gpu=workers_per_gpu,
         cache_dir=cache_dir,
+        prompt_embeddings_path=prompt_embeddings_path,
     ) as pool:
         return pool.map(tasks)

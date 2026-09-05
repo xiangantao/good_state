@@ -11,6 +11,8 @@ from typing import Any
 import cv2
 import numpy as np
 import torch
+from torch import Tensor
+from safetensors import safe_open
 
 from heft.attn_hook import (
     AttentionFeatureCapture,
@@ -32,6 +34,7 @@ class DiffusersChunkExecutorFactory:
     model: ModelConfig
     config: ExtractionConfig
     cache_dir: Path | None = None
+    prompt_embeddings_path: Path | None = None
 
     def __call__(self, gpu_id: int) -> DiffusersChunkExecutor:
         return DiffusersChunkExecutor(
@@ -39,6 +42,7 @@ class DiffusersChunkExecutorFactory:
             model=self.model,
             config=self.config,
             cache_dir=self.cache_dir,
+            prompt_embeddings_path=self.prompt_embeddings_path,
         )
 
 
@@ -52,6 +56,7 @@ class DiffusersChunkExecutor:
         model: ModelConfig,
         config: ExtractionConfig,
         cache_dir: str | os.PathLike[str] | None,
+        prompt_embeddings_path: str | os.PathLike[str] | None = None,
     ) -> None:
         self._model = model
         self._config = config
@@ -61,11 +66,35 @@ class DiffusersChunkExecutor:
 
         module = importlib.import_module(model.pipeline_module)
         pipeline_class = getattr(module, model.pipeline_class)
-        load_kwargs: dict[str, Any] = {"torch_dtype": model.dtype}
+        load_kwargs: dict[str, Any] = {
+            "torch_dtype": model.dtype,
+            "local_files_only": True,
+        }
         if cache_dir is not None:
             load_kwargs["cache_dir"] = str(cache_dir)
+
+        self._prompt_embeds: Tensor | None = None
+        self._negative_prompt_embeds: Tensor | None = None
+        if prompt_embeddings_path is not None:
+            embeddings_path = Path(prompt_embeddings_path)
+            with safe_open(embeddings_path, framework="pt", device="cpu") as file:
+                self._prompt_embeds = file.get_tensor("prompt_embeds")
+                self._negative_prompt_embeds = file.get_tensor(
+                    "negative_prompt_embeds"
+                )
+            load_kwargs["text_encoder"] = None
+            load_kwargs["tokenizer"] = None
+
         self._pipeline = pipeline_class.from_pretrained(model.model_id, **load_kwargs)
         self._pipeline.to(self._device)
+        if self._prompt_embeds is not None:
+            self._prompt_embeds = self._prompt_embeds.to(
+                device=self._device, dtype=model.dtype
+            )
+            assert self._negative_prompt_embeds is not None
+            self._negative_prompt_embeds = self._negative_prompt_embeds.to(
+                device=self._device, dtype=model.dtype
+            )
 
         transformer = self._pipeline.transformer
         self._blocks = getattr(transformer, model.blocks_attribute)
@@ -120,8 +149,21 @@ class DiffusersChunkExecutor:
                     job.input_video,
                     self._model.resolution,
                 )
+                prompt_kwargs: dict[str, Any]
+                if self._prompt_embeds is None:
+                    prompt_kwargs = {"prompt": job.prompt}
+                else:
+                    if job.prompt:
+                        raise ValueError(
+                            "cached prompt embeddings require an empty task prompt"
+                        )
+                    prompt_kwargs = {
+                        "prompt": None,
+                        "prompt_embeds": self._prompt_embeds,
+                        "negative_prompt_embeds": self._negative_prompt_embeds,
+                    }
                 self._pipeline(
-                    prompt=job.prompt,
+                    **prompt_kwargs,
                     height=height,
                     width=width,
                     num_frames=job.pipeline_num_frames,

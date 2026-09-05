@@ -77,7 +77,9 @@ class FeatureExtractionPool:
         model: ModelConfig,
         config: ExtractionConfig,
         gpu_ids: Sequence[int],
+        workers_per_gpu: int = 1,
         cache_dir: str | Path | None = None,
+        prompt_embeddings_path: str | Path | None = None,
         executor_factory: ChunkExecutorFactory | None = None,
     ) -> None:
         normalized_gpu_ids = tuple(gpu_ids)
@@ -85,6 +87,10 @@ class FeatureExtractionPool:
             raise ValueError("gpu_ids must not be empty")
         if len(set(normalized_gpu_ids)) != len(normalized_gpu_ids):
             raise ValueError("gpu_ids must be unique")
+        if not isinstance(workers_per_gpu, int) or isinstance(workers_per_gpu, bool):
+            raise TypeError("workers_per_gpu must be an integer")
+        if workers_per_gpu <= 0:
+            raise ValueError("workers_per_gpu must be positive")
         if not model.start_step <= config.capture.step < model.num_inference_steps:
             raise ValueError(
                 "capture step must be inside the model's active denoising schedule"
@@ -93,19 +99,27 @@ class FeatureExtractionPool:
         self.model = model
         self.config = config
         self.gpu_ids = normalized_gpu_ids
+        self.workers_per_gpu = workers_per_gpu
+        self.worker_count = len(normalized_gpu_ids) * workers_per_gpu
         self._closed = False
 
         context = mp.get_context("spawn")
         gpu_queue = context.Queue()
         for gpu_id in normalized_gpu_ids:
-            gpu_queue.put(gpu_id)
+            for _ in range(workers_per_gpu):
+                gpu_queue.put(gpu_id)
         factory = executor_factory or DiffusersChunkExecutorFactory(
             model=model,
             config=config,
             cache_dir=None if cache_dir is None else Path(cache_dir),
+            prompt_embeddings_path=(
+                None
+                if prompt_embeddings_path is None
+                else Path(prompt_embeddings_path)
+            ),
         )
         self._executor = ProcessPoolExecutor(
-            max_workers=len(normalized_gpu_ids),
+            max_workers=self.worker_count,
             mp_context=context,
             initializer=_initialize_worker,
             initargs=(gpu_queue, factory),
