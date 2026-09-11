@@ -1,0 +1,68 @@
+{
+  "run_id": "0d6428dbc0f43571",
+  "passed": true,
+  "scenes_checked": 5,
+  "chunks_checked": 10,
+  "transformer_forwards_checked": 20,
+  "transformer_input_shape": [
+    1,
+    16,
+    25,
+    60,
+    104
+  ],
+  "original_frame_ids_and_geometry_unchanged": true,
+  "candidate_pair_support_checks": 7750,
+  "current_source_hashes_match": true,
+  "same_scope_legacy_comparisons": 100,
+  "tests_passed": 38,
+  "coverage": [
+    {
+      "scene": "scene0707_00",
+      "all_pairs": 31,
+      "all_valid_pairs": 31,
+      "within_chunk_pairs": 30,
+      "within_chunk_valid_pairs": 30
+    },
+    {
+      "scene": "scene0708_00",
+      "all_pairs": 31,
+      "all_valid_pairs": 31,
+      "within_chunk_pairs": 30,
+      "within_chunk_valid_pairs": 30
+    },
+    {
+      "scene": "scene0709_00",
+      "all_pairs": 31,
+      "all_valid_pairs": 31,
+      "within_chunk_pairs": 30,
+      "within_chunk_valid_pairs": 30
+    },
+    {
+      "scene": "scene0710_00",
+      "all_pairs": 31,
+      "all_valid_pairs": 31,
+      "within_chunk_pairs": 30,
+      "within_chunk_valid_pairs": 30
+    },
+    {
+      "scene": "scene0711_00",
+      "all_pairs": 31,
+      "all_valid_pairs": 20,
+      "within_chunk_pairs": 30,
+      "within_chunk_valid_pairs": 19
+    }
+  ],
+  "scope_note": "within_chunk uses the same pair subset defined by video windows for both protocols; legacy descriptors remain independent",
+  "noise_protocol": {
+    "requested_timestep": 49,
+    "timestep_kind": "pipeline_step_index",
+    "actual_timestep": 57.0,
+    "sigma": 0.05763683095574379,
+    "schedule": "UniPCMultistepScheduler",
+    "num_inference_steps": 50,
+    "shift": 3.0
+  },
+  "elapsed_seconds": 413.027942988032,
+  "peak_gpu_allocated_mib": 13849.68212890625
+}

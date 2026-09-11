@@ -1,0 +1,34 @@
+{
+  "passed": true,
+  "frames": 160,
+  "scenes": 5,
+  "chunks": 10,
+  "transformer_forwards": 20,
+  "shape": [
+    1,
+    16,
+    25,
+    60,
+    104
+  ],
+  "actual_timestep": 299,
+  "sigma": 0.299923837184906,
+  "sigma_in_bf16": 0.30078125,
+  "shift": 5,
+  "updates_before_forward": 0,
+  "candidate_count": 50,
+  "raw_pair_rows": 7750,
+  "pairs_per_candidate": 155,
+  "valid_pairs_per_candidate": 144,
+  "sampled_frames_and_chunks_match_low_noise": true,
+  "pair_support_matches_low_noise": true,
+  "recorded_source_hashes_match": true,
+  "tests_passed": 41,
+  "status": {
+    "status": "complete",
+    "elapsed_seconds": 464.0214605910005,
+    "scenes_prepared": 5,
+    "scenes_requested": 5,
+    "peak_gpu_allocated_mib": 13849.68212890625
+  }
+}

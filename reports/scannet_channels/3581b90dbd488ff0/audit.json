@@ -1,0 +1,54 @@
+{
+  "passed": true,
+  "run": "3581b90dbd488ff0",
+  "baseline_run": "0d6428dbc0f43571",
+  "candidate_count": 50,
+  "pair_files": 250,
+  "pair_rows": 7750,
+  "scenes": [
+    "scene0707_00",
+    "scene0708_00",
+    "scene0709_00",
+    "scene0710_00",
+    "scene0711_00"
+  ],
+  "source_hashes_match": true,
+  "candidate_support_matches_baseline": true,
+  "training_splits_and_rankings_verified": 30,
+  "masks_checked": 210,
+  "primary_384_recomputed_pairs": 155,
+  "primary_384_maximum_metric_delta": 0.0,
+  "scopes": {
+    "all_pairs": {
+      "pairs_per_candidate": 155,
+      "valid_pairs_per_candidate": 144
+    },
+    "within_chunk": {
+      "pairs_per_candidate": 150,
+      "valid_pairs_per_candidate": 139
+    }
+  },
+  "scope_note": "Both scopes use masks fitted on all training pairs; within_chunk is a scoring-only subset.",
+  "baseline_check": {
+    "passed": true,
+    "pairs_checked": 155,
+    "valid_pairs": 144,
+    "absolute_tolerance": 1e-06,
+    "maximum_metric_delta": {
+      "positive_similarity": 0.0,
+      "negative_similarity": 0.0,
+      "similarity_gap": 0.0,
+      "retrieval_voxel_hit": 0.0,
+      "retrieval_hit_distance": 0.0,
+      "retrieval_world_error_mean": 0.0,
+      "retrieval_world_error_median": 0.0
+    },
+    "failures": []
+  },
+  "runtime": {
+    "status": "complete",
+    "seconds": 157.12932419776917,
+    "pair_rows": 7750,
+    "peak_gpu_allocated_bytes": 637171712
+  }
+}

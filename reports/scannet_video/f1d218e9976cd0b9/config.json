@@ -1,0 +1,280 @@
+{
+  "data_root": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/datasets/ScanNet/v2/scans_test",
+  "model": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/models/Wan2.1-T2V-1.3B-Diffusers",
+  "scenes": null,
+  "frames": 32,
+  "blocks": [
+    14,
+    15
+  ],
+  "timesteps": [
+    300
+  ],
+  "size": [
+    480,
+    832
+  ],
+  "grid": [
+    14,
+    14
+  ],
+  "voxel_size": 0.1,
+  "min_coverage": 0.1,
+  "negative_min_distance": 0.2,
+  "hit_distance": 0.1,
+  "shift": 5.0,
+  "seed": 42,
+  "device": "cuda:4",
+  "dtype": "bf16",
+  "batch_size": 1,
+  "save_prepool": false,
+  "chunk_size": 25,
+  "heads": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ],
+  "modes": [
+    "kk",
+    "qk"
+  ],
+  "noise_mode": "legacy",
+  "schema": "heft.scannet_video",
+  "schema_version": 1,
+  "model_identity": {
+    "directory": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/models/Wan2.1-T2V-1.3B-Diffusers",
+    "files": [
+      [
+        "configuration.json",
+        81,
+        1776097115000000000
+      ],
+      [
+        "model_index.json",
+        400,
+        1776097569000000000
+      ],
+      [
+        "scheduler/scheduler_config.json",
+        751,
+        1776097570000000000
+      ],
+      [
+        "text_encoder/config.json",
+        854,
+        1776097114000000000
+      ],
+      [
+        "text_encoder/model-00001-of-00005.safetensors",
+        4972389712,
+        1776097744000000000
+      ],
+      [
+        "text_encoder/model-00002-of-00005.safetensors",
+        4899225672,
+        1776097752000000000
+      ],
+      [
+        "text_encoder/model-00003-of-00005.safetensors",
+        4966309504,
+        1776097770000000000
+      ],
+      [
+        "text_encoder/model-00004-of-00005.safetensors",
+        4999880704,
+        1776097745000000000
+      ],
+      [
+        "text_encoder/model-00005-of-00005.safetensors",
+        2885866152,
+        1776097730000000000
+      ],
+      [
+        "text_encoder/model.safetensors.index.json",
+        22476,
+        1776097569000000000
+      ],
+      [
+        "tokenizer/special_tokens_map.json",
+        7079,
+        1776097570000000000
+      ],
+      [
+        "tokenizer/spiece.model",
+        4548313,
+        1776097571000000000
+      ],
+      [
+        "tokenizer/tokenizer.json",
+        16837459,
+        1776097575000000000
+      ],
+      [
+        "tokenizer/tokenizer_config.json",
+        61758,
+        1776097577000000000
+      ],
+      [
+        "transformer/config.json",
+        465,
+        1776097113000000000
+      ],
+      [
+        "transformer/diffusion_pytorch_model-00001-of-00002.safetensors",
+        4998781576,
+        1776097789000000000
+      ],
+      [
+        "transformer/diffusion_pytorch_model-00002-of-00002.safetensors",
+        677289072,
+        1776097578000000000
+      ],
+      [
+        "transformer/diffusion_pytorch_model.safetensors.index.json",
+        73296,
+        1776097143000000000
+      ],
+      [
+        "vae/config.json",
+        724,
+        1776097114000000000
+      ],
+      [
+        "vae/diffusion_pytorch_model.safetensors",
+        507591892,
+        1776097568000000000
+      ]
+    ]
+  },
+  "scene_sources": [
+    [
+      {
+        "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/datasets/ScanNet/v2/scans_test/scene0707_00/scene0707_00.sens",
+        "bytes": 465643634,
+        "mtime_ns": 1788758480618655224
+      },
+      {
+        "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/datasets/ScanNet/v2/scans_test/scene0707_00/scene0707_00.txt",
+        "bytes": 510,
+        "mtime_ns": 1788758477445907998
+      }
+    ],
+    [
+      {
+        "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/datasets/ScanNet/v2/scans_test/scene0708_00/scene0708_00.sens",
+        "bytes": 734793403,
+        "mtime_ns": 1788758481222634174
+      },
+      {
+        "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/datasets/ScanNet/v2/scans_test/scene0708_00/scene0708_00.txt",
+        "bytes": 512,
+        "mtime_ns": 1788758477465701014
+      }
+    ],
+    [
+      {
+        "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/datasets/ScanNet/v2/scans_test/scene0709_00/scene0709_00.sens",
+        "bytes": 551353340,
+        "mtime_ns": 1788758480952237536
+      },
+      {
+        "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/datasets/ScanNet/v2/scans_test/scene0709_00/scene0709_00.txt",
+        "bytes": 510,
+        "mtime_ns": 1788758477492056512
+      }
+    ],
+    [
+      {
+        "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/datasets/ScanNet/v2/scans_test/scene0710_00/scene0710_00.sens",
+        "bytes": 1024113485,
+        "mtime_ns": 1788758481734102929
+      },
+      {
+        "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/datasets/ScanNet/v2/scans_test/scene0710_00/scene0710_00.txt",
+        "bytes": 555,
+        "mtime_ns": 1788758477496311696
+      }
+    ],
+    [
+      {
+        "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/datasets/ScanNet/v2/scans_test/scene0711_00/scene0711_00.sens",
+        "bytes": 1774789645,
+        "mtime_ns": 1788758483121026207
+      },
+      {
+        "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/datasets/ScanNet/v2/scans_test/scene0711_00/scene0711_00.txt",
+        "bytes": 555,
+        "mtime_ns": 1788758477488783632
+      }
+    ]
+  ],
+  "requested_noise": [
+    {
+      "requested_timestep": 300,
+      "actual_timestep": 299,
+      "sigma": 0.299923837184906,
+      "schedule_index": 921,
+      "shift": 5.0,
+      "schedule": "SinglePointUniPCScheduler",
+      "timestep_kind": "legacy_requested_timestep",
+      "source_schedule": "VEGA FlowUniPC 1000-step integer lookup",
+      "source_num_inference_steps": 1000,
+      "num_inference_steps": 1,
+      "capture_step": 0,
+      "noise_mode": "legacy",
+      "active_denoising_steps": 1,
+      "updates_before_capture": 0
+    }
+  ],
+  "timestep_kind": "legacy_requested_timestep",
+  "comparison": "adjacent sampled frames; chunk boundaries marked",
+  "aggregation": "pair macro -> scene macro",
+  "code": {
+    "dataset.py": "bfc1230e4f7bceb5d84c350cf3e4a383be554def073a23186fedc74eb4478e9f",
+    "geometry.py": "903bab2a3b7714c9ba1ec948c8edbe3b815df656878b49e6995ba1b2461105f9",
+    "metrics.py": "ef5d8e35fea4671e57c0adc827f879b434516d1a16ba40fb15d09326253beb0b",
+    "scan.py": "c46f843b2c62182d5cb267b4f5930ee2e91a15e4126bc32abff994b2f8f02153",
+    "report.py": "74b31edce4dac19e5e673c1df25331807fd1b3be91ca1a7581c2df2e76a975b0",
+    "video_extract.py": "6cb2da4376d6939220618323a27b99a654a2a149cf50a2fed31b16fe17feb8e4",
+    "video_noise.py": "e1d9e7ecd895a89ea81de4144e20f9960f343c26454a85e06b5ca15e0e43afff",
+    "extract.py": "2c549a8ad790a3a44a33aae65e18a13c1b80d7d3de6548cecbd0685ed39dd4c3",
+    "video_scan.py": "9fe198349f3ed9535e8d6f9d806cbbb994a83f3e9958c365d689367a7dde9295",
+    "video_report.py": "98874764ae1cf28a72cab46e5de091d063fd6f83ba136b96964284e1ad0dcdb7"
+  },
+  "runtime_code": {
+    "src/heft/extraction/config.py": "11e436eceb452a59d853957eb5d44d16de73e6b00e3ccbfa53e0181c8797afd9",
+    "src/heft/extraction/pool.py": "773cb05c72df9af6559af0749d49858763739ed12b0091fd3b3020156ec70198",
+    "src/heft/extraction/worker.py": "a277f59b81efe9079004ca08e0c21ae2cc6dfef99cfd830892e370541b69b9ad",
+    "src/heft/attn_hook/capture.py": "3b876afa2742ce398cb799fd31de60f2ae2e64283e3811334e2ee805ff5f4502",
+    "diffusers/src/diffusers/pipelines/wan/pipeline_wan.py": "2337dadcf98550a2a16701ded184b7b2b4776f855f87fa8ea2255453461f978a",
+    "diffusers/src/diffusers/models/autoencoders/autoencoder_kl_wan.py": "2aab7e0f3d8acbf480d7e332fdf0b194aa19687f69c7834d8c5433b85e8c06d5",
+    "diffusers/src/diffusers/models/transformers/transformer_wan.py": "2a095ccd070554bd2f1b08be83605a852d225ab8ca04d7849fbd3ecff6503a89",
+    "diffusers/src/diffusers/schedulers/scheduling_unipc_multistep.py": "18d9580582f83e4ffbe00fddbfb687bd67ce2265b6247ab16542be57fd2ec546",
+    "diffusers/src/diffusers/video_processor.py": "8ca70886a0ace0451c11b284176deed1326cd677d9acfc1d5caafe633ad9dced",
+    "diffusers/src/diffusers/image_processor.py": "eaaa29edf8a54c776adcbf991955a624c9f4fb4b38060ed6f8068014135d3b44"
+  },
+  "video_protocol": {
+    "pipeline": "WanPipeline",
+    "num_inference_steps": 1,
+    "capture_step": 0,
+    "guidance_scale": 5.0,
+    "active_denoising_steps": 1,
+    "updates_before_capture": 0,
+    "vae": "joint video encoding; temporal downsampling disabled, causal convolution retained",
+    "latent_distribution": "sample",
+    "prompt": "",
+    "negative_prompt": "",
+    "tail_policy": "repeat last RGB frame before VAE; trim descriptors after capture",
+    "sampling": "uniform valid observations, preserving sampled-frame order",
+    "capture": "conditional full block output and per-head Q/K after normalization and RoPE"
+  }
+}

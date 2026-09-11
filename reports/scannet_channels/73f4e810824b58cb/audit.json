@@ -1,0 +1,45 @@
+{
+  "passed": true,
+  "candidate_count": 50,
+  "pair_files": 250,
+  "pair_rows": 7750,
+  "rankings_checked": 30,
+  "masks_checked": 210,
+  "held_out_excluded": true,
+  "recomputed_384_pairs": 155,
+  "recomputed_384_maximum_metric_delta": 0.0,
+  "source_hashes_match": true,
+  "baseline_check": {
+    "passed": true,
+    "pairs_checked": 155,
+    "valid_pairs": 144,
+    "absolute_tolerance": 1e-06,
+    "maximum_metric_delta": {
+      "positive_similarity": 0.0,
+      "negative_similarity": 0.0,
+      "similarity_gap": 0.0,
+      "retrieval_voxel_hit": 0.0,
+      "retrieval_hit_distance": 0.0,
+      "retrieval_world_error_mean": 0.0,
+      "retrieval_world_error_median": 0.0
+    },
+    "failures": []
+  },
+  "runtime": {
+    "status": "complete",
+    "seconds": 174.5629529953003,
+    "pair_rows": 7750,
+    "peak_gpu_allocated_bytes": 637171712
+  },
+  "scope_note": "Masks fit all training pairs; within_chunk changes held-out scoring only.",
+  "scopes": {
+    "all_pairs": {
+      "pairs_per_candidate": 155,
+      "valid_pairs_per_candidate": 144
+    },
+    "within_chunk": {
+      "pairs_per_candidate": 150,
+      "valid_pairs_per_candidate": 139
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "pairs_checked": 155,
+  "valid_pairs": 144,
+  "absolute_tolerance": 1e-06,
+  "maximum_metric_delta": {
+    "positive_similarity": 0.0,
+    "negative_similarity": 0.0,
+    "similarity_gap": 0.0,
+    "retrieval_voxel_hit": 0.0,
+    "retrieval_hit_distance": 0.0,
+    "retrieval_world_error_mean": 0.0,
+    "retrieval_world_error_median": 0.0
+  },
+  "failures": []
+}
