@@ -6,6 +6,8 @@ Five-scene exploration. Fit channel masks and PCA on four scenes, score the fift
 All listed dimensions were fixed before scoring. A winning dimension selected from this table needs new-scene validation.
 LOSO measures the selection procedure; the five fold masks are not one fixed deployment mask.
 
+For downstream use, [one fixed 256-channel mask](global_256/report.md) is now fitted jointly on all five calibration scenes. All videos use that same table without a `held_out` choice. The held-out scores below remain the original LOSO results.
+
 ## Protocol
 
 Cached pooled block outputs only; no model inference. Original geometry and evaluate_pair are unchanged.

@@ -1,0 +1,6 @@
+# Additional runtime dependencies from the existing V-JEPA2 evaluation path.
+# Installation is manual; the runner never installs or downloads packages.
+timm
+decord
+pandas
+-r requirements-wandb.txt

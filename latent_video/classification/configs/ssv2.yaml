@@ -1,0 +1,45 @@
+# Relative paths are resolved from the HeFT repository root.
+model_path: ../models/Wan2.1-T2V-1.3B-Diffusers
+vjepa_root: ../vjepa2
+# One fixed table for every video, fitted jointly on all five ScanNet scenes.
+channel_mask: reports/scannet_channels/73f4e810824b58cb/global_256/masks.json
+output_dir: ../runs/ssv2_wan_fused_online
+seed: 42
+num_workers: 4
+num_heads: 16
+num_probe_blocks: 4
+wandb:
+  enabled: true
+  mode: offline
+  project: heft-ssv2-latents
+  entity: 4351hhh-south-china-university-of-technology
+  name: null
+  group: null
+  log_every: 10
+  # Records locally; no connection or credentials needed during training.
+clip:
+  frames: 16
+  resolution: [480, 832]
+  grid: [14, 14]
+  stop_after_capture: true
+data:
+  train: ../datasets/SSv2/labels/train.csv
+  val: ../datasets/SSv2/labels/validation.csv
+  videos: ../datasets/SSv2/videos
+  labels: ../datasets/SSv2/labels/labels.json
+  extension: .webm
+  num_classes: 174
+  num_segments: 2
+  num_views_per_segment: 3
+  frame_step: 4
+  crop_size: 256
+optimization:
+  batch_size: 4
+  num_epochs: 20
+  lr: 0.0003
+  weight_decay: 0.1
+  warmup: 0.0
+  final_lr: 0.0
+  # The official use_bfloat16 flag actually selects FP16 classifier autocast.
+  # Wan extraction remains BF16, independently of classifier precision.
+  amp_dtype: float16

@@ -1,0 +1,21 @@
+{
+  "mask": {
+    "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/heft/reports/scannet_channels/73f4e810824b58cb/global_256/masks.json",
+    "bytes": 2406,
+    "sha256": "f57316f20690c139317a962460df910621ec8fd67af40abe230b10aec3892324"
+  },
+  "channel_count": 256,
+  "unique_channels": 256,
+  "calibration_scenes": [
+    "scene0707_00",
+    "scene0708_00",
+    "scene0709_00",
+    "scene0710_00",
+    "scene0711_00"
+  ],
+  "same_mask_for_every_scene": true,
+  "requires_held_out": false,
+  "evaluation_scope": "calibration only; no independent fixed-mask test",
+  "model_forwards": 0,
+  "results_directory": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/eval/scannet_channels/5c6418932a4a95d7"
+}

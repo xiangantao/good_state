@@ -106,6 +106,20 @@ export OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2
 
 这评估的是筛选流程在新场景上的表现，不等同于已经验证一份用全部五场景拟合的固定通道列表。按汇总结果挑选最佳维度后，还需要额外场景确认。剪枝减少下游描述子的存储和匹配维度，不减少原始 Wan block 前向计算。
 
+### 固定 256 通道表
+
+维度确定后，使用 `channel_refit.py` 在全部校准场景上共同拟合一次固定表。沿用原实验的迭代剪枝路径和场景等权规则，不按场景选择某一折，也不根据下游样本重新筛选。默认来源是多帧 t299 的 `73f4e810824b58cb`：
+
+```bash
+.venv/bin/python -m scripts.scannet.channel_refit \
+  --selection-run ../eval/scannet_channels/73f4e810824b58cb \
+  --dimensions 256 --device cuda:4
+```
+
+输出 [global_256/masks.json](../../reports/scannet_channels/73f4e810824b58cb/global_256/masks.json) 只有一份 `ablation_iterative_256` 通道编号，直接用于所有视频、训练集和验证集，无需 `held_out`。来源配置、缓存哈希、每档消融排序和校准成绩都有记录；已有固定表若编号不同，程序拒绝覆盖，需另选报告目录。
+
+原五折 LOSO 成绩仍用于评价筛选方法；共同拟合后的五场景成绩标注为校准成绩。固定表在新场景及 SSv2 上的效果需要独立评价，不能把校准成绩当作泛化成绩。详细说明见 [固定通道报告](../../reports/scannet_channels/73f4e810824b58cb/global_256/report.md)。
+
 ## 与点跟踪、OVIS 对齐的多帧扫描
 
 `video_scan.py` 使用与前面两个任务相同的本地 `WanPipeline` 和 `WAN_2_1` 配置：480×832、bf16、50 步调度的索引 49、guidance scale 5、空文本，以及视频 VAE 的 latent sampling。实际 timestep 和 sigma 从 checkpoint 调度器读取，不能将索引 49 与旧实验的 VEGA k=300 混为一谈。

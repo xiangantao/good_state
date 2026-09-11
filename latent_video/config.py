@@ -91,7 +91,7 @@ class ChannelSelection:
         held_out: str | None = None,
         key: str = "ablation_iterative_256",
     ) -> ChannelSelection:
-        """Read a named fold from fold_masks.json or a key from one masks.json."""
+        """Read a fixed masks.json, or explicitly select a legacy validation fold."""
         path = Path(path).resolve(strict=True)
         raw = path.read_bytes()
         payload = json.loads(raw)
@@ -111,7 +111,7 @@ class ChannelSelection:
         elif isinstance(payload, dict):
             if held_out is not None:
                 raise ValueError(
-                    "held_out selects a fold report; omit it for a single masks.json"
+                    "held_out selects a fold report; omit it for a fixed masks.json"
                 )
             tables = payload
         else:

@@ -1,0 +1,175 @@
+{
+  "target": {
+    "python": "3.12.14",
+    "system": "Linux",
+    "machine": "x86_64",
+    "glibc": "2.35"
+  },
+  "source": "PyPI release metadata; package files have not been downloaded",
+  "packages": [
+    {
+      "name": "wandb",
+      "version": "0.28.0",
+      "requires_dist": [
+        "click>=8.2.0",
+        "gitpython!=3.1.29,>=1.0.0",
+        "packaging",
+        "platformdirs",
+        "protobuf!=5.28.0,!=5.29.0,<8,>4.21.0",
+        "pydantic<3,>=2.6",
+        "pyyaml",
+        "requests<3,>=2.0.0",
+        "sentry-sdk>=2.0.0",
+        "typing-extensions<5,>=4.8"
+      ],
+      "files": [
+        {
+          "filename": "wandb-0.28.0-py3-none-manylinux_2_28_x86_64.whl",
+          "url": "https://files.pythonhosted.org/packages/d8/5d/1385ce3c219cb5bd30d4027687e3f8d25969c7dfd09adad1cbd5080e1a72/wandb-0.28.0-py3-none-manylinux_2_28_x86_64.whl",
+          "sha256": "325b2d0bd88be6eda5db10542499bad3710927f2569c81a84dc5eeaffc76825c"
+        }
+      ]
+    },
+    {
+      "name": "click",
+      "version": "8.2.1",
+      "requires_dist": [
+        "colorama; platform_system == \"Windows\""
+      ],
+      "files": [
+        {
+          "filename": "click-8.2.1-py3-none-any.whl",
+          "url": "https://files.pythonhosted.org/packages/85/32/10bb5764d90a8eee674e9dc6f4db6a0ab47c8c4d0d83c27f7c39ac415a4d/click-8.2.1-py3-none-any.whl",
+          "sha256": "61a3265b914e850b85317d0b3109c7f8cd35a670f963866005d6ef1d5175a12b"
+        }
+      ]
+    },
+    {
+      "name": "GitPython",
+      "version": "3.1.45",
+      "requires_dist": [
+        "gitdb<5,>=4.0.1",
+        "typing-extensions>=3.10.0.2; python_version < \"3.10\""
+      ],
+      "files": [
+        {
+          "filename": "gitpython-3.1.45-py3-none-any.whl",
+          "url": "https://files.pythonhosted.org/packages/01/61/d4b89fec821f72385526e1b9d9a3a0385dda4a72b206d28049e2c7cd39b8/gitpython-3.1.45-py3-none-any.whl",
+          "sha256": "8908cb2e02fb3b93b7eb0f2827125cb699869470432cc885f019b8fd0fccff77"
+        }
+      ]
+    },
+    {
+      "name": "gitdb",
+      "version": "4.0.12",
+      "requires_dist": [
+        "smmap<6,>=3.0.1"
+      ],
+      "files": [
+        {
+          "filename": "gitdb-4.0.12-py3-none-any.whl",
+          "url": "https://files.pythonhosted.org/packages/a0/61/5c78b91c3143ed5c14207f463aecfc8f9dbb5092fb2869baf37c273b2705/gitdb-4.0.12-py3-none-any.whl",
+          "sha256": "67073e15955400952c6565cc3e707c554a4eea2e428946f7a4c162fab9bd9bcf"
+        }
+      ]
+    },
+    {
+      "name": "smmap",
+      "version": "5.0.2",
+      "requires_dist": [],
+      "files": [
+        {
+          "filename": "smmap-5.0.2-py3-none-any.whl",
+          "url": "https://files.pythonhosted.org/packages/04/be/d09147ad1ec7934636ad912901c5fd7667e1c858e19d355237db0d0cd5e4/smmap-5.0.2-py3-none-any.whl",
+          "sha256": "b30115f0def7d7531d22a0fb6502488d879e75b260a9db4d0819cfb25403af5e"
+        }
+      ]
+    },
+    {
+      "name": "platformdirs",
+      "version": "4.3.8",
+      "requires_dist": [],
+      "files": [
+        {
+          "filename": "platformdirs-4.3.8-py3-none-any.whl",
+          "url": "https://files.pythonhosted.org/packages/fe/39/979e8e21520d4e47a0bbe349e2713c0aac6f3d853d0e5b34d76206c439aa/platformdirs-4.3.8-py3-none-any.whl",
+          "sha256": "ff7059bb7eb1179e2685604f4aaf157cfd9535242bd23742eadc3c13542139b4"
+        }
+      ]
+    },
+    {
+      "name": "pydantic",
+      "version": "2.11.7",
+      "requires_dist": [
+        "annotated-types>=0.6.0",
+        "pydantic-core==2.33.2",
+        "typing-extensions>=4.12.2",
+        "typing-inspection>=0.4.0"
+      ],
+      "files": [
+        {
+          "filename": "pydantic-2.11.7-py3-none-any.whl",
+          "url": "https://files.pythonhosted.org/packages/6a/c0/ec2b1c8712ca690e5d61979dee872603e92b8a32f94cc1b72d53beab008a/pydantic-2.11.7-py3-none-any.whl",
+          "sha256": "dde5df002701f6de26248661f6835bbe296a47bf73990135c7d07ce741b9623b"
+        }
+      ]
+    },
+    {
+      "name": "pydantic_core",
+      "version": "2.33.2",
+      "requires_dist": [
+        "typing-extensions!=4.7.0,>=4.6.0"
+      ],
+      "files": [
+        {
+          "filename": "pydantic_core-2.33.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+          "url": "https://files.pythonhosted.org/packages/f9/41/4b043778cf9c4285d59742281a769eac371b9e47e35f98ad321349cc5d61/pydantic_core-2.33.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+          "sha256": "8f57a69461af2a5fa6e6bbd7a5f60d3b7e6cebb687f55106933188e79ad155c1"
+        }
+      ]
+    },
+    {
+      "name": "annotated-types",
+      "version": "0.7.0",
+      "requires_dist": [
+        "typing-extensions>=4.0.0; python_version < \"3.9\""
+      ],
+      "files": [
+        {
+          "filename": "annotated_types-0.7.0-py3-none-any.whl",
+          "url": "https://files.pythonhosted.org/packages/78/b6/6307fbef88d9b5ee7421e68d78a9f162e0da4900bc5f5793f6d3d0e34fb8/annotated_types-0.7.0-py3-none-any.whl",
+          "sha256": "1f02e8b43a8fbbc3f3e0d4f0f4bfc8131bcb4eebe8849b8e5c773f3a1c582a53"
+        }
+      ]
+    },
+    {
+      "name": "typing-inspection",
+      "version": "0.4.1",
+      "requires_dist": [
+        "typing-extensions>=4.12.0"
+      ],
+      "files": [
+        {
+          "filename": "typing_inspection-0.4.1-py3-none-any.whl",
+          "url": "https://files.pythonhosted.org/packages/17/69/cd203477f944c353c31bade965f880aa1061fd6bf05ded0726ca845b6ff7/typing_inspection-0.4.1-py3-none-any.whl",
+          "sha256": "389055682238f53b04f7badcb49b989835495a96700ced5dab2d8feae4b26f51"
+        }
+      ]
+    },
+    {
+      "name": "sentry-sdk",
+      "version": "2.35.0",
+      "requires_dist": [
+        "urllib3>=1.26.11",
+        "certifi"
+      ],
+      "files": [
+        {
+          "filename": "sentry_sdk-2.35.0-py2.py3-none-any.whl",
+          "url": "https://files.pythonhosted.org/packages/36/3d/742617a7c644deb0c1628dcf6bb2d2165ab7c6aab56fe5222758994007f8/sentry_sdk-2.35.0-py2.py3-none-any.whl",
+          "sha256": "6e0c29b9a5d34de8575ffb04d289a987ff3053cf2c98ede445bea995e3830263"
+        }
+      ]
+    }
+  ]
+}

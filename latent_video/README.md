@@ -1,9 +1,11 @@
 # Video Latent Experiments
 
 Workspace for the video latent extraction and downstream classification experiments.
-The single-clip extractor is implemented in this directory. It accepts an already
-sampled RGB clip and returns pooled features with protocol metadata. Video decoding,
-batch dispatch, cache persistence, and classification training are subsequent steps.
+The single-clip extractor accepts an already sampled RGB clip and returns pooled
+features with protocol metadata. The [online classification runner](classification/README.md)
+reuses V-JEPA2 video processing and its attentive classifier, extracts features on
+every batch, and trains one head on the five concatenated candidates. It does not
+cache latent features on disk.
 
 ## Working Protocol
 
@@ -69,8 +71,9 @@ export HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1
 
 Load one extractor per GPU worker and reuse it across clips. Loading requires an
 existing local Wan2.1-T2V-1.3B checkpoint and CUDA; `local_files_only=True` prevents
-model downloading. For the five-fold channel report, the caller must explicitly
-choose `held_out`. The example leaves that choice as a required argument:
+model downloading. Use the fixed 256-channel table fitted jointly on all five
+ScanNet calibration scenes. Every clip uses the same indices; no `held_out`
+selection is needed:
 
 ```python
 from pathlib import Path
@@ -80,22 +83,24 @@ from latent_video import ClipConfig, WanLatentExtractor
 ROOT = Path("/increase_kairos_vepfs/increase/liwenhao/agent/2337888765")
 
 
-def make_extractor(*, held_out: str) -> WanLatentExtractor:
+def make_extractor() -> WanLatentExtractor:
     return WanLatentExtractor.from_local(
         ROOT / "models/Wan2.1-T2V-1.3B-Diffusers",
         channel_mask=(
-            ROOT / "heft/reports/scannet_channels/73f4e810824b58cb/fold_masks.json"
+            ROOT / "heft/reports/scannet_channels/73f4e810824b58cb/global_256/masks.json"
         ),
-        held_out=held_out,
         mask_key="ablation_iterative_256",
         device="cuda:0",
         config=ClipConfig(stop_after_capture=True),
     )
 ```
 
-Alternatively, pass an existing single-fold `masks.json` as `channel_mask` and
-omit `held_out`. Both formats validate the 256-channel table, preserve its order,
-and record its source, hash, and exact indices. No channels are reselected.
+The loader validates the 256-channel table, preserves its order, and records its
+source, hash, and exact indices. No channels are reselected during extraction or
+classification. The old `fold_masks.json` remains available only for reproducing
+LOSO validation with an explicit `held_out`; those five masks are not deployment
+choices. See the [fixed-mask report](../reports/scannet_channels/73f4e810824b58cb/global_256/report.md)
+for fitting provenance and the distinction between calibration and held-out scores.
 
 After creating `extractor`, call it with already sampled `frames`, a CPU uint8
 RGB tensor of shape `[16,3,H,W]`. The existing preprocessing resizes to 480x832.
@@ -140,7 +145,7 @@ pipeline or extraction helper imported from a different checkout.
 | [_prepare_input_video](../src/heft/extraction/worker.py) | Preserve the existing resize interpolation, tensor layout, and uint8-to-float conversion. This is a private helper, so include it in dependency identity and regression coverage. |
 | [video_scheduler](../scripts/scannet/video_noise.py), including [selected_noise](../scripts/scannet/extract.py) | Resolve the original checkpoint step 49 and the legacy requested timestep 300 exactly. Reuse the scheduler's add_noise implementation; distinguish capture indices 49/0 from actual timesteps 57/299. |
 | [pool_video_tokens](../scripts/scannet/video_extract.py) | Restore frame/spatial layout and apply the same per-frame FP32 adaptive average pooling. |
-| [Saved channel masks](../reports/scannet_channels/73f4e810824b58cb/fold_masks.json) | Read an explicitly identified ablation_iterative_256 table. Validate 256 unique indices, their bounds and order, and record its source/key/hash. The report contains five fold-specific tables; no fold is selected implicitly. |
+| [Fixed channel mask](../reports/scannet_channels/73f4e810824b58cb/global_256/masks.json) | Read the single ablation_iterative_256 table fitted on all five calibration scenes. Validate 256 unique indices, their bounds and order, and record its source/key/hash. All clips and datasets reuse this same table. |
 
 The experiment package can call the existing scripts as modules when launched
 from the HeFT repository root. Established experiments remain reference callers;
@@ -208,7 +213,8 @@ captures from the existing complete `WanVideoExtractor` pipeline at both noise
 points. Model forward comparisons currently use FP32 compute with BF16 output;
 large-checkpoint BF16 inference has not yet been exercised.
 
-Batch video decoding, multi-GPU dispatch, atomic cache bundles, and classifier
-training are subsequent steps. V-JEPA2 components belong to the later classifier
-and comparison stage. The implementation and tests download no datasets, weights,
-or dependencies.
+The [classification runner](classification/README.md) adds online video decoding,
+multi-GPU single-head training, checkpoint resume, and evaluation. Its dataset
+paths must be configured before a real run; its default mask is the fixed table.
+Large-model training and evaluation have not yet been run. The implementation
+and tests download no datasets, weights, or dependencies.

@@ -1,0 +1,3175 @@
+{
+  "schema": "heft.scannet_fixed_channels",
+  "schema_version": 1,
+  "source_selection": {
+    "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/eval/scannet_channels/73f4e810824b58cb/config.json",
+    "bytes": 92623,
+    "sha256": "f46829f3520f74309ffb7c77cdd4fb4aee02bf0f0abbf0a8f538037acbf82fdd"
+  },
+  "block": 15,
+  "timestep": 300,
+  "noise": {
+    "requested_timestep": 300,
+    "actual_timestep": 299,
+    "sigma": 0.299923837184906,
+    "schedule_index": 921,
+    "shift": 5.0,
+    "schedule": "SinglePointUniPCScheduler",
+    "timestep_kind": "legacy_requested_timestep",
+    "source_schedule": "VEGA FlowUniPC 1000-step integer lookup",
+    "source_num_inference_steps": 1000,
+    "num_inference_steps": 1,
+    "capture_step": 0,
+    "noise_mode": "legacy",
+    "active_denoising_steps": 1,
+    "updates_before_capture": 0
+  },
+  "input_dimensions": 1536,
+  "dimensions": 256,
+  "schedule": [
+    1024,
+    768,
+    512,
+    384,
+    256
+  ],
+  "calibration_scenes": [
+    "scene0707_00",
+    "scene0708_00",
+    "scene0709_00",
+    "scene0710_00",
+    "scene0711_00"
+  ],
+  "selection": "deletion importance: voxel hit, then matching margin, then channel index",
+  "aggregation": "pair macro, then equal weight per calibration scene",
+  "evaluation_scope": "calibration only; LOSO scores describe the selection procedure",
+  "device": "cuda:4",
+  "channel_batch": 64,
+  "threads": 2,
+  "protocol": {
+    "data_root": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/datasets/ScanNet/v2/scans_test",
+    "model": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/models/Wan2.1-T2V-1.3B-Diffusers",
+    "scenes": null,
+    "frames": 32,
+    "blocks": [
+      14,
+      15
+    ],
+    "timesteps": [
+      300
+    ],
+    "size": [
+      480,
+      832
+    ],
+    "grid": [
+      14,
+      14
+    ],
+    "voxel_size": 0.1,
+    "min_coverage": 0.1,
+    "negative_min_distance": 0.2,
+    "hit_distance": 0.1,
+    "shift": 5.0,
+    "seed": 42,
+    "device": "cuda:4",
+    "dtype": "bf16",
+    "batch_size": 1,
+    "save_prepool": false,
+    "chunk_size": 25,
+    "heads": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "modes": [
+      "kk",
+      "qk"
+    ],
+    "noise_mode": "legacy",
+    "schema": "heft.scannet_video",
+    "schema_version": 1,
+    "model_identity": {
+      "directory": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/models/Wan2.1-T2V-1.3B-Diffusers",
+      "files": [
+        [
+          "configuration.json",
+          81,
+          1776097115000000000
+        ],
+        [
+          "model_index.json",
+          400,
+          1776097569000000000
+        ],
+        [
+          "scheduler/scheduler_config.json",
+          751,
+          1776097570000000000
+        ],
+        [
+          "text_encoder/config.json",
+          854,
+          1776097114000000000
+        ],
+        [
+          "text_encoder/model-00001-of-00005.safetensors",
+          4972389712,
+          1776097744000000000
+        ],
+        [
+          "text_encoder/model-00002-of-00005.safetensors",
+          4899225672,
+          1776097752000000000
+        ],
+        [
+          "text_encoder/model-00003-of-00005.safetensors",
+          4966309504,
+          1776097770000000000
+        ],
+        [
+          "text_encoder/model-00004-of-00005.safetensors",
+          4999880704,
+          1776097745000000000
+        ],
+        [
+          "text_encoder/model-00005-of-00005.safetensors",
+          2885866152,
+          1776097730000000000
+        ],
+        [
+          "text_encoder/model.safetensors.index.json",
+          22476,
+          1776097569000000000
+        ],
+        [
+          "tokenizer/special_tokens_map.json",
+          7079,
+          1776097570000000000
+        ],
+        [
+          "tokenizer/spiece.model",
+          4548313,
+          1776097571000000000
+        ],
+        [
+          "tokenizer/tokenizer.json",
+          16837459,
+          1776097575000000000
+        ],
+        [
+          "tokenizer/tokenizer_config.json",
+          61758,
+          1776097577000000000
+        ],
+        [
+          "transformer/config.json",
+          465,
+          1776097113000000000
+        ],
+        [
+          "transformer/diffusion_pytorch_model-00001-of-00002.safetensors",
+          4998781576,
+          1776097789000000000
+        ],
+        [
+          "transformer/diffusion_pytorch_model-00002-of-00002.safetensors",
+          677289072,
+          1776097578000000000
+        ],
+        [
+          "transformer/diffusion_pytorch_model.safetensors.index.json",
+          73296,
+          1776097143000000000
+        ],
+        [
+          "vae/config.json",
+          724,
+          1776097114000000000
+        ],
+        [
+          "vae/diffusion_pytorch_model.safetensors",
+          507591892,
+          1776097568000000000
+        ]
+      ]
+    },
+    "scene_sources": [
+      [
+        {
+          "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/datasets/ScanNet/v2/scans_test/scene0707_00/scene0707_00.sens",
+          "bytes": 465643634,
+          "mtime_ns": 1788758480618655224
+        },
+        {
+          "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/datasets/ScanNet/v2/scans_test/scene0707_00/scene0707_00.txt",
+          "bytes": 510,
+          "mtime_ns": 1788758477445907998
+        }
+      ],
+      [
+        {
+          "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/datasets/ScanNet/v2/scans_test/scene0708_00/scene0708_00.sens",
+          "bytes": 734793403,
+          "mtime_ns": 1788758481222634174
+        },
+        {
+          "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/datasets/ScanNet/v2/scans_test/scene0708_00/scene0708_00.txt",
+          "bytes": 512,
+          "mtime_ns": 1788758477465701014
+        }
+      ],
+      [
+        {
+          "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/datasets/ScanNet/v2/scans_test/scene0709_00/scene0709_00.sens",
+          "bytes": 551353340,
+          "mtime_ns": 1788758480952237536
+        },
+        {
+          "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/datasets/ScanNet/v2/scans_test/scene0709_00/scene0709_00.txt",
+          "bytes": 510,
+          "mtime_ns": 1788758477492056512
+        }
+      ],
+      [
+        {
+          "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/datasets/ScanNet/v2/scans_test/scene0710_00/scene0710_00.sens",
+          "bytes": 1024113485,
+          "mtime_ns": 1788758481734102929
+        },
+        {
+          "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/datasets/ScanNet/v2/scans_test/scene0710_00/scene0710_00.txt",
+          "bytes": 555,
+          "mtime_ns": 1788758477496311696
+        }
+      ],
+      [
+        {
+          "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/datasets/ScanNet/v2/scans_test/scene0711_00/scene0711_00.sens",
+          "bytes": 1774789645,
+          "mtime_ns": 1788758483121026207
+        },
+        {
+          "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/datasets/ScanNet/v2/scans_test/scene0711_00/scene0711_00.txt",
+          "bytes": 555,
+          "mtime_ns": 1788758477488783632
+        }
+      ]
+    ],
+    "requested_noise": [
+      {
+        "requested_timestep": 300,
+        "actual_timestep": 299,
+        "sigma": 0.299923837184906,
+        "schedule_index": 921,
+        "shift": 5.0,
+        "schedule": "SinglePointUniPCScheduler",
+        "timestep_kind": "legacy_requested_timestep",
+        "source_schedule": "VEGA FlowUniPC 1000-step integer lookup",
+        "source_num_inference_steps": 1000,
+        "num_inference_steps": 1,
+        "capture_step": 0,
+        "noise_mode": "legacy",
+        "active_denoising_steps": 1,
+        "updates_before_capture": 0
+      }
+    ],
+    "timestep_kind": "legacy_requested_timestep",
+    "comparison": "adjacent sampled frames; chunk boundaries marked",
+    "aggregation": "pair macro -> scene macro",
+    "code": {
+      "dataset.py": "bfc1230e4f7bceb5d84c350cf3e4a383be554def073a23186fedc74eb4478e9f",
+      "geometry.py": "903bab2a3b7714c9ba1ec948c8edbe3b815df656878b49e6995ba1b2461105f9",
+      "metrics.py": "ef5d8e35fea4671e57c0adc827f879b434516d1a16ba40fb15d09326253beb0b",
+      "scan.py": "c46f843b2c62182d5cb267b4f5930ee2e91a15e4126bc32abff994b2f8f02153",
+      "report.py": "74b31edce4dac19e5e673c1df25331807fd1b3be91ca1a7581c2df2e76a975b0",
+      "video_extract.py": "6cb2da4376d6939220618323a27b99a654a2a149cf50a2fed31b16fe17feb8e4",
+      "video_noise.py": "e1d9e7ecd895a89ea81de4144e20f9960f343c26454a85e06b5ca15e0e43afff",
+      "extract.py": "2c549a8ad790a3a44a33aae65e18a13c1b80d7d3de6548cecbd0685ed39dd4c3",
+      "video_scan.py": "9fe198349f3ed9535e8d6f9d806cbbb994a83f3e9958c365d689367a7dde9295",
+      "video_report.py": "98874764ae1cf28a72cab46e5de091d063fd6f83ba136b96964284e1ad0dcdb7"
+    },
+    "runtime_code": {
+      "src/heft/extraction/config.py": "11e436eceb452a59d853957eb5d44d16de73e6b00e3ccbfa53e0181c8797afd9",
+      "src/heft/extraction/pool.py": "773cb05c72df9af6559af0749d49858763739ed12b0091fd3b3020156ec70198",
+      "src/heft/extraction/worker.py": "a277f59b81efe9079004ca08e0c21ae2cc6dfef99cfd830892e370541b69b9ad",
+      "src/heft/attn_hook/capture.py": "3b876afa2742ce398cb799fd31de60f2ae2e64283e3811334e2ee805ff5f4502",
+      "diffusers/src/diffusers/pipelines/wan/pipeline_wan.py": "2337dadcf98550a2a16701ded184b7b2b4776f855f87fa8ea2255453461f978a",
+      "diffusers/src/diffusers/models/autoencoders/autoencoder_kl_wan.py": "2aab7e0f3d8acbf480d7e332fdf0b194aa19687f69c7834d8c5433b85e8c06d5",
+      "diffusers/src/diffusers/models/transformers/transformer_wan.py": "2a095ccd070554bd2f1b08be83605a852d225ab8ca04d7849fbd3ecff6503a89",
+      "diffusers/src/diffusers/schedulers/scheduling_unipc_multistep.py": "18d9580582f83e4ffbe00fddbfb687bd67ce2265b6247ab16542be57fd2ec546",
+      "diffusers/src/diffusers/video_processor.py": "8ca70886a0ace0451c11b284176deed1326cd677d9acfc1d5caafe633ad9dced",
+      "diffusers/src/diffusers/image_processor.py": "eaaa29edf8a54c776adcbf991955a624c9f4fb4b38060ed6f8068014135d3b44"
+    },
+    "video_protocol": {
+      "pipeline": "WanPipeline",
+      "num_inference_steps": 1,
+      "capture_step": 0,
+      "guidance_scale": 5.0,
+      "active_denoising_steps": 1,
+      "updates_before_capture": 0,
+      "vae": "joint video encoding; temporal downsampling disabled, causal convolution retained",
+      "latent_distribution": "sample",
+      "prompt": "",
+      "negative_prompt": "",
+      "tail_policy": "repeat last RGB frame before VAE; trim descriptors after capture",
+      "sampling": "uniform valid observations, preserving sampled-frame order",
+      "capture": "conditional full block output and per-head Q/K after normalization and RoPE"
+    }
+  },
+  "provenance": [
+    {
+      "scene": "scene0707_00",
+      "feature_key": "f1665d1b972a1ef5",
+      "metadata": {
+        "identity": {
+          "geometry": "433c90ac45e74c37",
+          "model": {
+            "directory": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/models/Wan2.1-T2V-1.3B-Diffusers",
+            "files": [
+              [
+                "configuration.json",
+                81,
+                1776097115000000000
+              ],
+              [
+                "model_index.json",
+                400,
+                1776097569000000000
+              ],
+              [
+                "scheduler/scheduler_config.json",
+                751,
+                1776097570000000000
+              ],
+              [
+                "text_encoder/config.json",
+                854,
+                1776097114000000000
+              ],
+              [
+                "text_encoder/model-00001-of-00005.safetensors",
+                4972389712,
+                1776097744000000000
+              ],
+              [
+                "text_encoder/model-00002-of-00005.safetensors",
+                4899225672,
+                1776097752000000000
+              ],
+              [
+                "text_encoder/model-00003-of-00005.safetensors",
+                4966309504,
+                1776097770000000000
+              ],
+              [
+                "text_encoder/model-00004-of-00005.safetensors",
+                4999880704,
+                1776097745000000000
+              ],
+              [
+                "text_encoder/model-00005-of-00005.safetensors",
+                2885866152,
+                1776097730000000000
+              ],
+              [
+                "text_encoder/model.safetensors.index.json",
+                22476,
+                1776097569000000000
+              ],
+              [
+                "tokenizer/special_tokens_map.json",
+                7079,
+                1776097570000000000
+              ],
+              [
+                "tokenizer/spiece.model",
+                4548313,
+                1776097571000000000
+              ],
+              [
+                "tokenizer/tokenizer.json",
+                16837459,
+                1776097575000000000
+              ],
+              [
+                "tokenizer/tokenizer_config.json",
+                61758,
+                1776097577000000000
+              ],
+              [
+                "transformer/config.json",
+                465,
+                1776097113000000000
+              ],
+              [
+                "transformer/diffusion_pytorch_model-00001-of-00002.safetensors",
+                4998781576,
+                1776097789000000000
+              ],
+              [
+                "transformer/diffusion_pytorch_model-00002-of-00002.safetensors",
+                677289072,
+                1776097578000000000
+              ],
+              [
+                "transformer/diffusion_pytorch_model.safetensors.index.json",
+                73296,
+                1776097143000000000
+              ],
+              [
+                "vae/config.json",
+                724,
+                1776097114000000000
+              ],
+              [
+                "vae/diffusion_pytorch_model.safetensors",
+                507591892,
+                1776097568000000000
+              ]
+            ]
+          },
+          "code": {
+            "dataset.py": "bfc1230e4f7bceb5d84c350cf3e4a383be554def073a23186fedc74eb4478e9f",
+            "geometry.py": "903bab2a3b7714c9ba1ec948c8edbe3b815df656878b49e6995ba1b2461105f9",
+            "metrics.py": "ef5d8e35fea4671e57c0adc827f879b434516d1a16ba40fb15d09326253beb0b",
+            "scan.py": "c46f843b2c62182d5cb267b4f5930ee2e91a15e4126bc32abff994b2f8f02153",
+            "report.py": "74b31edce4dac19e5e673c1df25331807fd1b3be91ca1a7581c2df2e76a975b0",
+            "video_extract.py": "6cb2da4376d6939220618323a27b99a654a2a149cf50a2fed31b16fe17feb8e4",
+            "video_noise.py": "e1d9e7ecd895a89ea81de4144e20f9960f343c26454a85e06b5ca15e0e43afff",
+            "extract.py": "2c549a8ad790a3a44a33aae65e18a13c1b80d7d3de6548cecbd0685ed39dd4c3",
+            "video_scan.py": "9fe198349f3ed9535e8d6f9d806cbbb994a83f3e9958c365d689367a7dde9295",
+            "video_report.py": "98874764ae1cf28a72cab46e5de091d063fd6f83ba136b96964284e1ad0dcdb7"
+          },
+          "runtime_code": {
+            "src/heft/extraction/config.py": "11e436eceb452a59d853957eb5d44d16de73e6b00e3ccbfa53e0181c8797afd9",
+            "src/heft/extraction/pool.py": "773cb05c72df9af6559af0749d49858763739ed12b0091fd3b3020156ec70198",
+            "src/heft/extraction/worker.py": "a277f59b81efe9079004ca08e0c21ae2cc6dfef99cfd830892e370541b69b9ad",
+            "src/heft/attn_hook/capture.py": "3b876afa2742ce398cb799fd31de60f2ae2e64283e3811334e2ee805ff5f4502",
+            "diffusers/src/diffusers/pipelines/wan/pipeline_wan.py": "2337dadcf98550a2a16701ded184b7b2b4776f855f87fa8ea2255453461f978a",
+            "diffusers/src/diffusers/models/autoencoders/autoencoder_kl_wan.py": "2aab7e0f3d8acbf480d7e332fdf0b194aa19687f69c7834d8c5433b85e8c06d5",
+            "diffusers/src/diffusers/models/transformers/transformer_wan.py": "2a095ccd070554bd2f1b08be83605a852d225ab8ca04d7849fbd3ecff6503a89",
+            "diffusers/src/diffusers/schedulers/scheduling_unipc_multistep.py": "18d9580582f83e4ffbe00fddbfb687bd67ce2265b6247ab16542be57fd2ec546",
+            "diffusers/src/diffusers/video_processor.py": "8ca70886a0ace0451c11b284176deed1326cd677d9acfc1d5caafe633ad9dced",
+            "diffusers/src/diffusers/image_processor.py": "eaaa29edf8a54c776adcbf991955a624c9f4fb4b38060ed6f8068014135d3b44"
+          },
+          "protocol": {
+            "pipeline": "WanPipeline",
+            "num_inference_steps": 1,
+            "capture_step": 0,
+            "guidance_scale": 5.0,
+            "active_denoising_steps": 1,
+            "updates_before_capture": 0,
+            "vae": "joint video encoding; temporal downsampling disabled, causal convolution retained",
+            "latent_distribution": "sample",
+            "prompt": "",
+            "negative_prompt": "",
+            "tail_policy": "repeat last RGB frame before VAE; trim descriptors after capture",
+            "sampling": "uniform valid observations, preserving sampled-frame order",
+            "capture": "conditional full block output and per-head Q/K after normalization and RoPE"
+          },
+          "noise": {
+            "requested_timestep": 300,
+            "actual_timestep": 299,
+            "sigma": 0.299923837184906,
+            "schedule_index": 921,
+            "shift": 5.0,
+            "schedule": "SinglePointUniPCScheduler",
+            "timestep_kind": "legacy_requested_timestep",
+            "source_schedule": "VEGA FlowUniPC 1000-step integer lookup",
+            "source_num_inference_steps": 1000,
+            "num_inference_steps": 1,
+            "capture_step": 0,
+            "noise_mode": "legacy",
+            "active_denoising_steps": 1,
+            "updates_before_capture": 0
+          },
+          "chunks": [
+            {
+              "index": 0,
+              "start": 0,
+              "stop": 25,
+              "input_frames": 25,
+              "padding_frames": 0,
+              "frame_ids": [
+                0,
+                25,
+                50,
+                75,
+                101,
+                126,
+                151,
+                176,
+                202,
+                227,
+                252,
+                277,
+                303,
+                328,
+                353,
+                378,
+                404,
+                429,
+                454,
+                479,
+                505,
+                530,
+                555,
+                580,
+                606
+              ],
+              "input_frame_ids": [
+                0,
+                25,
+                50,
+                75,
+                101,
+                126,
+                151,
+                176,
+                202,
+                227,
+                252,
+                277,
+                303,
+                328,
+                353,
+                378,
+                404,
+                429,
+                454,
+                479,
+                505,
+                530,
+                555,
+                580,
+                606
+              ],
+              "seed": 42
+            },
+            {
+              "index": 1,
+              "start": 25,
+              "stop": 32,
+              "input_frames": 25,
+              "padding_frames": 18,
+              "frame_ids": [
+                631,
+                656,
+                681,
+                707,
+                732,
+                757,
+                783
+              ],
+              "input_frame_ids": [
+                631,
+                656,
+                681,
+                707,
+                732,
+                757,
+                783,
+                783,
+                783,
+                783,
+                783,
+                783,
+                783,
+                783,
+                783,
+                783,
+                783,
+                783,
+                783,
+                783,
+                783,
+                783,
+                783,
+                783,
+                783
+              ],
+              "seed": 42
+            }
+          ],
+          "dtype": "bf16",
+          "device": "cuda:4",
+          "blocks": [
+            14,
+            15
+          ],
+          "heads": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "grid": [
+            14,
+            14
+          ]
+        },
+        "feature_key": "f1665d1b972a1ef5",
+        "noise": {
+          "requested_timestep": 300,
+          "actual_timestep": 299,
+          "sigma": 0.299923837184906,
+          "schedule_index": 921,
+          "shift": 5.0,
+          "schedule": "SinglePointUniPCScheduler",
+          "timestep_kind": "legacy_requested_timestep",
+          "source_schedule": "VEGA FlowUniPC 1000-step integer lookup",
+          "source_num_inference_steps": 1000,
+          "num_inference_steps": 1,
+          "capture_step": 0,
+          "noise_mode": "legacy",
+          "active_denoising_steps": 1,
+          "updates_before_capture": 0
+        },
+        "heads": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "audits": [
+          {
+            "feature_key": "f1665d1b972a1ef5",
+            "chunk": {
+              "index": 0,
+              "start": 0,
+              "stop": 25,
+              "input_frames": 25,
+              "padding_frames": 0,
+              "frame_ids": [
+                0,
+                25,
+                50,
+                75,
+                101,
+                126,
+                151,
+                176,
+                202,
+                227,
+                252,
+                277,
+                303,
+                328,
+                353,
+                378,
+                404,
+                429,
+                454,
+                479,
+                505,
+                530,
+                555,
+                580,
+                606
+              ],
+              "input_frame_ids": [
+                0,
+                25,
+                50,
+                75,
+                101,
+                126,
+                151,
+                176,
+                202,
+                227,
+                252,
+                277,
+                303,
+                328,
+                353,
+                378,
+                404,
+                429,
+                454,
+                479,
+                505,
+                530,
+                555,
+                580,
+                606
+              ],
+              "seed": 42
+            },
+            "transformer_forwards": [
+              {
+                "shape": [
+                  1,
+                  16,
+                  25,
+                  60,
+                  104
+                ],
+                "timestep": 299.0,
+                "sigma": 0.299923837184906,
+                "sigma_in_latent_dtype": 0.30078125,
+                "updates_before_forward": 0
+              },
+              {
+                "shape": [
+                  1,
+                  16,
+                  25,
+                  60,
+                  104
+                ],
+                "timestep": 299.0,
+                "sigma": 0.299923837184906,
+                "sigma_in_latent_dtype": 0.30078125,
+                "updates_before_forward": 0
+              }
+            ],
+            "valid_frames": 25
+          },
+          {
+            "feature_key": "f1665d1b972a1ef5",
+            "chunk": {
+              "index": 1,
+              "start": 25,
+              "stop": 32,
+              "input_frames": 25,
+              "padding_frames": 18,
+              "frame_ids": [
+                631,
+                656,
+                681,
+                707,
+                732,
+                757,
+                783
+              ],
+              "input_frame_ids": [
+                631,
+                656,
+                681,
+                707,
+                732,
+                757,
+                783,
+                783,
+                783,
+                783,
+                783,
+                783,
+                783,
+                783,
+                783,
+                783,
+                783,
+                783,
+                783,
+                783,
+                783,
+                783,
+                783,
+                783,
+                783
+              ],
+              "seed": 42
+            },
+            "transformer_forwards": [
+              {
+                "shape": [
+                  1,
+                  16,
+                  25,
+                  60,
+                  104
+                ],
+                "timestep": 299.0,
+                "sigma": 0.299923837184906,
+                "sigma_in_latent_dtype": 0.30078125,
+                "updates_before_forward": 0
+              },
+              {
+                "shape": [
+                  1,
+                  16,
+                  25,
+                  60,
+                  104
+                ],
+                "timestep": 299.0,
+                "sigma": 0.299923837184906,
+                "sigma_in_latent_dtype": 0.30078125,
+                "updates_before_forward": 0
+              }
+            ],
+            "valid_frames": 7
+          }
+        ],
+        "versions": {
+          "torch": "2.11.0+cu128",
+          "diffusers": "0.34.0"
+        }
+      },
+      "geometry_key": "433c90ac45e74c37",
+      "frame_ids": [
+        0,
+        25,
+        50,
+        75,
+        101,
+        126,
+        151,
+        176,
+        202,
+        227,
+        252,
+        277,
+        303,
+        328,
+        353,
+        378,
+        404,
+        429,
+        454,
+        479,
+        505,
+        530,
+        555,
+        580,
+        606,
+        631,
+        656,
+        681,
+        707,
+        732,
+        757,
+        783
+      ],
+      "shape_thwc": [
+        32,
+        14,
+        14,
+        1536
+      ],
+      "files": [
+        {
+          "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/cache/scannet/video_features/f1665d1b972a1ef5/block_15.npz",
+          "bytes": 94433865,
+          "sha256": "46c556fb1fa3f0ee02eb9dba18ec1bb22688ecb837761dc403b2d57060ef15ce"
+        },
+        {
+          "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/cache/scannet/geometry/433c90ac45e74c37/geometry.npz",
+          "bytes": 81777,
+          "sha256": "88c4cc79cc551fb7cc49daf4797d26b8a1c6a00d931221dba0d1f63c34e0932d"
+        },
+        {
+          "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/eval/scannet_video/f1d218e9976cd0b9/pairs/scene0707_00_k300_b15.json",
+          "bytes": 22605,
+          "sha256": "c5cf6f8e2e6aa60a27b9b96facae6186b095d5184f1db0172ed27693b22002ea"
+        }
+      ]
+    },
+    {
+      "scene": "scene0708_00",
+      "feature_key": "b37ff2dc381b644b",
+      "metadata": {
+        "identity": {
+          "geometry": "c647c92218fd0a92",
+          "model": {
+            "directory": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/models/Wan2.1-T2V-1.3B-Diffusers",
+            "files": [
+              [
+                "configuration.json",
+                81,
+                1776097115000000000
+              ],
+              [
+                "model_index.json",
+                400,
+                1776097569000000000
+              ],
+              [
+                "scheduler/scheduler_config.json",
+                751,
+                1776097570000000000
+              ],
+              [
+                "text_encoder/config.json",
+                854,
+                1776097114000000000
+              ],
+              [
+                "text_encoder/model-00001-of-00005.safetensors",
+                4972389712,
+                1776097744000000000
+              ],
+              [
+                "text_encoder/model-00002-of-00005.safetensors",
+                4899225672,
+                1776097752000000000
+              ],
+              [
+                "text_encoder/model-00003-of-00005.safetensors",
+                4966309504,
+                1776097770000000000
+              ],
+              [
+                "text_encoder/model-00004-of-00005.safetensors",
+                4999880704,
+                1776097745000000000
+              ],
+              [
+                "text_encoder/model-00005-of-00005.safetensors",
+                2885866152,
+                1776097730000000000
+              ],
+              [
+                "text_encoder/model.safetensors.index.json",
+                22476,
+                1776097569000000000
+              ],
+              [
+                "tokenizer/special_tokens_map.json",
+                7079,
+                1776097570000000000
+              ],
+              [
+                "tokenizer/spiece.model",
+                4548313,
+                1776097571000000000
+              ],
+              [
+                "tokenizer/tokenizer.json",
+                16837459,
+                1776097575000000000
+              ],
+              [
+                "tokenizer/tokenizer_config.json",
+                61758,
+                1776097577000000000
+              ],
+              [
+                "transformer/config.json",
+                465,
+                1776097113000000000
+              ],
+              [
+                "transformer/diffusion_pytorch_model-00001-of-00002.safetensors",
+                4998781576,
+                1776097789000000000
+              ],
+              [
+                "transformer/diffusion_pytorch_model-00002-of-00002.safetensors",
+                677289072,
+                1776097578000000000
+              ],
+              [
+                "transformer/diffusion_pytorch_model.safetensors.index.json",
+                73296,
+                1776097143000000000
+              ],
+              [
+                "vae/config.json",
+                724,
+                1776097114000000000
+              ],
+              [
+                "vae/diffusion_pytorch_model.safetensors",
+                507591892,
+                1776097568000000000
+              ]
+            ]
+          },
+          "code": {
+            "dataset.py": "bfc1230e4f7bceb5d84c350cf3e4a383be554def073a23186fedc74eb4478e9f",
+            "geometry.py": "903bab2a3b7714c9ba1ec948c8edbe3b815df656878b49e6995ba1b2461105f9",
+            "metrics.py": "ef5d8e35fea4671e57c0adc827f879b434516d1a16ba40fb15d09326253beb0b",
+            "scan.py": "c46f843b2c62182d5cb267b4f5930ee2e91a15e4126bc32abff994b2f8f02153",
+            "report.py": "74b31edce4dac19e5e673c1df25331807fd1b3be91ca1a7581c2df2e76a975b0",
+            "video_extract.py": "6cb2da4376d6939220618323a27b99a654a2a149cf50a2fed31b16fe17feb8e4",
+            "video_noise.py": "e1d9e7ecd895a89ea81de4144e20f9960f343c26454a85e06b5ca15e0e43afff",
+            "extract.py": "2c549a8ad790a3a44a33aae65e18a13c1b80d7d3de6548cecbd0685ed39dd4c3",
+            "video_scan.py": "9fe198349f3ed9535e8d6f9d806cbbb994a83f3e9958c365d689367a7dde9295",
+            "video_report.py": "98874764ae1cf28a72cab46e5de091d063fd6f83ba136b96964284e1ad0dcdb7"
+          },
+          "runtime_code": {
+            "src/heft/extraction/config.py": "11e436eceb452a59d853957eb5d44d16de73e6b00e3ccbfa53e0181c8797afd9",
+            "src/heft/extraction/pool.py": "773cb05c72df9af6559af0749d49858763739ed12b0091fd3b3020156ec70198",
+            "src/heft/extraction/worker.py": "a277f59b81efe9079004ca08e0c21ae2cc6dfef99cfd830892e370541b69b9ad",
+            "src/heft/attn_hook/capture.py": "3b876afa2742ce398cb799fd31de60f2ae2e64283e3811334e2ee805ff5f4502",
+            "diffusers/src/diffusers/pipelines/wan/pipeline_wan.py": "2337dadcf98550a2a16701ded184b7b2b4776f855f87fa8ea2255453461f978a",
+            "diffusers/src/diffusers/models/autoencoders/autoencoder_kl_wan.py": "2aab7e0f3d8acbf480d7e332fdf0b194aa19687f69c7834d8c5433b85e8c06d5",
+            "diffusers/src/diffusers/models/transformers/transformer_wan.py": "2a095ccd070554bd2f1b08be83605a852d225ab8ca04d7849fbd3ecff6503a89",
+            "diffusers/src/diffusers/schedulers/scheduling_unipc_multistep.py": "18d9580582f83e4ffbe00fddbfb687bd67ce2265b6247ab16542be57fd2ec546",
+            "diffusers/src/diffusers/video_processor.py": "8ca70886a0ace0451c11b284176deed1326cd677d9acfc1d5caafe633ad9dced",
+            "diffusers/src/diffusers/image_processor.py": "eaaa29edf8a54c776adcbf991955a624c9f4fb4b38060ed6f8068014135d3b44"
+          },
+          "protocol": {
+            "pipeline": "WanPipeline",
+            "num_inference_steps": 1,
+            "capture_step": 0,
+            "guidance_scale": 5.0,
+            "active_denoising_steps": 1,
+            "updates_before_capture": 0,
+            "vae": "joint video encoding; temporal downsampling disabled, causal convolution retained",
+            "latent_distribution": "sample",
+            "prompt": "",
+            "negative_prompt": "",
+            "tail_policy": "repeat last RGB frame before VAE; trim descriptors after capture",
+            "sampling": "uniform valid observations, preserving sampled-frame order",
+            "capture": "conditional full block output and per-head Q/K after normalization and RoPE"
+          },
+          "noise": {
+            "requested_timestep": 300,
+            "actual_timestep": 299,
+            "sigma": 0.299923837184906,
+            "schedule_index": 921,
+            "shift": 5.0,
+            "schedule": "SinglePointUniPCScheduler",
+            "timestep_kind": "legacy_requested_timestep",
+            "source_schedule": "VEGA FlowUniPC 1000-step integer lookup",
+            "source_num_inference_steps": 1000,
+            "num_inference_steps": 1,
+            "capture_step": 0,
+            "noise_mode": "legacy",
+            "active_denoising_steps": 1,
+            "updates_before_capture": 0
+          },
+          "chunks": [
+            {
+              "index": 0,
+              "start": 0,
+              "stop": 25,
+              "input_frames": 25,
+              "padding_frames": 0,
+              "frame_ids": [
+                0,
+                38,
+                76,
+                114,
+                152,
+                190,
+                228,
+                266,
+                304,
+                343,
+                381,
+                419,
+                457,
+                495,
+                533,
+                571,
+                609,
+                647,
+                685,
+                723,
+                761,
+                799,
+                837,
+                875,
+                913
+              ],
+              "input_frame_ids": [
+                0,
+                38,
+                76,
+                114,
+                152,
+                190,
+                228,
+                266,
+                304,
+                343,
+                381,
+                419,
+                457,
+                495,
+                533,
+                571,
+                609,
+                647,
+                685,
+                723,
+                761,
+                799,
+                837,
+                875,
+                913
+              ],
+              "seed": 42
+            },
+            {
+              "index": 1,
+              "start": 25,
+              "stop": 32,
+              "input_frames": 25,
+              "padding_frames": 18,
+              "frame_ids": [
+                951,
+                989,
+                1028,
+                1066,
+                1104,
+                1142,
+                1181
+              ],
+              "input_frame_ids": [
+                951,
+                989,
+                1028,
+                1066,
+                1104,
+                1142,
+                1181,
+                1181,
+                1181,
+                1181,
+                1181,
+                1181,
+                1181,
+                1181,
+                1181,
+                1181,
+                1181,
+                1181,
+                1181,
+                1181,
+                1181,
+                1181,
+                1181,
+                1181,
+                1181
+              ],
+              "seed": 42
+            }
+          ],
+          "dtype": "bf16",
+          "device": "cuda:4",
+          "blocks": [
+            14,
+            15
+          ],
+          "heads": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "grid": [
+            14,
+            14
+          ]
+        },
+        "feature_key": "b37ff2dc381b644b",
+        "noise": {
+          "requested_timestep": 300,
+          "actual_timestep": 299,
+          "sigma": 0.299923837184906,
+          "schedule_index": 921,
+          "shift": 5.0,
+          "schedule": "SinglePointUniPCScheduler",
+          "timestep_kind": "legacy_requested_timestep",
+          "source_schedule": "VEGA FlowUniPC 1000-step integer lookup",
+          "source_num_inference_steps": 1000,
+          "num_inference_steps": 1,
+          "capture_step": 0,
+          "noise_mode": "legacy",
+          "active_denoising_steps": 1,
+          "updates_before_capture": 0
+        },
+        "heads": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "audits": [
+          {
+            "feature_key": "b37ff2dc381b644b",
+            "chunk": {
+              "index": 0,
+              "start": 0,
+              "stop": 25,
+              "input_frames": 25,
+              "padding_frames": 0,
+              "frame_ids": [
+                0,
+                38,
+                76,
+                114,
+                152,
+                190,
+                228,
+                266,
+                304,
+                343,
+                381,
+                419,
+                457,
+                495,
+                533,
+                571,
+                609,
+                647,
+                685,
+                723,
+                761,
+                799,
+                837,
+                875,
+                913
+              ],
+              "input_frame_ids": [
+                0,
+                38,
+                76,
+                114,
+                152,
+                190,
+                228,
+                266,
+                304,
+                343,
+                381,
+                419,
+                457,
+                495,
+                533,
+                571,
+                609,
+                647,
+                685,
+                723,
+                761,
+                799,
+                837,
+                875,
+                913
+              ],
+              "seed": 42
+            },
+            "transformer_forwards": [
+              {
+                "shape": [
+                  1,
+                  16,
+                  25,
+                  60,
+                  104
+                ],
+                "timestep": 299.0,
+                "sigma": 0.299923837184906,
+                "sigma_in_latent_dtype": 0.30078125,
+                "updates_before_forward": 0
+              },
+              {
+                "shape": [
+                  1,
+                  16,
+                  25,
+                  60,
+                  104
+                ],
+                "timestep": 299.0,
+                "sigma": 0.299923837184906,
+                "sigma_in_latent_dtype": 0.30078125,
+                "updates_before_forward": 0
+              }
+            ],
+            "valid_frames": 25
+          },
+          {
+            "feature_key": "b37ff2dc381b644b",
+            "chunk": {
+              "index": 1,
+              "start": 25,
+              "stop": 32,
+              "input_frames": 25,
+              "padding_frames": 18,
+              "frame_ids": [
+                951,
+                989,
+                1028,
+                1066,
+                1104,
+                1142,
+                1181
+              ],
+              "input_frame_ids": [
+                951,
+                989,
+                1028,
+                1066,
+                1104,
+                1142,
+                1181,
+                1181,
+                1181,
+                1181,
+                1181,
+                1181,
+                1181,
+                1181,
+                1181,
+                1181,
+                1181,
+                1181,
+                1181,
+                1181,
+                1181,
+                1181,
+                1181,
+                1181,
+                1181
+              ],
+              "seed": 42
+            },
+            "transformer_forwards": [
+              {
+                "shape": [
+                  1,
+                  16,
+                  25,
+                  60,
+                  104
+                ],
+                "timestep": 299.0,
+                "sigma": 0.299923837184906,
+                "sigma_in_latent_dtype": 0.30078125,
+                "updates_before_forward": 0
+              },
+              {
+                "shape": [
+                  1,
+                  16,
+                  25,
+                  60,
+                  104
+                ],
+                "timestep": 299.0,
+                "sigma": 0.299923837184906,
+                "sigma_in_latent_dtype": 0.30078125,
+                "updates_before_forward": 0
+              }
+            ],
+            "valid_frames": 7
+          }
+        ],
+        "versions": {
+          "torch": "2.11.0+cu128",
+          "diffusers": "0.34.0"
+        }
+      },
+      "geometry_key": "c647c92218fd0a92",
+      "frame_ids": [
+        0,
+        38,
+        76,
+        114,
+        152,
+        190,
+        228,
+        266,
+        304,
+        343,
+        381,
+        419,
+        457,
+        495,
+        533,
+        571,
+        609,
+        647,
+        685,
+        723,
+        761,
+        799,
+        837,
+        875,
+        913,
+        951,
+        989,
+        1028,
+        1066,
+        1104,
+        1142,
+        1181
+      ],
+      "shape_thwc": [
+        32,
+        14,
+        14,
+        1536
+      ],
+      "files": [
+        {
+          "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/cache/scannet/video_features/b37ff2dc381b644b/block_15.npz",
+          "bytes": 94394743,
+          "sha256": "f22f97b2e55b9e4492d9159951f4d2f8d3a3c841b4e2df64b576f2f27e6874b6"
+        },
+        {
+          "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/cache/scannet/geometry/c647c92218fd0a92/geometry.npz",
+          "bytes": 82044,
+          "sha256": "128a73e2b93c314fd7dcfb807d63983d05f72f18905e09bd9f30ec903d917cbc"
+        },
+        {
+          "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/eval/scannet_video/f1d218e9976cd0b9/pairs/scene0708_00_k300_b15.json",
+          "bytes": 22474,
+          "sha256": "b417d12a7bc33a95cf0b2fb4d447b68ca8917e34191a76311b5d0710c95b0c71"
+        }
+      ]
+    },
+    {
+      "scene": "scene0709_00",
+      "feature_key": "61621679e2983485",
+      "metadata": {
+        "identity": {
+          "geometry": "7f7ea2a1f1fe5906",
+          "model": {
+            "directory": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/models/Wan2.1-T2V-1.3B-Diffusers",
+            "files": [
+              [
+                "configuration.json",
+                81,
+                1776097115000000000
+              ],
+              [
+                "model_index.json",
+                400,
+                1776097569000000000
+              ],
+              [
+                "scheduler/scheduler_config.json",
+                751,
+                1776097570000000000
+              ],
+              [
+                "text_encoder/config.json",
+                854,
+                1776097114000000000
+              ],
+              [
+                "text_encoder/model-00001-of-00005.safetensors",
+                4972389712,
+                1776097744000000000
+              ],
+              [
+                "text_encoder/model-00002-of-00005.safetensors",
+                4899225672,
+                1776097752000000000
+              ],
+              [
+                "text_encoder/model-00003-of-00005.safetensors",
+                4966309504,
+                1776097770000000000
+              ],
+              [
+                "text_encoder/model-00004-of-00005.safetensors",
+                4999880704,
+                1776097745000000000
+              ],
+              [
+                "text_encoder/model-00005-of-00005.safetensors",
+                2885866152,
+                1776097730000000000
+              ],
+              [
+                "text_encoder/model.safetensors.index.json",
+                22476,
+                1776097569000000000
+              ],
+              [
+                "tokenizer/special_tokens_map.json",
+                7079,
+                1776097570000000000
+              ],
+              [
+                "tokenizer/spiece.model",
+                4548313,
+                1776097571000000000
+              ],
+              [
+                "tokenizer/tokenizer.json",
+                16837459,
+                1776097575000000000
+              ],
+              [
+                "tokenizer/tokenizer_config.json",
+                61758,
+                1776097577000000000
+              ],
+              [
+                "transformer/config.json",
+                465,
+                1776097113000000000
+              ],
+              [
+                "transformer/diffusion_pytorch_model-00001-of-00002.safetensors",
+                4998781576,
+                1776097789000000000
+              ],
+              [
+                "transformer/diffusion_pytorch_model-00002-of-00002.safetensors",
+                677289072,
+                1776097578000000000
+              ],
+              [
+                "transformer/diffusion_pytorch_model.safetensors.index.json",
+                73296,
+                1776097143000000000
+              ],
+              [
+                "vae/config.json",
+                724,
+                1776097114000000000
+              ],
+              [
+                "vae/diffusion_pytorch_model.safetensors",
+                507591892,
+                1776097568000000000
+              ]
+            ]
+          },
+          "code": {
+            "dataset.py": "bfc1230e4f7bceb5d84c350cf3e4a383be554def073a23186fedc74eb4478e9f",
+            "geometry.py": "903bab2a3b7714c9ba1ec948c8edbe3b815df656878b49e6995ba1b2461105f9",
+            "metrics.py": "ef5d8e35fea4671e57c0adc827f879b434516d1a16ba40fb15d09326253beb0b",
+            "scan.py": "c46f843b2c62182d5cb267b4f5930ee2e91a15e4126bc32abff994b2f8f02153",
+            "report.py": "74b31edce4dac19e5e673c1df25331807fd1b3be91ca1a7581c2df2e76a975b0",
+            "video_extract.py": "6cb2da4376d6939220618323a27b99a654a2a149cf50a2fed31b16fe17feb8e4",
+            "video_noise.py": "e1d9e7ecd895a89ea81de4144e20f9960f343c26454a85e06b5ca15e0e43afff",
+            "extract.py": "2c549a8ad790a3a44a33aae65e18a13c1b80d7d3de6548cecbd0685ed39dd4c3",
+            "video_scan.py": "9fe198349f3ed9535e8d6f9d806cbbb994a83f3e9958c365d689367a7dde9295",
+            "video_report.py": "98874764ae1cf28a72cab46e5de091d063fd6f83ba136b96964284e1ad0dcdb7"
+          },
+          "runtime_code": {
+            "src/heft/extraction/config.py": "11e436eceb452a59d853957eb5d44d16de73e6b00e3ccbfa53e0181c8797afd9",
+            "src/heft/extraction/pool.py": "773cb05c72df9af6559af0749d49858763739ed12b0091fd3b3020156ec70198",
+            "src/heft/extraction/worker.py": "a277f59b81efe9079004ca08e0c21ae2cc6dfef99cfd830892e370541b69b9ad",
+            "src/heft/attn_hook/capture.py": "3b876afa2742ce398cb799fd31de60f2ae2e64283e3811334e2ee805ff5f4502",
+            "diffusers/src/diffusers/pipelines/wan/pipeline_wan.py": "2337dadcf98550a2a16701ded184b7b2b4776f855f87fa8ea2255453461f978a",
+            "diffusers/src/diffusers/models/autoencoders/autoencoder_kl_wan.py": "2aab7e0f3d8acbf480d7e332fdf0b194aa19687f69c7834d8c5433b85e8c06d5",
+            "diffusers/src/diffusers/models/transformers/transformer_wan.py": "2a095ccd070554bd2f1b08be83605a852d225ab8ca04d7849fbd3ecff6503a89",
+            "diffusers/src/diffusers/schedulers/scheduling_unipc_multistep.py": "18d9580582f83e4ffbe00fddbfb687bd67ce2265b6247ab16542be57fd2ec546",
+            "diffusers/src/diffusers/video_processor.py": "8ca70886a0ace0451c11b284176deed1326cd677d9acfc1d5caafe633ad9dced",
+            "diffusers/src/diffusers/image_processor.py": "eaaa29edf8a54c776adcbf991955a624c9f4fb4b38060ed6f8068014135d3b44"
+          },
+          "protocol": {
+            "pipeline": "WanPipeline",
+            "num_inference_steps": 1,
+            "capture_step": 0,
+            "guidance_scale": 5.0,
+            "active_denoising_steps": 1,
+            "updates_before_capture": 0,
+            "vae": "joint video encoding; temporal downsampling disabled, causal convolution retained",
+            "latent_distribution": "sample",
+            "prompt": "",
+            "negative_prompt": "",
+            "tail_policy": "repeat last RGB frame before VAE; trim descriptors after capture",
+            "sampling": "uniform valid observations, preserving sampled-frame order",
+            "capture": "conditional full block output and per-head Q/K after normalization and RoPE"
+          },
+          "noise": {
+            "requested_timestep": 300,
+            "actual_timestep": 299,
+            "sigma": 0.299923837184906,
+            "schedule_index": 921,
+            "shift": 5.0,
+            "schedule": "SinglePointUniPCScheduler",
+            "timestep_kind": "legacy_requested_timestep",
+            "source_schedule": "VEGA FlowUniPC 1000-step integer lookup",
+            "source_num_inference_steps": 1000,
+            "num_inference_steps": 1,
+            "capture_step": 0,
+            "noise_mode": "legacy",
+            "active_denoising_steps": 1,
+            "updates_before_capture": 0
+          },
+          "chunks": [
+            {
+              "index": 0,
+              "start": 0,
+              "stop": 25,
+              "input_frames": 25,
+              "padding_frames": 0,
+              "frame_ids": [
+                0,
+                30,
+                60,
+                90,
+                120,
+                150,
+                180,
+                211,
+                241,
+                271,
+                301,
+                331,
+                361,
+                392,
+                422,
+                452,
+                482,
+                512,
+                542,
+                573,
+                603,
+                633,
+                663,
+                693,
+                723
+              ],
+              "input_frame_ids": [
+                0,
+                30,
+                60,
+                90,
+                120,
+                150,
+                180,
+                211,
+                241,
+                271,
+                301,
+                331,
+                361,
+                392,
+                422,
+                452,
+                482,
+                512,
+                542,
+                573,
+                603,
+                633,
+                663,
+                693,
+                723
+              ],
+              "seed": 42
+            },
+            {
+              "index": 1,
+              "start": 25,
+              "stop": 32,
+              "input_frames": 25,
+              "padding_frames": 18,
+              "frame_ids": [
+                754,
+                784,
+                814,
+                844,
+                874,
+                904,
+                935
+              ],
+              "input_frame_ids": [
+                754,
+                784,
+                814,
+                844,
+                874,
+                904,
+                935,
+                935,
+                935,
+                935,
+                935,
+                935,
+                935,
+                935,
+                935,
+                935,
+                935,
+                935,
+                935,
+                935,
+                935,
+                935,
+                935,
+                935,
+                935
+              ],
+              "seed": 42
+            }
+          ],
+          "dtype": "bf16",
+          "device": "cuda:4",
+          "blocks": [
+            14,
+            15
+          ],
+          "heads": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "grid": [
+            14,
+            14
+          ]
+        },
+        "feature_key": "61621679e2983485",
+        "noise": {
+          "requested_timestep": 300,
+          "actual_timestep": 299,
+          "sigma": 0.299923837184906,
+          "schedule_index": 921,
+          "shift": 5.0,
+          "schedule": "SinglePointUniPCScheduler",
+          "timestep_kind": "legacy_requested_timestep",
+          "source_schedule": "VEGA FlowUniPC 1000-step integer lookup",
+          "source_num_inference_steps": 1000,
+          "num_inference_steps": 1,
+          "capture_step": 0,
+          "noise_mode": "legacy",
+          "active_denoising_steps": 1,
+          "updates_before_capture": 0
+        },
+        "heads": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "audits": [
+          {
+            "feature_key": "61621679e2983485",
+            "chunk": {
+              "index": 0,
+              "start": 0,
+              "stop": 25,
+              "input_frames": 25,
+              "padding_frames": 0,
+              "frame_ids": [
+                0,
+                30,
+                60,
+                90,
+                120,
+                150,
+                180,
+                211,
+                241,
+                271,
+                301,
+                331,
+                361,
+                392,
+                422,
+                452,
+                482,
+                512,
+                542,
+                573,
+                603,
+                633,
+                663,
+                693,
+                723
+              ],
+              "input_frame_ids": [
+                0,
+                30,
+                60,
+                90,
+                120,
+                150,
+                180,
+                211,
+                241,
+                271,
+                301,
+                331,
+                361,
+                392,
+                422,
+                452,
+                482,
+                512,
+                542,
+                573,
+                603,
+                633,
+                663,
+                693,
+                723
+              ],
+              "seed": 42
+            },
+            "transformer_forwards": [
+              {
+                "shape": [
+                  1,
+                  16,
+                  25,
+                  60,
+                  104
+                ],
+                "timestep": 299.0,
+                "sigma": 0.299923837184906,
+                "sigma_in_latent_dtype": 0.30078125,
+                "updates_before_forward": 0
+              },
+              {
+                "shape": [
+                  1,
+                  16,
+                  25,
+                  60,
+                  104
+                ],
+                "timestep": 299.0,
+                "sigma": 0.299923837184906,
+                "sigma_in_latent_dtype": 0.30078125,
+                "updates_before_forward": 0
+              }
+            ],
+            "valid_frames": 25
+          },
+          {
+            "feature_key": "61621679e2983485",
+            "chunk": {
+              "index": 1,
+              "start": 25,
+              "stop": 32,
+              "input_frames": 25,
+              "padding_frames": 18,
+              "frame_ids": [
+                754,
+                784,
+                814,
+                844,
+                874,
+                904,
+                935
+              ],
+              "input_frame_ids": [
+                754,
+                784,
+                814,
+                844,
+                874,
+                904,
+                935,
+                935,
+                935,
+                935,
+                935,
+                935,
+                935,
+                935,
+                935,
+                935,
+                935,
+                935,
+                935,
+                935,
+                935,
+                935,
+                935,
+                935,
+                935
+              ],
+              "seed": 42
+            },
+            "transformer_forwards": [
+              {
+                "shape": [
+                  1,
+                  16,
+                  25,
+                  60,
+                  104
+                ],
+                "timestep": 299.0,
+                "sigma": 0.299923837184906,
+                "sigma_in_latent_dtype": 0.30078125,
+                "updates_before_forward": 0
+              },
+              {
+                "shape": [
+                  1,
+                  16,
+                  25,
+                  60,
+                  104
+                ],
+                "timestep": 299.0,
+                "sigma": 0.299923837184906,
+                "sigma_in_latent_dtype": 0.30078125,
+                "updates_before_forward": 0
+              }
+            ],
+            "valid_frames": 7
+          }
+        ],
+        "versions": {
+          "torch": "2.11.0+cu128",
+          "diffusers": "0.34.0"
+        }
+      },
+      "geometry_key": "7f7ea2a1f1fe5906",
+      "frame_ids": [
+        0,
+        30,
+        60,
+        90,
+        120,
+        150,
+        180,
+        211,
+        241,
+        271,
+        301,
+        331,
+        361,
+        392,
+        422,
+        452,
+        482,
+        512,
+        542,
+        573,
+        603,
+        633,
+        663,
+        693,
+        723,
+        754,
+        784,
+        814,
+        844,
+        874,
+        904,
+        935
+      ],
+      "shape_thwc": [
+        32,
+        14,
+        14,
+        1536
+      ],
+      "files": [
+        {
+          "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/cache/scannet/video_features/61621679e2983485/block_15.npz",
+          "bytes": 94406955,
+          "sha256": "2c31d5ea043909126f5b2c281edc89809e18d796555669c38a2f7af1341587da"
+        },
+        {
+          "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/cache/scannet/geometry/7f7ea2a1f1fe5906/geometry.npz",
+          "bytes": 82299,
+          "sha256": "66a4b8dc9267c1e801b765671f3d631ca4f51f94b9515e8dc84e8bceeb05d5d1"
+        },
+        {
+          "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/eval/scannet_video/f1d218e9976cd0b9/pairs/scene0709_00_k300_b15.json",
+          "bytes": 22640,
+          "sha256": "a54188a4391daf9088c6757ebdd1cceedf03b1121292fb676e6590cd761e19df"
+        }
+      ]
+    },
+    {
+      "scene": "scene0710_00",
+      "feature_key": "69cf82cba0924e0b",
+      "metadata": {
+        "identity": {
+          "geometry": "52183f363a2b85e3",
+          "model": {
+            "directory": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/models/Wan2.1-T2V-1.3B-Diffusers",
+            "files": [
+              [
+                "configuration.json",
+                81,
+                1776097115000000000
+              ],
+              [
+                "model_index.json",
+                400,
+                1776097569000000000
+              ],
+              [
+                "scheduler/scheduler_config.json",
+                751,
+                1776097570000000000
+              ],
+              [
+                "text_encoder/config.json",
+                854,
+                1776097114000000000
+              ],
+              [
+                "text_encoder/model-00001-of-00005.safetensors",
+                4972389712,
+                1776097744000000000
+              ],
+              [
+                "text_encoder/model-00002-of-00005.safetensors",
+                4899225672,
+                1776097752000000000
+              ],
+              [
+                "text_encoder/model-00003-of-00005.safetensors",
+                4966309504,
+                1776097770000000000
+              ],
+              [
+                "text_encoder/model-00004-of-00005.safetensors",
+                4999880704,
+                1776097745000000000
+              ],
+              [
+                "text_encoder/model-00005-of-00005.safetensors",
+                2885866152,
+                1776097730000000000
+              ],
+              [
+                "text_encoder/model.safetensors.index.json",
+                22476,
+                1776097569000000000
+              ],
+              [
+                "tokenizer/special_tokens_map.json",
+                7079,
+                1776097570000000000
+              ],
+              [
+                "tokenizer/spiece.model",
+                4548313,
+                1776097571000000000
+              ],
+              [
+                "tokenizer/tokenizer.json",
+                16837459,
+                1776097575000000000
+              ],
+              [
+                "tokenizer/tokenizer_config.json",
+                61758,
+                1776097577000000000
+              ],
+              [
+                "transformer/config.json",
+                465,
+                1776097113000000000
+              ],
+              [
+                "transformer/diffusion_pytorch_model-00001-of-00002.safetensors",
+                4998781576,
+                1776097789000000000
+              ],
+              [
+                "transformer/diffusion_pytorch_model-00002-of-00002.safetensors",
+                677289072,
+                1776097578000000000
+              ],
+              [
+                "transformer/diffusion_pytorch_model.safetensors.index.json",
+                73296,
+                1776097143000000000
+              ],
+              [
+                "vae/config.json",
+                724,
+                1776097114000000000
+              ],
+              [
+                "vae/diffusion_pytorch_model.safetensors",
+                507591892,
+                1776097568000000000
+              ]
+            ]
+          },
+          "code": {
+            "dataset.py": "bfc1230e4f7bceb5d84c350cf3e4a383be554def073a23186fedc74eb4478e9f",
+            "geometry.py": "903bab2a3b7714c9ba1ec948c8edbe3b815df656878b49e6995ba1b2461105f9",
+            "metrics.py": "ef5d8e35fea4671e57c0adc827f879b434516d1a16ba40fb15d09326253beb0b",
+            "scan.py": "c46f843b2c62182d5cb267b4f5930ee2e91a15e4126bc32abff994b2f8f02153",
+            "report.py": "74b31edce4dac19e5e673c1df25331807fd1b3be91ca1a7581c2df2e76a975b0",
+            "video_extract.py": "6cb2da4376d6939220618323a27b99a654a2a149cf50a2fed31b16fe17feb8e4",
+            "video_noise.py": "e1d9e7ecd895a89ea81de4144e20f9960f343c26454a85e06b5ca15e0e43afff",
+            "extract.py": "2c549a8ad790a3a44a33aae65e18a13c1b80d7d3de6548cecbd0685ed39dd4c3",
+            "video_scan.py": "9fe198349f3ed9535e8d6f9d806cbbb994a83f3e9958c365d689367a7dde9295",
+            "video_report.py": "98874764ae1cf28a72cab46e5de091d063fd6f83ba136b96964284e1ad0dcdb7"
+          },
+          "runtime_code": {
+            "src/heft/extraction/config.py": "11e436eceb452a59d853957eb5d44d16de73e6b00e3ccbfa53e0181c8797afd9",
+            "src/heft/extraction/pool.py": "773cb05c72df9af6559af0749d49858763739ed12b0091fd3b3020156ec70198",
+            "src/heft/extraction/worker.py": "a277f59b81efe9079004ca08e0c21ae2cc6dfef99cfd830892e370541b69b9ad",
+            "src/heft/attn_hook/capture.py": "3b876afa2742ce398cb799fd31de60f2ae2e64283e3811334e2ee805ff5f4502",
+            "diffusers/src/diffusers/pipelines/wan/pipeline_wan.py": "2337dadcf98550a2a16701ded184b7b2b4776f855f87fa8ea2255453461f978a",
+            "diffusers/src/diffusers/models/autoencoders/autoencoder_kl_wan.py": "2aab7e0f3d8acbf480d7e332fdf0b194aa19687f69c7834d8c5433b85e8c06d5",
+            "diffusers/src/diffusers/models/transformers/transformer_wan.py": "2a095ccd070554bd2f1b08be83605a852d225ab8ca04d7849fbd3ecff6503a89",
+            "diffusers/src/diffusers/schedulers/scheduling_unipc_multistep.py": "18d9580582f83e4ffbe00fddbfb687bd67ce2265b6247ab16542be57fd2ec546",
+            "diffusers/src/diffusers/video_processor.py": "8ca70886a0ace0451c11b284176deed1326cd677d9acfc1d5caafe633ad9dced",
+            "diffusers/src/diffusers/image_processor.py": "eaaa29edf8a54c776adcbf991955a624c9f4fb4b38060ed6f8068014135d3b44"
+          },
+          "protocol": {
+            "pipeline": "WanPipeline",
+            "num_inference_steps": 1,
+            "capture_step": 0,
+            "guidance_scale": 5.0,
+            "active_denoising_steps": 1,
+            "updates_before_capture": 0,
+            "vae": "joint video encoding; temporal downsampling disabled, causal convolution retained",
+            "latent_distribution": "sample",
+            "prompt": "",
+            "negative_prompt": "",
+            "tail_policy": "repeat last RGB frame before VAE; trim descriptors after capture",
+            "sampling": "uniform valid observations, preserving sampled-frame order",
+            "capture": "conditional full block output and per-head Q/K after normalization and RoPE"
+          },
+          "noise": {
+            "requested_timestep": 300,
+            "actual_timestep": 299,
+            "sigma": 0.299923837184906,
+            "schedule_index": 921,
+            "shift": 5.0,
+            "schedule": "SinglePointUniPCScheduler",
+            "timestep_kind": "legacy_requested_timestep",
+            "source_schedule": "VEGA FlowUniPC 1000-step integer lookup",
+            "source_num_inference_steps": 1000,
+            "num_inference_steps": 1,
+            "capture_step": 0,
+            "noise_mode": "legacy",
+            "active_denoising_steps": 1,
+            "updates_before_capture": 0
+          },
+          "chunks": [
+            {
+              "index": 0,
+              "start": 0,
+              "stop": 25,
+              "input_frames": 25,
+              "padding_frames": 0,
+              "frame_ids": [
+                0,
+                58,
+                116,
+                174,
+                233,
+                291,
+                349,
+                407,
+                466,
+                524,
+                582,
+                640,
+                699,
+                757,
+                815,
+                873,
+                932,
+                990,
+                1048,
+                1106,
+                1165,
+                1223,
+                1281,
+                1339,
+                1398
+              ],
+              "input_frame_ids": [
+                0,
+                58,
+                116,
+                174,
+                233,
+                291,
+                349,
+                407,
+                466,
+                524,
+                582,
+                640,
+                699,
+                757,
+                815,
+                873,
+                932,
+                990,
+                1048,
+                1106,
+                1165,
+                1223,
+                1281,
+                1339,
+                1398
+              ],
+              "seed": 42
+            },
+            {
+              "index": 1,
+              "start": 25,
+              "stop": 32,
+              "input_frames": 25,
+              "padding_frames": 18,
+              "frame_ids": [
+                1456,
+                1514,
+                1572,
+                1631,
+                1689,
+                1747,
+                1806
+              ],
+              "input_frame_ids": [
+                1456,
+                1514,
+                1572,
+                1631,
+                1689,
+                1747,
+                1806,
+                1806,
+                1806,
+                1806,
+                1806,
+                1806,
+                1806,
+                1806,
+                1806,
+                1806,
+                1806,
+                1806,
+                1806,
+                1806,
+                1806,
+                1806,
+                1806,
+                1806,
+                1806
+              ],
+              "seed": 42
+            }
+          ],
+          "dtype": "bf16",
+          "device": "cuda:4",
+          "blocks": [
+            14,
+            15
+          ],
+          "heads": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "grid": [
+            14,
+            14
+          ]
+        },
+        "feature_key": "69cf82cba0924e0b",
+        "noise": {
+          "requested_timestep": 300,
+          "actual_timestep": 299,
+          "sigma": 0.299923837184906,
+          "schedule_index": 921,
+          "shift": 5.0,
+          "schedule": "SinglePointUniPCScheduler",
+          "timestep_kind": "legacy_requested_timestep",
+          "source_schedule": "VEGA FlowUniPC 1000-step integer lookup",
+          "source_num_inference_steps": 1000,
+          "num_inference_steps": 1,
+          "capture_step": 0,
+          "noise_mode": "legacy",
+          "active_denoising_steps": 1,
+          "updates_before_capture": 0
+        },
+        "heads": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "audits": [
+          {
+            "feature_key": "69cf82cba0924e0b",
+            "chunk": {
+              "index": 0,
+              "start": 0,
+              "stop": 25,
+              "input_frames": 25,
+              "padding_frames": 0,
+              "frame_ids": [
+                0,
+                58,
+                116,
+                174,
+                233,
+                291,
+                349,
+                407,
+                466,
+                524,
+                582,
+                640,
+                699,
+                757,
+                815,
+                873,
+                932,
+                990,
+                1048,
+                1106,
+                1165,
+                1223,
+                1281,
+                1339,
+                1398
+              ],
+              "input_frame_ids": [
+                0,
+                58,
+                116,
+                174,
+                233,
+                291,
+                349,
+                407,
+                466,
+                524,
+                582,
+                640,
+                699,
+                757,
+                815,
+                873,
+                932,
+                990,
+                1048,
+                1106,
+                1165,
+                1223,
+                1281,
+                1339,
+                1398
+              ],
+              "seed": 42
+            },
+            "transformer_forwards": [
+              {
+                "shape": [
+                  1,
+                  16,
+                  25,
+                  60,
+                  104
+                ],
+                "timestep": 299.0,
+                "sigma": 0.299923837184906,
+                "sigma_in_latent_dtype": 0.30078125,
+                "updates_before_forward": 0
+              },
+              {
+                "shape": [
+                  1,
+                  16,
+                  25,
+                  60,
+                  104
+                ],
+                "timestep": 299.0,
+                "sigma": 0.299923837184906,
+                "sigma_in_latent_dtype": 0.30078125,
+                "updates_before_forward": 0
+              }
+            ],
+            "valid_frames": 25
+          },
+          {
+            "feature_key": "69cf82cba0924e0b",
+            "chunk": {
+              "index": 1,
+              "start": 25,
+              "stop": 32,
+              "input_frames": 25,
+              "padding_frames": 18,
+              "frame_ids": [
+                1456,
+                1514,
+                1572,
+                1631,
+                1689,
+                1747,
+                1806
+              ],
+              "input_frame_ids": [
+                1456,
+                1514,
+                1572,
+                1631,
+                1689,
+                1747,
+                1806,
+                1806,
+                1806,
+                1806,
+                1806,
+                1806,
+                1806,
+                1806,
+                1806,
+                1806,
+                1806,
+                1806,
+                1806,
+                1806,
+                1806,
+                1806,
+                1806,
+                1806,
+                1806
+              ],
+              "seed": 42
+            },
+            "transformer_forwards": [
+              {
+                "shape": [
+                  1,
+                  16,
+                  25,
+                  60,
+                  104
+                ],
+                "timestep": 299.0,
+                "sigma": 0.299923837184906,
+                "sigma_in_latent_dtype": 0.30078125,
+                "updates_before_forward": 0
+              },
+              {
+                "shape": [
+                  1,
+                  16,
+                  25,
+                  60,
+                  104
+                ],
+                "timestep": 299.0,
+                "sigma": 0.299923837184906,
+                "sigma_in_latent_dtype": 0.30078125,
+                "updates_before_forward": 0
+              }
+            ],
+            "valid_frames": 7
+          }
+        ],
+        "versions": {
+          "torch": "2.11.0+cu128",
+          "diffusers": "0.34.0"
+        }
+      },
+      "geometry_key": "52183f363a2b85e3",
+      "frame_ids": [
+        0,
+        58,
+        116,
+        174,
+        233,
+        291,
+        349,
+        407,
+        466,
+        524,
+        582,
+        640,
+        699,
+        757,
+        815,
+        873,
+        932,
+        990,
+        1048,
+        1106,
+        1165,
+        1223,
+        1281,
+        1339,
+        1398,
+        1456,
+        1514,
+        1572,
+        1631,
+        1689,
+        1747,
+        1806
+      ],
+      "shape_thwc": [
+        32,
+        14,
+        14,
+        1536
+      ],
+      "files": [
+        {
+          "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/cache/scannet/video_features/69cf82cba0924e0b/block_15.npz",
+          "bytes": 94368622,
+          "sha256": "c670125f95bdc5bb065634673f5be6e5adb7f22536c82915c4501b4dc0699ce0"
+        },
+        {
+          "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/cache/scannet/geometry/52183f363a2b85e3/geometry.npz",
+          "bytes": 80893,
+          "sha256": "425340279139f8a9bfc68f3206060091e4c3fdd0f09ca06992af4f9877f75102"
+        },
+        {
+          "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/eval/scannet_video/f1d218e9976cd0b9/pairs/scene0710_00_k300_b15.json",
+          "bytes": 22495,
+          "sha256": "ff3ffb57c190d5c05ceab992eef00f8dda58b31494a373328a01acf87a3b07e4"
+        }
+      ]
+    },
+    {
+      "scene": "scene0711_00",
+      "feature_key": "7669a3d16697996a",
+      "metadata": {
+        "identity": {
+          "geometry": "b132d8302a1ed0d0",
+          "model": {
+            "directory": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/models/Wan2.1-T2V-1.3B-Diffusers",
+            "files": [
+              [
+                "configuration.json",
+                81,
+                1776097115000000000
+              ],
+              [
+                "model_index.json",
+                400,
+                1776097569000000000
+              ],
+              [
+                "scheduler/scheduler_config.json",
+                751,
+                1776097570000000000
+              ],
+              [
+                "text_encoder/config.json",
+                854,
+                1776097114000000000
+              ],
+              [
+                "text_encoder/model-00001-of-00005.safetensors",
+                4972389712,
+                1776097744000000000
+              ],
+              [
+                "text_encoder/model-00002-of-00005.safetensors",
+                4899225672,
+                1776097752000000000
+              ],
+              [
+                "text_encoder/model-00003-of-00005.safetensors",
+                4966309504,
+                1776097770000000000
+              ],
+              [
+                "text_encoder/model-00004-of-00005.safetensors",
+                4999880704,
+                1776097745000000000
+              ],
+              [
+                "text_encoder/model-00005-of-00005.safetensors",
+                2885866152,
+                1776097730000000000
+              ],
+              [
+                "text_encoder/model.safetensors.index.json",
+                22476,
+                1776097569000000000
+              ],
+              [
+                "tokenizer/special_tokens_map.json",
+                7079,
+                1776097570000000000
+              ],
+              [
+                "tokenizer/spiece.model",
+                4548313,
+                1776097571000000000
+              ],
+              [
+                "tokenizer/tokenizer.json",
+                16837459,
+                1776097575000000000
+              ],
+              [
+                "tokenizer/tokenizer_config.json",
+                61758,
+                1776097577000000000
+              ],
+              [
+                "transformer/config.json",
+                465,
+                1776097113000000000
+              ],
+              [
+                "transformer/diffusion_pytorch_model-00001-of-00002.safetensors",
+                4998781576,
+                1776097789000000000
+              ],
+              [
+                "transformer/diffusion_pytorch_model-00002-of-00002.safetensors",
+                677289072,
+                1776097578000000000
+              ],
+              [
+                "transformer/diffusion_pytorch_model.safetensors.index.json",
+                73296,
+                1776097143000000000
+              ],
+              [
+                "vae/config.json",
+                724,
+                1776097114000000000
+              ],
+              [
+                "vae/diffusion_pytorch_model.safetensors",
+                507591892,
+                1776097568000000000
+              ]
+            ]
+          },
+          "code": {
+            "dataset.py": "bfc1230e4f7bceb5d84c350cf3e4a383be554def073a23186fedc74eb4478e9f",
+            "geometry.py": "903bab2a3b7714c9ba1ec948c8edbe3b815df656878b49e6995ba1b2461105f9",
+            "metrics.py": "ef5d8e35fea4671e57c0adc827f879b434516d1a16ba40fb15d09326253beb0b",
+            "scan.py": "c46f843b2c62182d5cb267b4f5930ee2e91a15e4126bc32abff994b2f8f02153",
+            "report.py": "74b31edce4dac19e5e673c1df25331807fd1b3be91ca1a7581c2df2e76a975b0",
+            "video_extract.py": "6cb2da4376d6939220618323a27b99a654a2a149cf50a2fed31b16fe17feb8e4",
+            "video_noise.py": "e1d9e7ecd895a89ea81de4144e20f9960f343c26454a85e06b5ca15e0e43afff",
+            "extract.py": "2c549a8ad790a3a44a33aae65e18a13c1b80d7d3de6548cecbd0685ed39dd4c3",
+            "video_scan.py": "9fe198349f3ed9535e8d6f9d806cbbb994a83f3e9958c365d689367a7dde9295",
+            "video_report.py": "98874764ae1cf28a72cab46e5de091d063fd6f83ba136b96964284e1ad0dcdb7"
+          },
+          "runtime_code": {
+            "src/heft/extraction/config.py": "11e436eceb452a59d853957eb5d44d16de73e6b00e3ccbfa53e0181c8797afd9",
+            "src/heft/extraction/pool.py": "773cb05c72df9af6559af0749d49858763739ed12b0091fd3b3020156ec70198",
+            "src/heft/extraction/worker.py": "a277f59b81efe9079004ca08e0c21ae2cc6dfef99cfd830892e370541b69b9ad",
+            "src/heft/attn_hook/capture.py": "3b876afa2742ce398cb799fd31de60f2ae2e64283e3811334e2ee805ff5f4502",
+            "diffusers/src/diffusers/pipelines/wan/pipeline_wan.py": "2337dadcf98550a2a16701ded184b7b2b4776f855f87fa8ea2255453461f978a",
+            "diffusers/src/diffusers/models/autoencoders/autoencoder_kl_wan.py": "2aab7e0f3d8acbf480d7e332fdf0b194aa19687f69c7834d8c5433b85e8c06d5",
+            "diffusers/src/diffusers/models/transformers/transformer_wan.py": "2a095ccd070554bd2f1b08be83605a852d225ab8ca04d7849fbd3ecff6503a89",
+            "diffusers/src/diffusers/schedulers/scheduling_unipc_multistep.py": "18d9580582f83e4ffbe00fddbfb687bd67ce2265b6247ab16542be57fd2ec546",
+            "diffusers/src/diffusers/video_processor.py": "8ca70886a0ace0451c11b284176deed1326cd677d9acfc1d5caafe633ad9dced",
+            "diffusers/src/diffusers/image_processor.py": "eaaa29edf8a54c776adcbf991955a624c9f4fb4b38060ed6f8068014135d3b44"
+          },
+          "protocol": {
+            "pipeline": "WanPipeline",
+            "num_inference_steps": 1,
+            "capture_step": 0,
+            "guidance_scale": 5.0,
+            "active_denoising_steps": 1,
+            "updates_before_capture": 0,
+            "vae": "joint video encoding; temporal downsampling disabled, causal convolution retained",
+            "latent_distribution": "sample",
+            "prompt": "",
+            "negative_prompt": "",
+            "tail_policy": "repeat last RGB frame before VAE; trim descriptors after capture",
+            "sampling": "uniform valid observations, preserving sampled-frame order",
+            "capture": "conditional full block output and per-head Q/K after normalization and RoPE"
+          },
+          "noise": {
+            "requested_timestep": 300,
+            "actual_timestep": 299,
+            "sigma": 0.299923837184906,
+            "schedule_index": 921,
+            "shift": 5.0,
+            "schedule": "SinglePointUniPCScheduler",
+            "timestep_kind": "legacy_requested_timestep",
+            "source_schedule": "VEGA FlowUniPC 1000-step integer lookup",
+            "source_num_inference_steps": 1000,
+            "num_inference_steps": 1,
+            "capture_step": 0,
+            "noise_mode": "legacy",
+            "active_denoising_steps": 1,
+            "updates_before_capture": 0
+          },
+          "chunks": [
+            {
+              "index": 0,
+              "start": 0,
+              "stop": 25,
+              "input_frames": 25,
+              "padding_frames": 0,
+              "frame_ids": [
+                0,
+                106,
+                222,
+                328,
+                434,
+                540,
+                646,
+                753,
+                859,
+                965,
+                1071,
+                1201,
+                1307,
+                1414,
+                1520,
+                1626,
+                1732,
+                1838,
+                1944,
+                2051,
+                2157,
+                2264,
+                2370,
+                2476,
+                2582
+              ],
+              "input_frame_ids": [
+                0,
+                106,
+                222,
+                328,
+                434,
+                540,
+                646,
+                753,
+                859,
+                965,
+                1071,
+                1201,
+                1307,
+                1414,
+                1520,
+                1626,
+                1732,
+                1838,
+                1944,
+                2051,
+                2157,
+                2264,
+                2370,
+                2476,
+                2582
+              ],
+              "seed": 42
+            },
+            {
+              "index": 1,
+              "start": 25,
+              "stop": 32,
+              "input_frames": 25,
+              "padding_frames": 18,
+              "frame_ids": [
+                2689,
+                2828,
+                2934,
+                3040,
+                3146,
+                3252,
+                3359
+              ],
+              "input_frame_ids": [
+                2689,
+                2828,
+                2934,
+                3040,
+                3146,
+                3252,
+                3359,
+                3359,
+                3359,
+                3359,
+                3359,
+                3359,
+                3359,
+                3359,
+                3359,
+                3359,
+                3359,
+                3359,
+                3359,
+                3359,
+                3359,
+                3359,
+                3359,
+                3359,
+                3359
+              ],
+              "seed": 42
+            }
+          ],
+          "dtype": "bf16",
+          "device": "cuda:4",
+          "blocks": [
+            14,
+            15
+          ],
+          "heads": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "grid": [
+            14,
+            14
+          ]
+        },
+        "feature_key": "7669a3d16697996a",
+        "noise": {
+          "requested_timestep": 300,
+          "actual_timestep": 299,
+          "sigma": 0.299923837184906,
+          "schedule_index": 921,
+          "shift": 5.0,
+          "schedule": "SinglePointUniPCScheduler",
+          "timestep_kind": "legacy_requested_timestep",
+          "source_schedule": "VEGA FlowUniPC 1000-step integer lookup",
+          "source_num_inference_steps": 1000,
+          "num_inference_steps": 1,
+          "capture_step": 0,
+          "noise_mode": "legacy",
+          "active_denoising_steps": 1,
+          "updates_before_capture": 0
+        },
+        "heads": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "audits": [
+          {
+            "feature_key": "7669a3d16697996a",
+            "chunk": {
+              "index": 0,
+              "start": 0,
+              "stop": 25,
+              "input_frames": 25,
+              "padding_frames": 0,
+              "frame_ids": [
+                0,
+                106,
+                222,
+                328,
+                434,
+                540,
+                646,
+                753,
+                859,
+                965,
+                1071,
+                1201,
+                1307,
+                1414,
+                1520,
+                1626,
+                1732,
+                1838,
+                1944,
+                2051,
+                2157,
+                2264,
+                2370,
+                2476,
+                2582
+              ],
+              "input_frame_ids": [
+                0,
+                106,
+                222,
+                328,
+                434,
+                540,
+                646,
+                753,
+                859,
+                965,
+                1071,
+                1201,
+                1307,
+                1414,
+                1520,
+                1626,
+                1732,
+                1838,
+                1944,
+                2051,
+                2157,
+                2264,
+                2370,
+                2476,
+                2582
+              ],
+              "seed": 42
+            },
+            "transformer_forwards": [
+              {
+                "shape": [
+                  1,
+                  16,
+                  25,
+                  60,
+                  104
+                ],
+                "timestep": 299.0,
+                "sigma": 0.299923837184906,
+                "sigma_in_latent_dtype": 0.30078125,
+                "updates_before_forward": 0
+              },
+              {
+                "shape": [
+                  1,
+                  16,
+                  25,
+                  60,
+                  104
+                ],
+                "timestep": 299.0,
+                "sigma": 0.299923837184906,
+                "sigma_in_latent_dtype": 0.30078125,
+                "updates_before_forward": 0
+              }
+            ],
+            "valid_frames": 25
+          },
+          {
+            "feature_key": "7669a3d16697996a",
+            "chunk": {
+              "index": 1,
+              "start": 25,
+              "stop": 32,
+              "input_frames": 25,
+              "padding_frames": 18,
+              "frame_ids": [
+                2689,
+                2828,
+                2934,
+                3040,
+                3146,
+                3252,
+                3359
+              ],
+              "input_frame_ids": [
+                2689,
+                2828,
+                2934,
+                3040,
+                3146,
+                3252,
+                3359,
+                3359,
+                3359,
+                3359,
+                3359,
+                3359,
+                3359,
+                3359,
+                3359,
+                3359,
+                3359,
+                3359,
+                3359,
+                3359,
+                3359,
+                3359,
+                3359,
+                3359,
+                3359
+              ],
+              "seed": 42
+            },
+            "transformer_forwards": [
+              {
+                "shape": [
+                  1,
+                  16,
+                  25,
+                  60,
+                  104
+                ],
+                "timestep": 299.0,
+                "sigma": 0.299923837184906,
+                "sigma_in_latent_dtype": 0.30078125,
+                "updates_before_forward": 0
+              },
+              {
+                "shape": [
+                  1,
+                  16,
+                  25,
+                  60,
+                  104
+                ],
+                "timestep": 299.0,
+                "sigma": 0.299923837184906,
+                "sigma_in_latent_dtype": 0.30078125,
+                "updates_before_forward": 0
+              }
+            ],
+            "valid_frames": 7
+          }
+        ],
+        "versions": {
+          "torch": "2.11.0+cu128",
+          "diffusers": "0.34.0"
+        }
+      },
+      "geometry_key": "b132d8302a1ed0d0",
+      "frame_ids": [
+        0,
+        106,
+        222,
+        328,
+        434,
+        540,
+        646,
+        753,
+        859,
+        965,
+        1071,
+        1201,
+        1307,
+        1414,
+        1520,
+        1626,
+        1732,
+        1838,
+        1944,
+        2051,
+        2157,
+        2264,
+        2370,
+        2476,
+        2582,
+        2689,
+        2828,
+        2934,
+        3040,
+        3146,
+        3252,
+        3359
+      ],
+      "shape_thwc": [
+        32,
+        14,
+        14,
+        1536
+      ],
+      "files": [
+        {
+          "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/cache/scannet/video_features/7669a3d16697996a/block_15.npz",
+          "bytes": 94287168,
+          "sha256": "6417d8255bcd2cb06c2f4695d0114d5e59cb3220ca2c1743257b8c7e51926a75"
+        },
+        {
+          "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/cache/scannet/geometry/b132d8302a1ed0d0/geometry.npz",
+          "bytes": 79260,
+          "sha256": "95b987f4d3fb69e0fa96b20461ced9180e151dd98011cf99f58a646ae38dbe61"
+        },
+        {
+          "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/eval/scannet_video/f1d218e9976cd0b9/pairs/scene0711_00_k300_b15.json",
+          "bytes": 21560,
+          "sha256": "782a63b01b3f04e81260f19eff13bab354ba168a787a22ebd5c58d85eeade0ca"
+        }
+      ]
+    }
+  ],
+  "code": {
+    "channel_refit.py": "221517ef6b2ee8d08c317a3326a70ae9e0d78dbf5b2417d3221a62a710f29a9a",
+    "channel_scan.py": "f60f7ed19da90053ebf601eede46d2c8cce115beb273ae0f407f77eec8f4c638",
+    "channel_selection.py": "355c204ea71795b0cb59ab855ee14b07c3823aaaf2c144fd2696d8325aa6dd0d",
+    "channel_report.py": "327ee637d8d6092ea0e653b3c4ab86893ba39ea216b76a2a1413e38588df07d9",
+    "geometry.py": "903bab2a3b7714c9ba1ec948c8edbe3b815df656878b49e6995ba1b2461105f9",
+    "metrics.py": "ef5d8e35fea4671e57c0adc827f879b434516d1a16ba40fb15d09326253beb0b",
+    "report.py": "74b31edce4dac19e5e673c1df25331807fd1b3be91ca1a7581c2df2e76a975b0",
+    "scan.py": "c46f843b2c62182d5cb267b4f5930ee2e91a15e4126bc32abff994b2f8f02153"
+  },
+  "versions": {
+    "numpy": "2.5.1",
+    "torch": "2.11.0+cu128"
+  }
+}
