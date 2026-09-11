@@ -39,6 +39,9 @@ def file_identity(path):
 def load_cached_scenes(args):
     original = read_json(args.baseline_run / "config.json")
     sampled = read_json(args.baseline_run / "sampled_frames.json")
+    if original.get("schema") == "heft.scannet_video":
+        if read_json(args.baseline_run / "status.json").get("status") != "complete":
+            raise ValueError("Video baseline must be complete before channel selection")
     if args.block not in original["blocks"] or args.timestep not in original["timesteps"]:
         raise ValueError("Requested block/timestep is absent from the baseline run")
     scenes, provenance = {}, []
@@ -46,16 +49,30 @@ def load_cached_scenes(args):
         name = info["scene"]
         if name in scenes:
             raise ValueError(f"Repeated scene: {name}")
-        identity = {
-            "geometry": info["geometry_cache"], "model": original["model_identity"],
-            "code": {"extract.py": original["code"]["extract.py"]},
-            "dtype": original["dtype"], "device": original["device"],
-        }
-        key = digest({
-            **identity, "seed": original["seed"], "k": args.timestep,
-            "shift": original["shift"], "batch": original["batch_size"],
-        })
-        feature_dir = args.cache_root / "features" / key
+        if original.get("schema") == "heft.scannet_video":
+            identity = info["video_feature_identity"]
+            key = digest(identity)
+            expected = {
+                "geometry": info["geometry_cache"], "model": original["model_identity"],
+                "code": original["code"], "runtime_code": original["runtime_code"],
+                "protocol": original["video_protocol"], "noise": original["requested_noise"][0],
+                "chunks": info["video_chunks"], "dtype": original["dtype"], "device": original["device"],
+                "blocks": original["blocks"], "heads": original["heads"], "grid": original["grid"],
+            }
+            if identity != expected or key != info["video_feature_key"]:
+                raise ValueError(f"Video provenance mismatch for {name}")
+            feature_dir = args.cache_root / "video_features" / key
+        else:
+            identity = {
+                "geometry": info["geometry_cache"], "model": original["model_identity"],
+                "code": {"extract.py": original["code"]["extract.py"]},
+                "dtype": original["dtype"], "device": original["device"],
+            }
+            key = digest({
+                **identity, "seed": original["seed"], "k": args.timestep,
+                "shift": original["shift"], "batch": original["batch_size"],
+            })
+            feature_dir = args.cache_root / "features" / key
         metadata = read_json(feature_dir / "metadata.json")
         expected_noise = next(
             item for item in original["requested_noise"]

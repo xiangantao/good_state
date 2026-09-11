@@ -31,7 +31,7 @@
 - **RGB-D 标定**：读取 .sens 深度内参与相机到世界位姿；读取 .txt 的 colorToDepthExtrinsics 并求逆，投影深度到彩色相机，再应用与RGB一致的resize/crop；以最近表面z-buffer处理投影冲突。位姿采用深度相机到世界的ScanNet约定。
 - **Axis alignment**：存在时应用；测试场景未提供时使用单位变换并记录。整个场景共同的刚性坐标变换不改变点间距离，但体素边界可随轴方向变化，不能将此设置与其他对齐方式的分数混用。
 - **无效深度**：排除零值与非有限值，不填补深度空洞。坐标池化仅以有效投影像素加权；有效像素覆盖率默认至少0.1。覆盖率是输出图像像素中有真实深度投影的比例，会受输入分辨率影响，所有层必须固定相同预处理和阈值。物体边界内多个有效表面的平均点仍可能不位于真实表面，14×14/10cm指标只是近似几何探针。
-- **HEFT VAE设计**：保留本地 Diffusers 有意禁用时间卷积的实现，用于独立帧表征。加载原始checkpoint时出现时间卷积权重未使用的提示是该设计的预期结果；本流程不修改共享Diffusers代码。
+- **HEFT VAE设计**：保留本地 Diffusers 禁用时间下采样的实现；编码器中的因果时间卷积仍然存在。当前单帧扫描通过每次只编码一张图像，避免跨帧 VAE 上下文。加载原始 checkpoint 时，未使用的时间重采样权重是该实现的预期结果；本流程不修改共享 Diffusers 代码。
 - **Wan**：每张RGB独立进行单帧VAE编码，取latent mode并做checkpoint定义的mean/std归一化，冻结模型。空文本使用本地T5编码并补零到512。VAE使用float32，Transformer默认bf16；与VEGA原始Wan实现并非逐位复现。
 - **噪声**：独立实现并用本地VEGA调度器测试对照其1000步、shift=5的整数timestep最近查找，同时记录实际sigma。k=300不是HEFT 50步调度的第300步。端点也保留参考调度器的实际选择（例如请求0未必意味着严格零噪声）。按seed、场景、原始帧编号生成CPU噪声，同一帧不因batch_size改变噪声；多层共享一次前向。
 - **特征**：读取完整DiT block输出，float32池化到14×14。不是Q/K或单head；这些是后续扩展。图像默认480×832，与论文部分实验的720×1280不同，报告应保留此区别。
@@ -105,3 +105,60 @@ export OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2
 结果保存于 `eval/scannet_channels/<hash>`，报告与曲线保存于 `heft/reports/scannet_channels/<hash>`。绘图优先使用 matplotlib，未安装时使用仓库现有 Pillow 依赖。`folds/<留出场景>/masks.json` 保存原始通道编号，`pca.npz` 保存训练均值和投影矩阵，`split.json` 记录拟合场景；消融排序与组合评分另行保存，可断点重跑。
 
 这评估的是筛选流程在新场景上的表现，不等同于已经验证一份用全部五场景拟合的固定通道列表。按汇总结果挑选最佳维度后，还需要额外场景确认。剪枝减少下游描述子的存储和匹配维度，不减少原始 Wan block 前向计算。
+
+## 与点跟踪、OVIS 对齐的多帧扫描
+
+`video_scan.py` 使用与前面两个任务相同的本地 `WanPipeline` 和 `WAN_2_1` 配置：480×832、bf16、50 步调度的索引 49、guidance scale 5、空文本，以及视频 VAE 的 latent sampling。实际 timestep 和 sigma 从 checkpoint 调度器读取，不能将索引 49 与旧实验的 VEGA k=300 混为一谈。
+
+```bash
+# 在仓库根目录，先设置上节中的 PYTHONPATH 和离线环境变量。
+.venv/bin/python -m scripts.scannet.video_scan --geometry-only
+.venv/bin/python -m scripts.scannet.video_scan --device cuda:4 --no-previews
+
+# 单场景验证，默认每景 32 张采样帧、25 帧视频片段。
+.venv/bin/python -m scripts.scannet.video_scan \
+  --device cuda:4 --scenes scene0707_00 --blocks 15 --no-previews
+
+# 使用相同 HEFT 调度及 VAE sampling 的单帧对照，另存为独立实验。
+.venv/bin/python -m scripts.scannet.video_scan --device cuda:4 --chunk-size 1 --no-previews
+
+.venv/bin/python -m pytest -p no:cacheprovider scripts/scannet/test_video.py -q
+```
+
+多帧输入为 `[1,C,25,H,W]`，不是将 25 张独立图像放在 batch 维。复用 HEFT 的分块和输入预处理；每个场景独立分块，尾段重复最后一张 RGB 到 25 帧。VAE 在整个片段内保留因果卷积上下文，Transformer 在全部时空 token 上联合注意力。尾段补齐帧会参与上下文，但不进入评分。默认扫描 B14/B15 的完整 block 输出及全部 12 个头的 Q/K，支持 `--blocks`、`--heads` 和 `--modes` 选择。
+
+模型前向只捕获条件分支，hidden 来自完整 block 输出，Q/K 来自原有 HEFT 捕获接口。空间池化逐帧进行，输出 hidden `[采样帧数,1536,14,14]`、Q/K `[采样帧数,所选头数,128,14,14]`；时间顺序与原始帧编号一一对应。每个片段记录实际 Transformer 输入形状、前向次数及 timestep。当前 VAE 编码器按首帧加四帧组处理，因此 `--chunk-size` 要满足 `4n+1`，默认 25。
+
+首轮继续使用各场景原来的 32 张均匀采样帧，采样间隔和时间戳保存在 `sampled_frames.json`。这对齐了视频编码方式，但没有把 ScanNet 的稀疏采样改成原始连续帧，也没有统一不同任务的下游指标。三维几何、14×14 网格、负例、并列处理和场景等权聚合与旧实验一致。
+
+结果位于 `eval/scannet_video/<hash>`，报告位于 `heft/reports/scannet_video/<hash>`，特征使用独立的 `cache/scannet/video_features/<hash>`。原始 `pairs/` 保留所有相邻采样帧对；报告同时提供 `all_pairs` 和 `within_chunk` 两种汇总。后者只评价两帧位于同一视频片段内的帧对。跨片段帧对不应被解释成共享上下文的匹配；和旧结果比较时必须取相同帧对。`pair_metrics.csv` 用 `scope` 区分两种口径，不能把两种 scope 的行混合再次汇总。
+
+通道筛选可以读取新的完整 hidden 缓存，先通过逐帧对基线复算再筛选：
+
+```bash
+.venv/bin/python -m scripts.scannet.channel_scan \
+  --baseline-run ../eval/scannet_video/RUN_ID --timestep 49 \
+  --device cuda:4 --baseline-only
+```
+
+将 `RUN_ID` 替换为实际视频扫描目录名。通道筛选目前采用 `all_pairs` 口径，包含分块边界，沿用原始场景留一流程。旧单帧结果选出的 384 维列表尚未验证能迁移到多帧特征。视频模式与旧 k=300 模式同时改变了 VAE 上下文、latent 采样和噪声配置，因此两者的分数差不能全部归因于 Transformer 的跨帧注意力。
+
+### 多帧使用旧实验的噪声点
+
+使用 `--noise-mode legacy` 可以保留视频编码、分块和采样方式，同时按旧 `selected_noise` 查表规则选择 timestep 和 sigma：
+
+```bash
+.venv/bin/python -m scripts.scannet.video_scan \
+  --noise-mode legacy --timesteps 300 --shift 5 \
+  --blocks 14 15 --device cuda:4 --no-previews
+
+.venv/bin/python -m scripts.scannet.channel_scan \
+  --baseline-run ../eval/scannet_video/RUN_ID --timestep 300 \
+  --dimensions 1024 768 512 384 256 128 --device cuda:4
+```
+
+上述设置精确选择实际 timestep 299、sigma `0.299923837184906`、shift 5。`--timesteps 300` 是旧调度的请求值，不是实际 timestep，也不是 pipeline 步索引。该模式将选中的噪声点交给单步 UniPC 调度器，pipeline 捕获索引为 0；旧 1000 点调度只用于确定这个噪声点，不执行其余去噪步骤。
+
+默认 HEFT 模式是 50 步调度中只执行索引 49，legacy 噪声模式是单步调度中执行索引 0。两者实际都只有一轮条件/无条件前向，hidden 和 Q/K 均在首次调度更新前捕获。实际前向的 timestep、调度 sigma、sigma 转换到 latent 精度后的值及此前更新次数均记录在分块 audit 中。加噪继续使用现有 bf16 视频 pipeline，因此调度 sigma 在运算时按 bf16 精度表示。
+
+新的噪声设置使用独立缓存与结果目录；B15 通道筛选需在对应多帧缓存上重新拟合。它与旧单帧 k=300 对齐了噪声点，但视频 VAE 上下文、latent sampling、精度和随机噪声序列仍与旧单帧不同。

@@ -108,8 +108,8 @@ class WanExtractor:
             self.context = context.to(self.dtype).detach()
         del text_encoder, tokenizer, tokens
         torch.cuda.empty_cache()
-        # Retain HEFT's intentional temporal-convolution disablement.
-        # Original checkpoint temporal weights are consequently unused.
+        # HEFT disables temporal resampling; causal convolutions remain.
+        # Original checkpoint temporal-resampling weights are unused.
         self.vae = (
             AutoencoderKLWan.from_pretrained(
                 model_path / "vae", torch_dtype=torch.float32, local_files_only=True
