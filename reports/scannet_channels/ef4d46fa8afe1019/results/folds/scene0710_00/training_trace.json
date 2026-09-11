@@ -1,0 +1,218 @@
+[
+  {
+    "method": "ablation_once",
+    "dimensions": 1024,
+    "from_dimensions": 1536,
+    "training_scores": {
+      "retrieval_voxel_hit": 0.31943392054173825,
+      "retrieval_hit_distance": 0.4574462300808185,
+      "retrieval_world_error_mean": 0.25309771170034506,
+      "matching_margin": -0.021882077487728895
+    },
+    "held_out": "scene0710_00",
+    "training_scenes": [
+      "scene0707_00",
+      "scene0708_00",
+      "scene0709_00",
+      "scene0711_00"
+    ]
+  },
+  {
+    "method": "ablation_iterative",
+    "dimensions": 1024,
+    "from_dimensions": 1536,
+    "training_scores": {
+      "retrieval_voxel_hit": 0.31943392054173825,
+      "retrieval_hit_distance": 0.4574462300808185,
+      "retrieval_world_error_mean": 0.25309771170034506,
+      "matching_margin": -0.021882077487728895
+    },
+    "held_out": "scene0710_00",
+    "training_scenes": [
+      "scene0707_00",
+      "scene0708_00",
+      "scene0709_00",
+      "scene0711_00"
+    ]
+  },
+  {
+    "method": "ablation_once",
+    "dimensions": 768,
+    "from_dimensions": 1536,
+    "training_scores": {
+      "retrieval_voxel_hit": 0.30939913967120436,
+      "retrieval_hit_distance": 0.44658703512953446,
+      "retrieval_world_error_mean": 0.2611989307635723,
+      "matching_margin": -0.023681999704234312
+    },
+    "held_out": "scene0710_00",
+    "training_scenes": [
+      "scene0707_00",
+      "scene0708_00",
+      "scene0709_00",
+      "scene0711_00"
+    ]
+  },
+  {
+    "method": "ablation_iterative",
+    "dimensions": 768,
+    "from_dimensions": 1024,
+    "training_scores": {
+      "retrieval_voxel_hit": 0.3408298811917204,
+      "retrieval_hit_distance": 0.47932882244839004,
+      "retrieval_world_error_mean": 0.24290798589233512,
+      "matching_margin": -0.023259086951487415
+    },
+    "held_out": "scene0710_00",
+    "training_scenes": [
+      "scene0707_00",
+      "scene0708_00",
+      "scene0709_00",
+      "scene0711_00"
+    ]
+  },
+  {
+    "method": "ablation_once",
+    "dimensions": 512,
+    "from_dimensions": 1536,
+    "training_scores": {
+      "retrieval_voxel_hit": 0.2953286388695433,
+      "retrieval_hit_distance": 0.4292146931781149,
+      "retrieval_world_error_mean": 0.2677937560827145,
+      "matching_margin": -0.024497672728215097
+    },
+    "held_out": "scene0710_00",
+    "training_scenes": [
+      "scene0707_00",
+      "scene0708_00",
+      "scene0709_00",
+      "scene0711_00"
+    ]
+  },
+  {
+    "method": "ablation_iterative",
+    "dimensions": 512,
+    "from_dimensions": 768,
+    "training_scores": {
+      "retrieval_voxel_hit": 0.3446126872069111,
+      "retrieval_hit_distance": 0.48152425553930733,
+      "retrieval_world_error_mean": 0.24174992898933798,
+      "matching_margin": -0.02325318485558224
+    },
+    "held_out": "scene0710_00",
+    "training_scenes": [
+      "scene0707_00",
+      "scene0708_00",
+      "scene0709_00",
+      "scene0711_00"
+    ]
+  },
+  {
+    "method": "ablation_once",
+    "dimensions": 384,
+    "from_dimensions": 1536,
+    "training_scores": {
+      "retrieval_voxel_hit": 0.28168947128993016,
+      "retrieval_hit_distance": 0.41263610577456133,
+      "retrieval_world_error_mean": 0.27661509042503035,
+      "matching_margin": -0.02782823814519547
+    },
+    "held_out": "scene0710_00",
+    "training_scenes": [
+      "scene0707_00",
+      "scene0708_00",
+      "scene0709_00",
+      "scene0711_00"
+    ]
+  },
+  {
+    "method": "ablation_iterative",
+    "dimensions": 384,
+    "from_dimensions": 512,
+    "training_scores": {
+      "retrieval_voxel_hit": 0.34852995738860854,
+      "retrieval_hit_distance": 0.4883314074317699,
+      "retrieval_world_error_mean": 0.2441921029596252,
+      "matching_margin": -0.023542219372300527
+    },
+    "held_out": "scene0710_00",
+    "training_scenes": [
+      "scene0707_00",
+      "scene0708_00",
+      "scene0709_00",
+      "scene0711_00"
+    ]
+  },
+  {
+    "method": "ablation_once",
+    "dimensions": 256,
+    "from_dimensions": 1536,
+    "training_scores": {
+      "retrieval_voxel_hit": 0.25579210916836587,
+      "retrieval_hit_distance": 0.3761089320638704,
+      "retrieval_world_error_mean": 0.29885272698971904,
+      "matching_margin": -0.03236793818339138
+    },
+    "held_out": "scene0710_00",
+    "training_scenes": [
+      "scene0707_00",
+      "scene0708_00",
+      "scene0709_00",
+      "scene0711_00"
+    ]
+  },
+  {
+    "method": "ablation_iterative",
+    "dimensions": 256,
+    "from_dimensions": 384,
+    "training_scores": {
+      "retrieval_voxel_hit": 0.3508938054430528,
+      "retrieval_hit_distance": 0.49076424130588214,
+      "retrieval_world_error_mean": 0.24565501591316158,
+      "matching_margin": -0.023306161969342737
+    },
+    "held_out": "scene0710_00",
+    "training_scenes": [
+      "scene0707_00",
+      "scene0708_00",
+      "scene0709_00",
+      "scene0711_00"
+    ]
+  },
+  {
+    "method": "ablation_once",
+    "dimensions": 128,
+    "from_dimensions": 1536,
+    "training_scores": {
+      "retrieval_voxel_hit": 0.20353554522748404,
+      "retrieval_hit_distance": 0.3066036437797271,
+      "retrieval_world_error_mean": 0.35594885618956307,
+      "matching_margin": -0.037584080238267994
+    },
+    "held_out": "scene0710_00",
+    "training_scenes": [
+      "scene0707_00",
+      "scene0708_00",
+      "scene0709_00",
+      "scene0711_00"
+    ]
+  },
+  {
+    "method": "ablation_iterative",
+    "dimensions": 128,
+    "from_dimensions": 256,
+    "training_scores": {
+      "retrieval_voxel_hit": 0.34097051226348035,
+      "retrieval_hit_distance": 0.4728458208164176,
+      "retrieval_world_error_mean": 0.25238697545219196,
+      "matching_margin": -0.021766750663984633
+    },
+    "held_out": "scene0710_00",
+    "training_scenes": [
+      "scene0707_00",
+      "scene0708_00",
+      "scene0709_00",
+      "scene0711_00"
+    ]
+  }
+]

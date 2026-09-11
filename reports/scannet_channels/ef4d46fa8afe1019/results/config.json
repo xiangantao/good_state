@@ -1,0 +1,1240 @@
+{
+  "schema_version": 1,
+  "baseline_run": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/eval/scannet/07c02b354a694662",
+  "block": 15,
+  "timestep": 300,
+  "dimensions": [
+    1024,
+    768,
+    512,
+    384,
+    256,
+    128
+  ],
+  "random_seeds": [
+    42,
+    43,
+    44,
+    45,
+    46
+  ],
+  "device": "cuda:6",
+  "channel_batch": 64,
+  "threads": 2,
+  "protocol": {
+    "data_root": "/kairos_vepfs_volc/autodrive/liwenhao/agent/2337888765/datasets/ScanNet/v2/scans_test",
+    "model": "/kairos_vepfs_volc/autodrive/liwenhao/agent/2337888765/models/Wan2.1-T2V-1.3B-Diffusers",
+    "scenes": null,
+    "frames": 32,
+    "blocks": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
+    ],
+    "timesteps": [
+      300
+    ],
+    "size": [
+      480,
+      832
+    ],
+    "grid": [
+      14,
+      14
+    ],
+    "voxel_size": 0.1,
+    "min_coverage": 0.1,
+    "negative_min_distance": 0.2,
+    "hit_distance": 0.1,
+    "shift": 5.0,
+    "seed": 42,
+    "device": "cuda:7",
+    "dtype": "bf16",
+    "batch_size": 1,
+    "save_prepool": false,
+    "schema_version": 1,
+    "scene_sources": [
+      [
+        {
+          "path": "/kairos_vepfs_volc/autodrive/liwenhao/agent/2337888765/datasets/ScanNet/v2/scans_test/scene0707_00/scene0707_00.sens",
+          "bytes": 465643634,
+          "mtime_ns": 1788758480618655224
+        },
+        {
+          "path": "/kairos_vepfs_volc/autodrive/liwenhao/agent/2337888765/datasets/ScanNet/v2/scans_test/scene0707_00/scene0707_00.txt",
+          "bytes": 510,
+          "mtime_ns": 1788758477445907998
+        }
+      ],
+      [
+        {
+          "path": "/kairos_vepfs_volc/autodrive/liwenhao/agent/2337888765/datasets/ScanNet/v2/scans_test/scene0708_00/scene0708_00.sens",
+          "bytes": 734793403,
+          "mtime_ns": 1788758481222634174
+        },
+        {
+          "path": "/kairos_vepfs_volc/autodrive/liwenhao/agent/2337888765/datasets/ScanNet/v2/scans_test/scene0708_00/scene0708_00.txt",
+          "bytes": 512,
+          "mtime_ns": 1788758477465701014
+        }
+      ],
+      [
+        {
+          "path": "/kairos_vepfs_volc/autodrive/liwenhao/agent/2337888765/datasets/ScanNet/v2/scans_test/scene0709_00/scene0709_00.sens",
+          "bytes": 551353340,
+          "mtime_ns": 1788758480952237536
+        },
+        {
+          "path": "/kairos_vepfs_volc/autodrive/liwenhao/agent/2337888765/datasets/ScanNet/v2/scans_test/scene0709_00/scene0709_00.txt",
+          "bytes": 510,
+          "mtime_ns": 1788758477492056512
+        }
+      ],
+      [
+        {
+          "path": "/kairos_vepfs_volc/autodrive/liwenhao/agent/2337888765/datasets/ScanNet/v2/scans_test/scene0710_00/scene0710_00.sens",
+          "bytes": 1024113485,
+          "mtime_ns": 1788758481734102929
+        },
+        {
+          "path": "/kairos_vepfs_volc/autodrive/liwenhao/agent/2337888765/datasets/ScanNet/v2/scans_test/scene0710_00/scene0710_00.txt",
+          "bytes": 555,
+          "mtime_ns": 1788758477496311696
+        }
+      ],
+      [
+        {
+          "path": "/kairos_vepfs_volc/autodrive/liwenhao/agent/2337888765/datasets/ScanNet/v2/scans_test/scene0711_00/scene0711_00.sens",
+          "bytes": 1774789645,
+          "mtime_ns": 1788758483121026207
+        },
+        {
+          "path": "/kairos_vepfs_volc/autodrive/liwenhao/agent/2337888765/datasets/ScanNet/v2/scans_test/scene0711_00/scene0711_00.txt",
+          "bytes": 555,
+          "mtime_ns": 1788758477488783632
+        }
+      ]
+    ],
+    "code": {
+      "dataset.py": "bfc1230e4f7bceb5d84c350cf3e4a383be554def073a23186fedc74eb4478e9f",
+      "geometry.py": "903bab2a3b7714c9ba1ec948c8edbe3b815df656878b49e6995ba1b2461105f9",
+      "extract.py": "246e42bf9e71f57fd108ca4359bc41bbcef7d495d0ca191974aa4b00686d61b4",
+      "metrics.py": "20eb0ee9ddd0dd6e608c9c1aa538c0dcd14b2ee65ec76ae8b4b7da1a8794c2df",
+      "scan.py": "c46f843b2c62182d5cb267b4f5930ee2e91a15e4126bc32abff994b2f8f02153",
+      "report.py": "107060a5484aee7e5ec1e647f4f6f5f06fe5c4c94985d20b7cedbe3820a4c7c5"
+    },
+    "model_identity": {
+      "directory": "/kairos_vepfs_volc/autodrive/liwenhao/agent/2337888765/models/Wan2.1-T2V-1.3B-Diffusers",
+      "files": [
+        [
+          "configuration.json",
+          81,
+          1776097115000000000
+        ],
+        [
+          "model_index.json",
+          400,
+          1776097569000000000
+        ],
+        [
+          "scheduler/scheduler_config.json",
+          751,
+          1776097570000000000
+        ],
+        [
+          "text_encoder/config.json",
+          854,
+          1776097114000000000
+        ],
+        [
+          "text_encoder/model-00001-of-00005.safetensors",
+          4972389712,
+          1776097744000000000
+        ],
+        [
+          "text_encoder/model-00002-of-00005.safetensors",
+          4899225672,
+          1776097752000000000
+        ],
+        [
+          "text_encoder/model-00003-of-00005.safetensors",
+          4966309504,
+          1776097770000000000
+        ],
+        [
+          "text_encoder/model-00004-of-00005.safetensors",
+          4999880704,
+          1776097745000000000
+        ],
+        [
+          "text_encoder/model-00005-of-00005.safetensors",
+          2885866152,
+          1776097730000000000
+        ],
+        [
+          "text_encoder/model.safetensors.index.json",
+          22476,
+          1776097569000000000
+        ],
+        [
+          "tokenizer/special_tokens_map.json",
+          7079,
+          1776097570000000000
+        ],
+        [
+          "tokenizer/spiece.model",
+          4548313,
+          1776097571000000000
+        ],
+        [
+          "tokenizer/tokenizer.json",
+          16837459,
+          1776097575000000000
+        ],
+        [
+          "tokenizer/tokenizer_config.json",
+          61758,
+          1776097577000000000
+        ],
+        [
+          "transformer/config.json",
+          465,
+          1776097113000000000
+        ],
+        [
+          "transformer/diffusion_pytorch_model-00001-of-00002.safetensors",
+          4998781576,
+          1776097789000000000
+        ],
+        [
+          "transformer/diffusion_pytorch_model-00002-of-00002.safetensors",
+          677289072,
+          1776097578000000000
+        ],
+        [
+          "transformer/diffusion_pytorch_model.safetensors.index.json",
+          73296,
+          1776097143000000000
+        ],
+        [
+          "vae/config.json",
+          724,
+          1776097114000000000
+        ],
+        [
+          "vae/diffusion_pytorch_model.safetensors",
+          507591892,
+          1776097568000000000
+        ]
+      ]
+    },
+    "comparison": "adjacent sampled frames",
+    "aggregation": "pair macro -> scene macro (not paper all-view-pair score)",
+    "requested_noise": [
+      {
+        "requested_timestep": 300,
+        "actual_timestep": 299,
+        "sigma": 0.299923837184906,
+        "schedule_index": 921,
+        "shift": 5.0,
+        "schedule": "VEGA FlowUniPC 1000-step integer lookup"
+      }
+    ]
+  },
+  "provenance": [
+    {
+      "scene": "scene0707_00",
+      "feature_key": "9b2300edaed91764",
+      "metadata": {
+        "identity": {
+          "geometry": "332f4a06c14941e0",
+          "model": {
+            "directory": "/kairos_vepfs_volc/autodrive/liwenhao/agent/2337888765/models/Wan2.1-T2V-1.3B-Diffusers",
+            "files": [
+              [
+                "configuration.json",
+                81,
+                1776097115000000000
+              ],
+              [
+                "model_index.json",
+                400,
+                1776097569000000000
+              ],
+              [
+                "scheduler/scheduler_config.json",
+                751,
+                1776097570000000000
+              ],
+              [
+                "text_encoder/config.json",
+                854,
+                1776097114000000000
+              ],
+              [
+                "text_encoder/model-00001-of-00005.safetensors",
+                4972389712,
+                1776097744000000000
+              ],
+              [
+                "text_encoder/model-00002-of-00005.safetensors",
+                4899225672,
+                1776097752000000000
+              ],
+              [
+                "text_encoder/model-00003-of-00005.safetensors",
+                4966309504,
+                1776097770000000000
+              ],
+              [
+                "text_encoder/model-00004-of-00005.safetensors",
+                4999880704,
+                1776097745000000000
+              ],
+              [
+                "text_encoder/model-00005-of-00005.safetensors",
+                2885866152,
+                1776097730000000000
+              ],
+              [
+                "text_encoder/model.safetensors.index.json",
+                22476,
+                1776097569000000000
+              ],
+              [
+                "tokenizer/special_tokens_map.json",
+                7079,
+                1776097570000000000
+              ],
+              [
+                "tokenizer/spiece.model",
+                4548313,
+                1776097571000000000
+              ],
+              [
+                "tokenizer/tokenizer.json",
+                16837459,
+                1776097575000000000
+              ],
+              [
+                "tokenizer/tokenizer_config.json",
+                61758,
+                1776097577000000000
+              ],
+              [
+                "transformer/config.json",
+                465,
+                1776097113000000000
+              ],
+              [
+                "transformer/diffusion_pytorch_model-00001-of-00002.safetensors",
+                4998781576,
+                1776097789000000000
+              ],
+              [
+                "transformer/diffusion_pytorch_model-00002-of-00002.safetensors",
+                677289072,
+                1776097578000000000
+              ],
+              [
+                "transformer/diffusion_pytorch_model.safetensors.index.json",
+                73296,
+                1776097143000000000
+              ],
+              [
+                "vae/config.json",
+                724,
+                1776097114000000000
+              ],
+              [
+                "vae/diffusion_pytorch_model.safetensors",
+                507591892,
+                1776097568000000000
+              ]
+            ]
+          },
+          "code": {
+            "extract.py": "246e42bf9e71f57fd108ca4359bc41bbcef7d495d0ca191974aa4b00686d61b4"
+          },
+          "dtype": "bf16",
+          "device": "cuda:7"
+        },
+        "noise": {
+          "requested_timestep": 300,
+          "actual_timestep": 299,
+          "sigma": 0.299923837184906,
+          "schedule_index": 921,
+          "shift": 5.0,
+          "schedule": "VEGA FlowUniPC 1000-step integer lookup"
+        },
+        "feature_key": "9b2300edaed91764",
+        "versions": {
+          "torch": "2.11.0+cu128",
+          "diffusers": "0.34.0"
+        }
+      },
+      "geometry_key": "332f4a06c14941e0",
+      "frame_ids": [
+        0,
+        25,
+        50,
+        75,
+        101,
+        126,
+        151,
+        176,
+        202,
+        227,
+        252,
+        277,
+        303,
+        328,
+        353,
+        378,
+        404,
+        429,
+        454,
+        479,
+        505,
+        530,
+        555,
+        580,
+        606,
+        631,
+        656,
+        681,
+        707,
+        732,
+        757,
+        783
+      ],
+      "shape_thwc": [
+        32,
+        14,
+        14,
+        1536
+      ],
+      "files": [
+        {
+          "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/cache/scannet/features/9b2300edaed91764/block_15.npz",
+          "bytes": 31666720,
+          "sha256": "18ce69f1833460c994c4df59765a09649356802c5f0cdfd17273f645db8a4fb3"
+        },
+        {
+          "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/cache/scannet/geometry/332f4a06c14941e0/geometry.npz",
+          "bytes": 81777,
+          "sha256": "88c4cc79cc551fb7cc49daf4797d26b8a1c6a00d931221dba0d1f63c34e0932d"
+        },
+        {
+          "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/eval/scannet/07c02b354a694662/pairs/scene0707_00_k300_b15.json",
+          "bytes": 21763,
+          "sha256": "0646883fc6c634b22696ef4b53186aeed2251a872314ad4aee9d3d5e022515a9"
+        }
+      ]
+    },
+    {
+      "scene": "scene0708_00",
+      "feature_key": "56f502c3d9415263",
+      "metadata": {
+        "identity": {
+          "geometry": "afdaa04065f510e0",
+          "model": {
+            "directory": "/kairos_vepfs_volc/autodrive/liwenhao/agent/2337888765/models/Wan2.1-T2V-1.3B-Diffusers",
+            "files": [
+              [
+                "configuration.json",
+                81,
+                1776097115000000000
+              ],
+              [
+                "model_index.json",
+                400,
+                1776097569000000000
+              ],
+              [
+                "scheduler/scheduler_config.json",
+                751,
+                1776097570000000000
+              ],
+              [
+                "text_encoder/config.json",
+                854,
+                1776097114000000000
+              ],
+              [
+                "text_encoder/model-00001-of-00005.safetensors",
+                4972389712,
+                1776097744000000000
+              ],
+              [
+                "text_encoder/model-00002-of-00005.safetensors",
+                4899225672,
+                1776097752000000000
+              ],
+              [
+                "text_encoder/model-00003-of-00005.safetensors",
+                4966309504,
+                1776097770000000000
+              ],
+              [
+                "text_encoder/model-00004-of-00005.safetensors",
+                4999880704,
+                1776097745000000000
+              ],
+              [
+                "text_encoder/model-00005-of-00005.safetensors",
+                2885866152,
+                1776097730000000000
+              ],
+              [
+                "text_encoder/model.safetensors.index.json",
+                22476,
+                1776097569000000000
+              ],
+              [
+                "tokenizer/special_tokens_map.json",
+                7079,
+                1776097570000000000
+              ],
+              [
+                "tokenizer/spiece.model",
+                4548313,
+                1776097571000000000
+              ],
+              [
+                "tokenizer/tokenizer.json",
+                16837459,
+                1776097575000000000
+              ],
+              [
+                "tokenizer/tokenizer_config.json",
+                61758,
+                1776097577000000000
+              ],
+              [
+                "transformer/config.json",
+                465,
+                1776097113000000000
+              ],
+              [
+                "transformer/diffusion_pytorch_model-00001-of-00002.safetensors",
+                4998781576,
+                1776097789000000000
+              ],
+              [
+                "transformer/diffusion_pytorch_model-00002-of-00002.safetensors",
+                677289072,
+                1776097578000000000
+              ],
+              [
+                "transformer/diffusion_pytorch_model.safetensors.index.json",
+                73296,
+                1776097143000000000
+              ],
+              [
+                "vae/config.json",
+                724,
+                1776097114000000000
+              ],
+              [
+                "vae/diffusion_pytorch_model.safetensors",
+                507591892,
+                1776097568000000000
+              ]
+            ]
+          },
+          "code": {
+            "extract.py": "246e42bf9e71f57fd108ca4359bc41bbcef7d495d0ca191974aa4b00686d61b4"
+          },
+          "dtype": "bf16",
+          "device": "cuda:7"
+        },
+        "noise": {
+          "requested_timestep": 300,
+          "actual_timestep": 299,
+          "sigma": 0.299923837184906,
+          "schedule_index": 921,
+          "shift": 5.0,
+          "schedule": "VEGA FlowUniPC 1000-step integer lookup"
+        },
+        "feature_key": "56f502c3d9415263",
+        "versions": {
+          "torch": "2.11.0+cu128",
+          "diffusers": "0.34.0"
+        }
+      },
+      "geometry_key": "afdaa04065f510e0",
+      "frame_ids": [
+        0,
+        38,
+        76,
+        114,
+        152,
+        190,
+        228,
+        266,
+        304,
+        343,
+        381,
+        419,
+        457,
+        495,
+        533,
+        571,
+        609,
+        647,
+        685,
+        723,
+        761,
+        799,
+        837,
+        875,
+        913,
+        951,
+        989,
+        1028,
+        1066,
+        1104,
+        1142,
+        1181
+      ],
+      "shape_thwc": [
+        32,
+        14,
+        14,
+        1536
+      ],
+      "files": [
+        {
+          "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/cache/scannet/features/56f502c3d9415263/block_15.npz",
+          "bytes": 31669488,
+          "sha256": "59f8e77c768d96bbefe812bca6b5c3c7b0b1442a06bb4d54f89996f075c25baf"
+        },
+        {
+          "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/cache/scannet/geometry/afdaa04065f510e0/geometry.npz",
+          "bytes": 82044,
+          "sha256": "128a73e2b93c314fd7dcfb807d63983d05f72f18905e09bd9f30ec903d917cbc"
+        },
+        {
+          "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/eval/scannet/07c02b354a694662/pairs/scene0708_00_k300_b15.json",
+          "bytes": 21635,
+          "sha256": "dff562b93d75dcd92c189cf3bef036d23bdc799f017f1a82483fd5a3f628b1d2"
+        }
+      ]
+    },
+    {
+      "scene": "scene0709_00",
+      "feature_key": "0645821249aee7ca",
+      "metadata": {
+        "identity": {
+          "geometry": "df6e74e0ba74c392",
+          "model": {
+            "directory": "/kairos_vepfs_volc/autodrive/liwenhao/agent/2337888765/models/Wan2.1-T2V-1.3B-Diffusers",
+            "files": [
+              [
+                "configuration.json",
+                81,
+                1776097115000000000
+              ],
+              [
+                "model_index.json",
+                400,
+                1776097569000000000
+              ],
+              [
+                "scheduler/scheduler_config.json",
+                751,
+                1776097570000000000
+              ],
+              [
+                "text_encoder/config.json",
+                854,
+                1776097114000000000
+              ],
+              [
+                "text_encoder/model-00001-of-00005.safetensors",
+                4972389712,
+                1776097744000000000
+              ],
+              [
+                "text_encoder/model-00002-of-00005.safetensors",
+                4899225672,
+                1776097752000000000
+              ],
+              [
+                "text_encoder/model-00003-of-00005.safetensors",
+                4966309504,
+                1776097770000000000
+              ],
+              [
+                "text_encoder/model-00004-of-00005.safetensors",
+                4999880704,
+                1776097745000000000
+              ],
+              [
+                "text_encoder/model-00005-of-00005.safetensors",
+                2885866152,
+                1776097730000000000
+              ],
+              [
+                "text_encoder/model.safetensors.index.json",
+                22476,
+                1776097569000000000
+              ],
+              [
+                "tokenizer/special_tokens_map.json",
+                7079,
+                1776097570000000000
+              ],
+              [
+                "tokenizer/spiece.model",
+                4548313,
+                1776097571000000000
+              ],
+              [
+                "tokenizer/tokenizer.json",
+                16837459,
+                1776097575000000000
+              ],
+              [
+                "tokenizer/tokenizer_config.json",
+                61758,
+                1776097577000000000
+              ],
+              [
+                "transformer/config.json",
+                465,
+                1776097113000000000
+              ],
+              [
+                "transformer/diffusion_pytorch_model-00001-of-00002.safetensors",
+                4998781576,
+                1776097789000000000
+              ],
+              [
+                "transformer/diffusion_pytorch_model-00002-of-00002.safetensors",
+                677289072,
+                1776097578000000000
+              ],
+              [
+                "transformer/diffusion_pytorch_model.safetensors.index.json",
+                73296,
+                1776097143000000000
+              ],
+              [
+                "vae/config.json",
+                724,
+                1776097114000000000
+              ],
+              [
+                "vae/diffusion_pytorch_model.safetensors",
+                507591892,
+                1776097568000000000
+              ]
+            ]
+          },
+          "code": {
+            "extract.py": "246e42bf9e71f57fd108ca4359bc41bbcef7d495d0ca191974aa4b00686d61b4"
+          },
+          "dtype": "bf16",
+          "device": "cuda:7"
+        },
+        "noise": {
+          "requested_timestep": 300,
+          "actual_timestep": 299,
+          "sigma": 0.299923837184906,
+          "schedule_index": 921,
+          "shift": 5.0,
+          "schedule": "VEGA FlowUniPC 1000-step integer lookup"
+        },
+        "feature_key": "0645821249aee7ca",
+        "versions": {
+          "torch": "2.11.0+cu128",
+          "diffusers": "0.34.0"
+        }
+      },
+      "geometry_key": "df6e74e0ba74c392",
+      "frame_ids": [
+        0,
+        30,
+        60,
+        90,
+        120,
+        150,
+        180,
+        211,
+        241,
+        271,
+        301,
+        331,
+        361,
+        392,
+        422,
+        452,
+        482,
+        512,
+        542,
+        573,
+        603,
+        633,
+        663,
+        693,
+        723,
+        754,
+        784,
+        814,
+        844,
+        874,
+        904,
+        935
+      ],
+      "shape_thwc": [
+        32,
+        14,
+        14,
+        1536
+      ],
+      "files": [
+        {
+          "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/cache/scannet/features/0645821249aee7ca/block_15.npz",
+          "bytes": 31667131,
+          "sha256": "1deab470141ef0c9b1874f314c80d721b6be664d424e88437ab39e9e4ce944b1"
+        },
+        {
+          "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/cache/scannet/geometry/df6e74e0ba74c392/geometry.npz",
+          "bytes": 82299,
+          "sha256": "66a4b8dc9267c1e801b765671f3d631ca4f51f94b9515e8dc84e8bceeb05d5d1"
+        },
+        {
+          "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/eval/scannet/07c02b354a694662/pairs/scene0709_00_k300_b15.json",
+          "bytes": 21762,
+          "sha256": "192714c6a9d22ccdfc57af0a63564a4029d8961f89e4f05685e2a2f68681329d"
+        }
+      ]
+    },
+    {
+      "scene": "scene0710_00",
+      "feature_key": "ba9c382113457f6b",
+      "metadata": {
+        "identity": {
+          "geometry": "585945038ab811a9",
+          "model": {
+            "directory": "/kairos_vepfs_volc/autodrive/liwenhao/agent/2337888765/models/Wan2.1-T2V-1.3B-Diffusers",
+            "files": [
+              [
+                "configuration.json",
+                81,
+                1776097115000000000
+              ],
+              [
+                "model_index.json",
+                400,
+                1776097569000000000
+              ],
+              [
+                "scheduler/scheduler_config.json",
+                751,
+                1776097570000000000
+              ],
+              [
+                "text_encoder/config.json",
+                854,
+                1776097114000000000
+              ],
+              [
+                "text_encoder/model-00001-of-00005.safetensors",
+                4972389712,
+                1776097744000000000
+              ],
+              [
+                "text_encoder/model-00002-of-00005.safetensors",
+                4899225672,
+                1776097752000000000
+              ],
+              [
+                "text_encoder/model-00003-of-00005.safetensors",
+                4966309504,
+                1776097770000000000
+              ],
+              [
+                "text_encoder/model-00004-of-00005.safetensors",
+                4999880704,
+                1776097745000000000
+              ],
+              [
+                "text_encoder/model-00005-of-00005.safetensors",
+                2885866152,
+                1776097730000000000
+              ],
+              [
+                "text_encoder/model.safetensors.index.json",
+                22476,
+                1776097569000000000
+              ],
+              [
+                "tokenizer/special_tokens_map.json",
+                7079,
+                1776097570000000000
+              ],
+              [
+                "tokenizer/spiece.model",
+                4548313,
+                1776097571000000000
+              ],
+              [
+                "tokenizer/tokenizer.json",
+                16837459,
+                1776097575000000000
+              ],
+              [
+                "tokenizer/tokenizer_config.json",
+                61758,
+                1776097577000000000
+              ],
+              [
+                "transformer/config.json",
+                465,
+                1776097113000000000
+              ],
+              [
+                "transformer/diffusion_pytorch_model-00001-of-00002.safetensors",
+                4998781576,
+                1776097789000000000
+              ],
+              [
+                "transformer/diffusion_pytorch_model-00002-of-00002.safetensors",
+                677289072,
+                1776097578000000000
+              ],
+              [
+                "transformer/diffusion_pytorch_model.safetensors.index.json",
+                73296,
+                1776097143000000000
+              ],
+              [
+                "vae/config.json",
+                724,
+                1776097114000000000
+              ],
+              [
+                "vae/diffusion_pytorch_model.safetensors",
+                507591892,
+                1776097568000000000
+              ]
+            ]
+          },
+          "code": {
+            "extract.py": "246e42bf9e71f57fd108ca4359bc41bbcef7d495d0ca191974aa4b00686d61b4"
+          },
+          "dtype": "bf16",
+          "device": "cuda:7"
+        },
+        "noise": {
+          "requested_timestep": 300,
+          "actual_timestep": 299,
+          "sigma": 0.299923837184906,
+          "schedule_index": 921,
+          "shift": 5.0,
+          "schedule": "VEGA FlowUniPC 1000-step integer lookup"
+        },
+        "feature_key": "ba9c382113457f6b",
+        "versions": {
+          "torch": "2.11.0+cu128",
+          "diffusers": "0.34.0"
+        }
+      },
+      "geometry_key": "585945038ab811a9",
+      "frame_ids": [
+        0,
+        58,
+        116,
+        174,
+        233,
+        291,
+        349,
+        407,
+        466,
+        524,
+        582,
+        640,
+        699,
+        757,
+        815,
+        873,
+        932,
+        990,
+        1048,
+        1106,
+        1165,
+        1223,
+        1281,
+        1339,
+        1398,
+        1456,
+        1514,
+        1572,
+        1631,
+        1689,
+        1747,
+        1806
+      ],
+      "shape_thwc": [
+        32,
+        14,
+        14,
+        1536
+      ],
+      "files": [
+        {
+          "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/cache/scannet/features/ba9c382113457f6b/block_15.npz",
+          "bytes": 31687711,
+          "sha256": "9a84e99c391f2a9a52fb958a9bda18f7cdb831117ebfd097c37f2c36e8db2d35"
+        },
+        {
+          "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/cache/scannet/geometry/585945038ab811a9/geometry.npz",
+          "bytes": 80893,
+          "sha256": "425340279139f8a9bfc68f3206060091e4c3fdd0f09ca06992af4f9877f75102"
+        },
+        {
+          "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/eval/scannet/07c02b354a694662/pairs/scene0710_00_k300_b15.json",
+          "bytes": 21603,
+          "sha256": "f9c8d9d8f704c15ec1080aad65fd33915a7d28cf6b9943322a88693ed59c2a5a"
+        }
+      ]
+    },
+    {
+      "scene": "scene0711_00",
+      "feature_key": "f0521bb1512770d9",
+      "metadata": {
+        "identity": {
+          "geometry": "6ed684aa085d1685",
+          "model": {
+            "directory": "/kairos_vepfs_volc/autodrive/liwenhao/agent/2337888765/models/Wan2.1-T2V-1.3B-Diffusers",
+            "files": [
+              [
+                "configuration.json",
+                81,
+                1776097115000000000
+              ],
+              [
+                "model_index.json",
+                400,
+                1776097569000000000
+              ],
+              [
+                "scheduler/scheduler_config.json",
+                751,
+                1776097570000000000
+              ],
+              [
+                "text_encoder/config.json",
+                854,
+                1776097114000000000
+              ],
+              [
+                "text_encoder/model-00001-of-00005.safetensors",
+                4972389712,
+                1776097744000000000
+              ],
+              [
+                "text_encoder/model-00002-of-00005.safetensors",
+                4899225672,
+                1776097752000000000
+              ],
+              [
+                "text_encoder/model-00003-of-00005.safetensors",
+                4966309504,
+                1776097770000000000
+              ],
+              [
+                "text_encoder/model-00004-of-00005.safetensors",
+                4999880704,
+                1776097745000000000
+              ],
+              [
+                "text_encoder/model-00005-of-00005.safetensors",
+                2885866152,
+                1776097730000000000
+              ],
+              [
+                "text_encoder/model.safetensors.index.json",
+                22476,
+                1776097569000000000
+              ],
+              [
+                "tokenizer/special_tokens_map.json",
+                7079,
+                1776097570000000000
+              ],
+              [
+                "tokenizer/spiece.model",
+                4548313,
+                1776097571000000000
+              ],
+              [
+                "tokenizer/tokenizer.json",
+                16837459,
+                1776097575000000000
+              ],
+              [
+                "tokenizer/tokenizer_config.json",
+                61758,
+                1776097577000000000
+              ],
+              [
+                "transformer/config.json",
+                465,
+                1776097113000000000
+              ],
+              [
+                "transformer/diffusion_pytorch_model-00001-of-00002.safetensors",
+                4998781576,
+                1776097789000000000
+              ],
+              [
+                "transformer/diffusion_pytorch_model-00002-of-00002.safetensors",
+                677289072,
+                1776097578000000000
+              ],
+              [
+                "transformer/diffusion_pytorch_model.safetensors.index.json",
+                73296,
+                1776097143000000000
+              ],
+              [
+                "vae/config.json",
+                724,
+                1776097114000000000
+              ],
+              [
+                "vae/diffusion_pytorch_model.safetensors",
+                507591892,
+                1776097568000000000
+              ]
+            ]
+          },
+          "code": {
+            "extract.py": "246e42bf9e71f57fd108ca4359bc41bbcef7d495d0ca191974aa4b00686d61b4"
+          },
+          "dtype": "bf16",
+          "device": "cuda:7"
+        },
+        "noise": {
+          "requested_timestep": 300,
+          "actual_timestep": 299,
+          "sigma": 0.299923837184906,
+          "schedule_index": 921,
+          "shift": 5.0,
+          "schedule": "VEGA FlowUniPC 1000-step integer lookup"
+        },
+        "feature_key": "f0521bb1512770d9",
+        "versions": {
+          "torch": "2.11.0+cu128",
+          "diffusers": "0.34.0"
+        }
+      },
+      "geometry_key": "6ed684aa085d1685",
+      "frame_ids": [
+        0,
+        106,
+        222,
+        328,
+        434,
+        540,
+        646,
+        753,
+        859,
+        965,
+        1071,
+        1201,
+        1307,
+        1414,
+        1520,
+        1626,
+        1732,
+        1838,
+        1944,
+        2051,
+        2157,
+        2264,
+        2370,
+        2476,
+        2582,
+        2689,
+        2828,
+        2934,
+        3040,
+        3146,
+        3252,
+        3359
+      ],
+      "shape_thwc": [
+        32,
+        14,
+        14,
+        1536
+      ],
+      "files": [
+        {
+          "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/cache/scannet/features/f0521bb1512770d9/block_15.npz",
+          "bytes": 31666153,
+          "sha256": "6078c3e6322c855a890481ed274c8e29c838c9953cec695e0c4b690472bba417"
+        },
+        {
+          "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/cache/scannet/geometry/6ed684aa085d1685/geometry.npz",
+          "bytes": 79260,
+          "sha256": "95b987f4d3fb69e0fa96b20461ced9180e151dd98011cf99f58a646ae38dbe61"
+        },
+        {
+          "path": "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/eval/scannet/07c02b354a694662/pairs/scene0711_00_k300_b15.json",
+          "bytes": 20692,
+          "sha256": "0b11695a2900da5801438e3d758a51552ca71ca48cbd06b5dce3e08bbbb385d0"
+        }
+      ]
+    }
+  ],
+  "validation": "leave-one-scene-out; dimensions fixed before scoring",
+  "selection": "deletion importance: voxel hit, then matching margin, then channel index",
+  "selection_precision": "float64; final scores use unchanged float32 evaluate_pair",
+  "pca": "scene-equal valid-token covariance; centered, no whitening; training scenes only",
+  "code": {
+    "channel_selection.py": "355c204ea71795b0cb59ab855ee14b07c3823aaaf2c144fd2696d8325aa6dd0d",
+    "channel_scan.py": "904895e4ffa2f4fa5d68b9e3c92c0971fff7aa972a768c1468b2f8f69bdd764e",
+    "channel_report.py": "327ee637d8d6092ea0e653b3c4ab86893ba39ea216b76a2a1413e38588df07d9",
+    "geometry.py": "903bab2a3b7714c9ba1ec948c8edbe3b815df656878b49e6995ba1b2461105f9",
+    "metrics.py": "ef5d8e35fea4671e57c0adc827f879b434516d1a16ba40fb15d09326253beb0b",
+    "report.py": "74b31edce4dac19e5e673c1df25331807fd1b3be91ca1a7581c2df2e76a975b0",
+    "scan.py": "c46f843b2c62182d5cb267b4f5930ee2e91a15e4126bc32abff994b2f8f02153"
+  },
+  "versions": {
+    "numpy": "2.5.1",
+    "torch": "2.11.0+cu128"
+  }
+}
