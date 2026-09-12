@@ -1,0 +1,22 @@
+................................................................         [100%]
+=============================== warnings summary ===============================
+latent_video/classification/test_classification.py: 6 warnings
+latent_video/classification/test_execution.py: 6 warnings
+latent_video/test_extractor.py: 71 warnings
+  /increase_kairos_vepfs/increase/liwenhao/agent/2337888765/heft/diffusers/src/diffusers/schedulers/scheduling_unipc_multistep.py:336: DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword
+    sigmas = np.array(((1 - self.alphas_cumprod) / self.alphas_cumprod) ** 0.5)
+
+latent_video/classification/test_classification.py::test_original_attentive_head_accepts_fused_features_and_backward
+  /dev/shm/heft-ssv2-2337888765-20260911/venv/lib/python3.12/site-packages/timm/models/layers/__init__.py:48: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+    warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+
+latent_video/classification/test_classification.py::test_original_attentive_head_accepts_fused_features_and_backward
+  /increase_kairos_vepfs/increase/liwenhao/agent/2337888765/cache/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/contextlib.py:105: FutureWarning: `torch.backends.cuda.sdp_kernel()` is deprecated. In the future, this context manager will be removed. Please see `torch.nn.attention.sdpa_kernel()` for the new context manager, with updated signature.
+    self.gen = func(*args, **kwds)
+
+latent_video/classification/test_execution.py::test_train_only_retains_epochs_resumes_and_evaluates_in_separate_directory
+  /dev/shm/heft-ssv2-2337888765-20260911/venv/lib/python3.12/site-packages/torch/utils/data/dataloader.py:775: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+    super().__init__(loader)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+64 passed, 86 warnings in 35.10s

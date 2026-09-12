@@ -1,0 +1,224 @@
+{
+  "complete": true,
+  "world_size": 1,
+  "rank": 0,
+  "videos_per_rank": 32,
+  "execution": {
+    "lanes": 2,
+    "compiled_blocks": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      14
+    ],
+    "compile_fullgraph": true,
+    "compile_dynamic": false,
+    "vae_layout": "native",
+    "warmup": "serial per lane and batch size on fixed worker threads"
+  },
+  "extract_batch_size": 32,
+  "resolution": [
+    256,
+    256
+  ],
+  "comparison": {
+    "exact": true,
+    "max_abs": 0.0,
+    "relative_rms": 0.0
+  },
+  "rank_agreement": true,
+  "metrics": {
+    "samples": 96,
+    "loss": 3.9778910477956138,
+    "top1": 9.375,
+    "top5": 37.5
+  },
+  "steps": [
+    {
+      "step": 1,
+      "epoch": 0.3333333333333333,
+      "batch/samples": 32,
+      "batch/loss": 5.222672462463379,
+      "batch/top1": 0.0,
+      "batch/top5": 0.0,
+      "optim/lr": 0.000299794430213186,
+      "optim/weight_decay": 0.1,
+      "timing/iteration_seconds": 16.517194348038174,
+      "timing/videos_per_second": 1.937375036323938,
+      "memory/peak_allocated_gib": 34.11871147155762,
+      "optim/grad_scale": 65536.0
+    },
+    {
+      "step": 2,
+      "epoch": 0.6666666666666666,
+      "batch/samples": 32,
+      "batch/loss": 3.6560771465301514,
+      "batch/top1": 12.5,
+      "batch/top5": 43.75,
+      "optim/lr": 0.00029917828430524096,
+      "optim/weight_decay": 0.1,
+      "timing/iteration_seconds": 15.700921090028714,
+      "timing/videos_per_second": 2.038096989120113,
+      "memory/peak_allocated_gib": 34.11871147155762,
+      "optim/grad_scale": 65536.0
+    },
+    {
+      "step": 3,
+      "epoch": 1.0,
+      "batch/samples": 32,
+      "batch/loss": 3.0549235343933105,
+      "batch/top1": 15.625,
+      "batch/top5": 68.75,
+      "optim/lr": 0.00029815325108927063,
+      "optim/weight_decay": 0.1,
+      "timing/iteration_seconds": 13.410194500989746,
+      "timing/videos_per_second": 2.3862442858407626,
+      "memory/peak_allocated_gib": 34.11871147155762,
+      "optim/grad_scale": 65536.0
+    }
+  ],
+  "peak_allocated_gib": 34.11871147155762,
+  "peak_reserved_gib": 46.7734375,
+  "measurement": "Predecoded real clips repeated for bounded training steps; excludes loader throughput",
+  "torch_version": "2.11.0+cu128",
+  "extractor": {
+    "model": {
+      "directory": "/dev/shm/heft-ssv2-2337888765-20260911/model",
+      "files": [
+        [
+          "configuration.json",
+          81,
+          1776097115000000000
+        ],
+        [
+          "model_index.json",
+          400,
+          1776097569000000000
+        ],
+        [
+          "scheduler/scheduler_config.json",
+          751,
+          1776097570000000000
+        ],
+        [
+          "text_encoder/config.json",
+          854,
+          1776097114000000000
+        ],
+        [
+          "text_encoder/model-00001-of-00005.safetensors",
+          4972389712,
+          1776097744000000000
+        ],
+        [
+          "text_encoder/model-00002-of-00005.safetensors",
+          4899225672,
+          1776097752000000000
+        ],
+        [
+          "text_encoder/model-00003-of-00005.safetensors",
+          4966309504,
+          1776097770000000000
+        ],
+        [
+          "text_encoder/model-00004-of-00005.safetensors",
+          4999880704,
+          1776097745000000000
+        ],
+        [
+          "text_encoder/model-00005-of-00005.safetensors",
+          2885866152,
+          1776097730000000000
+        ],
+        [
+          "text_encoder/model.safetensors.index.json",
+          22476,
+          1776097569000000000
+        ],
+        [
+          "tokenizer/special_tokens_map.json",
+          7079,
+          1776097570000000000
+        ],
+        [
+          "tokenizer/spiece.model",
+          4548313,
+          1776097571000000000
+        ],
+        [
+          "tokenizer/tokenizer.json",
+          16837459,
+          1776097575000000000
+        ],
+        [
+          "tokenizer/tokenizer_config.json",
+          61758,
+          1776097577000000000
+        ],
+        [
+          "transformer/config.json",
+          465,
+          1776097113000000000
+        ],
+        [
+          "transformer/diffusion_pytorch_model-00001-of-00002.safetensors",
+          4998781576,
+          1776097789000000000
+        ],
+        [
+          "transformer/diffusion_pytorch_model-00002-of-00002.safetensors",
+          677289072,
+          1776097578000000000
+        ],
+        [
+          "transformer/diffusion_pytorch_model.safetensors.index.json",
+          73296,
+          1776097143000000000
+        ],
+        [
+          "vae/config.json",
+          724,
+          1776097114000000000
+        ],
+        [
+          "vae/diffusion_pytorch_model.safetensors",
+          507591892,
+          1776097568000000000
+        ]
+      ]
+    },
+    "code": {
+      "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/heft/diffusers/src/diffusers/models/autoencoders/autoencoder_kl_wan.py": "2aab7e0f3d8acbf480d7e332fdf0b194aa19687f69c7834d8c5433b85e8c06d5",
+      "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/heft/diffusers/src/diffusers/models/autoencoders/vae.py": "5d79b5d057d0f702e1a335a89913b695d7dc6faa91f3978f17e4a153162afba6",
+      "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/heft/diffusers/src/diffusers/models/transformers/transformer_wan.py": "2a095ccd070554bd2f1b08be83605a852d225ab8ca04d7849fbd3ecff6503a89",
+      "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/heft/diffusers/src/diffusers/pipelines/wan/pipeline_wan.py": "2337dadcf98550a2a16701ded184b7b2b4776f855f87fa8ea2255453461f978a",
+      "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/heft/diffusers/src/diffusers/schedulers/scheduling_unipc_multistep.py": "18d9580582f83e4ffbe00fddbfb687bd67ce2265b6247ab16542be57fd2ec546",
+      "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/heft/diffusers/src/diffusers/utils/torch_utils.py": "daaf96b002e48ba38d4be5758189e8b802bf740035276e36b634e7bfa5b2654c",
+      "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/heft/diffusers/src/diffusers/video_processor.py": "8ca70886a0ace0451c11b284176deed1326cd677d9acfc1d5caafe633ad9dced",
+      "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/heft/latent_video/config.py": "cd9db526f6f19b8059fad260db7980f95381b283421cf20ec3d27534875eb079",
+      "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/heft/latent_video/extractor.py": "386adda7ccb6133c34d6c05cc44e7e75b1ac538ea9b5dbc0f737fface96b53e6",
+      "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/heft/scripts/scannet/extract.py": "2c549a8ad790a3a44a33aae65e18a13c1b80d7d3de6548cecbd0685ed39dd4c3",
+      "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/heft/scripts/scannet/scan.py": "c46f843b2c62182d5cb267b4f5930ee2e91a15e4126bc32abff994b2f8f02153",
+      "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/heft/scripts/scannet/video_extract.py": "6cb2da4376d6939220618323a27b99a654a2a149cf50a2fed31b16fe17feb8e4",
+      "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/heft/scripts/scannet/video_noise.py": "e1d9e7ecd895a89ea81de4144e20f9960f343c26454a85e06b5ca15e0e43afff",
+      "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/heft/src/heft/attn_hook/capture.py": "3b876afa2742ce398cb799fd31de60f2ae2e64283e3811334e2ee805ff5f4502",
+      "/increase_kairos_vepfs/increase/liwenhao/agent/2337888765/heft/src/heft/extraction/worker.py": "a277f59b81efe9079004ca08e0c21ae2cc6dfef99cfd830892e370541b69b9ad"
+    },
+    "versions": {
+      "torch": "2.11.0+cu128",
+      "diffusers": "0.34.0",
+      "opencv": "5.0.0"
+    },
+    "prompt_sha256": "c77cc44de192080edb88f16abfc3e380445dc8d271d7554135fb003f34a1be80"
+  }
+}

@@ -9,7 +9,9 @@ cache latent features on disk.
 
 ## Working Protocol
 
-Each clip contains 16 sampled RGB frames at 480x832. The video VAE temporarily
+The generic extractor retains the ScanNet-compatible 480x832 default. The SSv2
+classification recipe explicitly uses 256x256 crops and encoder inputs, with two
+extraction lanes per GPU. Each clip contains 16 sampled RGB frames. The video VAE temporarily
 receives a repeated final frame to satisfy its 4n+1 chunking requirement. Crop the
 posterior parameters back to 16 frames before latent sampling and diffusion noise
 generation. The Transformer receives exactly 16 latent frames and retains its
