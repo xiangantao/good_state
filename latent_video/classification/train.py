@@ -9,7 +9,7 @@ import json
 import logging
 import os
 import random
-from dataclasses import asdict
+from dataclasses import asdict, replace
 from pathlib import Path
 
 import numpy as np
@@ -20,7 +20,7 @@ from torch.utils.data import DataLoader, DistributedSampler
 
 from ..config import ChannelSelection
 from ..extractor import WanLatentExtractor
-from .checkpoint import load_checkpoint, save_checkpoint
+from .checkpoint import load_checkpoint, publish_checkpoint_alias, save_checkpoint
 from .config import RunConfig
 from .data import (
     EvaluationSampler,
@@ -31,6 +31,7 @@ from .data import (
 )
 from .encoder import OnlineWanEncoder
 from .engine import ProbeOptimization, run_epoch
+from .execution import ExtractionPool
 from .monitoring import WandbMonitor
 from .upstream import load_upstream, missing_dependencies
 
@@ -138,6 +139,7 @@ def protocol_record(config, encoder, runtime, train_records, val_records, world_
         },
         "training": {
             "optimization": asdict(config.optimization),
+            "validate_every": config.validate_every,
             "world_size": world_size,
             "manifest": manifest_identity(train_records)
             if train_records is not None
@@ -162,12 +164,15 @@ def run(config: RunConfig, *, resume: Path | None = None, evaluate: Path | None 
     }:
         raise ValueError("Training and validation video IDs overlap")
     output = config.path(config.output_dir)
+    if evaluate is not None:
+        output = output / "evaluations" / evaluate.stem
     if (output / "latest.pt").exists() and resume is None and evaluate is None:
         raise ValueError(
             "Output already has a checkpoint; use --resume or a new output_dir"
         )
     device, rank, world_size = distributed_device()
     monitor = None
+    pool = None
     succeeded = False
     try:
         if rank == 0:
@@ -190,12 +195,14 @@ def run(config: RunConfig, *, resume: Path | None = None, evaluate: Path | None 
             job_type="evaluate" if evaluate is not None else "train",
         )
         runtime = load_upstream(config.path(config.vjepa_root))
-        val_dataset = build_dataset(
-            runtime, output / "val_paths.csv", val_records, config, training=False
-        )
-        val_loader, _ = make_loader(
-            val_dataset, config, rank=rank, world_size=world_size, training=False
-        )
+        val_loader = None
+        if evaluate is not None or config.validate_every:
+            val_dataset = build_dataset(
+                runtime, output / "val_paths.csv", val_records, config, training=False
+            )
+            val_loader, _ = make_loader(
+                val_dataset, config, rank=rank, world_size=world_size, training=False
+            )
         train_loader = train_sampler = train_dataset = None
         if train_records is not None:
             train_dataset = build_dataset(
@@ -215,8 +222,13 @@ def run(config: RunConfig, *, resume: Path | None = None, evaluate: Path | None 
             device=str(device),
             config=config.clip,
         )
+        # Clone before installing compiled forwards; never share hooks or VAE caches.
+        extractors = [extractor] + [
+            extractor.replica() for _ in range(config.extract_lanes - 1)
+        ]
+        pool = ExtractionPool(extractors, compile_blocks=config.compile_blocks)
         encoder = OnlineWanEncoder(
-            extractor, extract_batch_size=config.extract_batch_size
+            extractor, extract_batch_size=config.extract_batch_size, pool=pool
         )
         random.seed(config.seed)
         np.random.seed(config.seed % 2**32)
@@ -237,6 +249,7 @@ def run(config: RunConfig, *, resume: Path | None = None, evaluate: Path | None 
         )
         monitor.update_config({"protocol": protocol})
         if evaluate is not None:
+            assert val_loader is not None
             epoch, _ = load_checkpoint(
                 evaluate, classifier, protocol=protocol, device=device
             )
@@ -313,26 +326,34 @@ def run(config: RunConfig, *, resume: Path | None = None, evaluate: Path | None 
                 log_every=config.wandb.log_every,
                 epoch=epoch,
             )
-            val_metrics = run_epoch(
-                classifier,
-                encoder,
-                val_loader,
-                training=False,
-                amp_dtype=config.optimization.amp_dtype,
-            )
-            if val_metrics["samples"] != len(val_records):
-                raise RuntimeError(
-                    "Validation did not cover exactly the requested split"
+            val_metrics = None
+            improved = False
+            if config.validate_every and (epoch + 1) % config.validate_every == 0:
+                assert val_loader is not None
+                val_metrics = run_epoch(
+                    classifier,
+                    encoder,
+                    val_loader,
+                    training=False,
+                    amp_dtype=config.optimization.amp_dtype,
                 )
-            improved = val_metrics["top1"] > best
-            best = max(best, val_metrics["top1"])
+                if val_metrics["samples"] != len(val_records):
+                    raise RuntimeError(
+                        "Validation did not cover exactly the requested split"
+                    )
+                improved = val_metrics["top1"] > best
+                best = max(best, val_metrics["top1"])
             monitor.log(
                 {
                     "step": (epoch + 1) * len(train_loader),
                     "epoch": epoch + 1,
                     **{f"train/{k}": v for k, v in train_metrics.items()},
-                    **{f"val/{k}": v for k, v in val_metrics.items()},
-                    "val/best_top1": best,
+                    **(
+                        {f"val/{k}": v for k, v in val_metrics.items()}
+                        if val_metrics
+                        else {}
+                    ),
+                    **({"val/best_top1": best} if val_metrics else {}),
                 }
             )
             save_args = {
@@ -341,11 +362,16 @@ def run(config: RunConfig, *, resume: Path | None = None, evaluate: Path | None 
                 "protocol": protocol,
                 "device": device,
             }
-            save_checkpoint(output / "latest.pt", classifier, optimization, **save_args)
-            if improved:
-                save_checkpoint(
-                    output / "best.pt", classifier, optimization, **save_args
+            epoch_path = output / f"epoch_{epoch + 1:04d}.pt"
+            if epoch_path.exists():
+                raise FileExistsError(
+                    f"Refusing to overwrite retained checkpoint: {epoch_path}"
                 )
+            save_checkpoint(epoch_path, classifier, optimization, **save_args)
+            if rank == 0:
+                publish_checkpoint_alias(epoch_path, output / "latest.pt")
+                if improved:
+                    publish_checkpoint_alias(epoch_path, output / "best.pt")
             if rank == 0:
                 with (output / "metrics.jsonl").open("a") as stream:
                     stream.write(
@@ -354,7 +380,7 @@ def run(config: RunConfig, *, resume: Path | None = None, evaluate: Path | None 
                                 "epoch": epoch + 1,
                                 "train": train_metrics,
                                 "val": val_metrics,
-                                "best_top1": best,
+                                "best_top1": best if np.isfinite(best) else None,
                             }
                         )
                         + "\n"
@@ -365,16 +391,22 @@ def run(config: RunConfig, *, resume: Path | None = None, evaluate: Path | None 
         succeeded = True
     finally:
         try:
-            if monitor is not None:
-                monitor.finish(exit_code=0 if succeeded else 1)
+            if pool is not None:
+                pool.close()
         finally:
-            if dist.is_initialized():
-                dist.destroy_process_group()
+            try:
+                if monitor is not None:
+                    monitor.finish(exit_code=0 if succeeded else 1)
+            finally:
+                if dist.is_initialized():
+                    dist.destroy_process_group()
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", type=Path, required=True)
+    parser.add_argument("--model-path", type=Path)
+    parser.add_argument("--output-dir", type=Path)
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--resume", type=Path)
     mode.add_argument("--evaluate", type=Path)
@@ -388,6 +420,10 @@ def main():
         level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s"
     )
     config = RunConfig.load(args.config)
+    if args.model_path is not None:
+        config = replace(config, model_path=str(args.model_path.resolve()))
+    if args.output_dir is not None:
+        config = replace(config, output_dir=str(args.output_dir.resolve()))
     if args.check:
         issues = preflight(config, evaluation=args.evaluate is not None)
         print(

@@ -29,10 +29,10 @@ hash. Dependency installation and model downloads are never automatic.
   B15 selected hidden256 at t299; L15H2 K at t299. Total width: 896.
 - B15 uses one fixed 256-channel table fitted jointly on the five ScanNet
   calibration scenes. Training, validation, and every video use the same indices.
-- Each segment contains 16 frames, jointly encoded at 480x832, pooled to 14x14.
+- Each segment contains 16 frames, jointly encoded at 256x256, pooled to 14x14.
   The two recorded noise settings and B15 early-stop switch remain unchanged.
 - One VAE encoding and two noise-branch Transformer forwards per segment/view.
-  `extract_batch_size` groups independent clips on each GPU; it is separate from
+  `extract_batch_size` groups independent clips per extraction lane; it is separate from
   the classifier's video batch size. Features are selected, pooled, and fused on
   the encoder device without CPU round trips. Only the classifier participates
   in DDP or backpropagation.
@@ -48,8 +48,8 @@ hash. Dependency installation and model downloads are never automatic.
 
 The official transform produces ImageNet-normalized square crops. The adapter
 undoes normalization, rounds/clamps to RGB uint8, and passes them through the
-existing Wan preprocessing. The default crop is 256x256 before Wan's resize to
-480x832. This includes RGB quantization and clipping of erased pixels; it is
+existing Wan preprocessing. The default crop and Wan input are both 256x256;
+there is no enlargement to 480x832. This includes RGB quantization and clipping of erased pixels; it is
 recorded as an input adaptation, not claimed identical to V-JEPA2 preprocessing.
 No extra positional encoding or trainable feature-fusion projection is added.
 
@@ -58,17 +58,24 @@ classifier precision is explicitly `float16`, matching what the upstream
 `use_bfloat16: true` flag actually does. `bfloat16` and `float32` classifier modes
 are configurable and recorded as different optimization settings.
 
-Set `extract_batch_size` to 1, 2, or 4 according to available GPU memory and
-measured throughput. The supplied recipe and omitted settings default to 1.
-The local A800 trial found little additional throughput from 2/4-clip groups,
-with higher memory use and BF16 numerical differences. A classifier batch of four
-videos with two temporal segments produces eight clips, processed in groups of
-this size, including a smaller final group when needed. All clips retain their
-own temporal sequence, posterior/noise RNG stream, and metadata. Both noise
-branches share the same clean latent and noise for each clip. VAE state is cleared
-between groups. Selecting channels before pooling and using batched kernels can
-introduce floating-point differences; the extraction batch size is recorded in
-checkpoint protocol compatibility checks.
+The supplied recipe uses `extract_lanes: 2`, `extract_batch_size: 32`, and
+classifier `batch_size: 32` per GPU. Thus each rank's 32 videos produce 64 clips,
+split between two independent extraction lanes. Eight ranks train one DDP head
+with global video batch 256. Each lane owns its weights, VAE caches, scheduler,
+hooks, fixed worker thread, and CUDA stream. New batch sizes warm serially on
+their worker threads before concurrent execution. Tail batches are retained;
+their smaller extraction groups also receive this warmup.
+
+`compile_blocks: true` compiles only blocks 0-12 and 14, using fullgraph=True and
+dynamic=False. Capture blocks 13 and 15 remain native. **VAE layout stays native;
+channels_last_3d is not enabled.** Compilation has measured BF16 numerical
+differences and is not claimed bitwise equivalent. These settings are recorded
+in checkpoint compatibility metadata. Generic configs omitting these switches
+retain one lane, extraction batch 1, and no compilation.
+
+All clips retain their temporal sequence, posterior/noise RNG stream, and
+metadata. Both noise branches share the same clean latent and noise for each
+clip. VAE state is cleared between groups. No feature cache is written.
 
 ## Setup
 
@@ -126,21 +133,17 @@ export HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1
 .venv/bin/python -m latent_video.classification.train \
   --config latent_video/classification/configs/ssv2.yaml --check
 
-# One classifier trained across eight GPUs; one frozen Wan instance per GPU.
-.venv/bin/python -m torch.distributed.run --standalone --nproc-per-node=8 \
-  --module latent_video.classification.train \
-  --config latent_video/classification/configs/ssv2.yaml
+# One classifier across eight GPUs, two frozen Wan instances per GPU.
+bash latent_video/classification/launch.sh
 
 # Resume at the next epoch with the same data, protocol, and world size.
-.venv/bin/python -m torch.distributed.run --standalone --nproc-per-node=8 \
-  --module latent_video.classification.train \
-  --config latent_video/classification/configs/ssv2.yaml \
+bash latent_video/classification/launch.sh \
   --resume ../runs/ssv2_wan_fused_online/latest.pt
 
-# Evaluate a trained head; no optimizer updates. A single GPU is also supported.
-.venv/bin/python -m latent_video.classification.train \
-  --config latent_video/classification/configs/ssv2.yaml \
-  --evaluate ../runs/ssv2_wan_fused_online/best.pt
+# Evaluate a retained checkpoint on separately available GPUs.
+# CUDA_VISIBLE_DEVICES must select GPUs available to this evaluation process.
+HEFT_NPROC_PER_NODE=1 bash latent_video/classification/launch.sh \
+  --evaluate ../runs/ssv2_wan_fused_online/epoch_0001.pt
 ```
 
 Fresh training checks video-file availability before loading the large model.
@@ -148,11 +151,28 @@ Decoding failures report the sample ID/path. Validation shards contain no repeat
 padding examples, including when the number of GPUs does not divide the split.
 Metrics sum correct predictions and sample counts before computing percentages.
 
-`latest.pt` and `best.pt` contain one classifier, its optimizer/scaler/scheduler
+The default `validate_every: 0` skips validation in the training loop. Every
+completed epoch writes an immutable `epoch_NNNN.pt`; `latest.pt` is atomically
+updated as a hard-link alias. Independent evaluators should use the epoch files,
+whose contents will not change while they are being read. Set `validate_every`
+to a positive interval to enable in-loop validation; only then can training
+publish a `best.pt` alias. There is no automatic background evaluator or GPU
+reservation. Evaluation output is isolated in `output_dir/evaluations/<checkpoint-stem>`.
+
+These checkpoints contain one classifier, its optimizer/scaler/scheduler
 state, per-rank RNG states, and protocol metadata. They contain no Wan weights or
 latent tensors. Resume rejects changed features, data, optimization settings, or
 world size. Epochs interrupted before checkpointing are replayed from their start.
 Evaluation saves Top-1/Top-5 metrics and one `predictions_r<RANK>.jsonl` per rank.
+
+The launcher defaults to eight local processes and offline operation. Optional
+`HEFT_PYTHON`, `HEFT_NPROC_PER_NODE`, `HEFT_TMPDIR`, `HEFT_COMPILE_CACHE`,
+`HEFT_TRITON_CACHE`, and `HEFT_CUDA_CACHE` select an existing environment and
+cache directories. No dependencies are installed. `--model-path` and
+`--output-dir` provide explicit path overrides for local staging or separate runs.
+Use the same model path for training and evaluation because model provenance is
+part of the checkpoint protocol. The temporary directory defaults to /dev/shm
+for Unix socket compatibility; compiler caches default to the workspace cache.
 
 ## W&B Monitoring
 
@@ -171,8 +191,9 @@ Git capture, and model upload remain disabled in both modes.
 - Every `wandb.log_every` training batches, including the final partial window:
   sample-weighted loss, Top-1/Top-5, LR, weight decay, FP16 gradient scale,
   iteration time, videos/second, and maximum allocated CUDA memory across ranks.
-- At each completed epoch: globally reduced training and validation metrics and
-  the best validation Top-1. Separate evaluation runs record final evaluation metrics.
+- At each completed epoch: globally reduced training metrics; validation and best
+  Top-1 appear only when in-loop validation is enabled. Separate evaluation runs
+  record final evaluation metrics.
 - Run configuration and feature protocol accompany the metrics. No latent tensors
   or model weights are logged. Monitoring does not change the classifier updates.
 
@@ -227,8 +248,20 @@ scalar logging, finalization, and nonempty `.wandb` and JSONL outputs. GPU syste
 metrics and online connectivity still need validation during an actual run.
 No test connects to W&B, downloads data, or installs packages.
 
-The V-JEPA2 public ViT-L probe result (73.7%) is a reference with its own backbone,
-input resolution, feature width, batch size, and hyperparameter search. Those
-differences must accompany any comparison. This runner trains only our fused head;
+The 256x256, 16-frame, two-segment, global-batch-256, 20-epoch recipe aligns with
+the repository's V-JEPA2 ViT-L SSv2 configuration. Validation uses three spatial
+views and the same probability averaging. This does not align with its 384px,
+64-frame ViT-g configuration. There are still differences in pretrained data,
+backbone, feature width/token count, RGB adaptation, and numerical execution.
+Wan repeats the final frame for a 17-frame VAE input and crops back to 16; it
+does not observe an extra distinct frame. The fixed channels were selected on
+ScanNet, not on SSv2 labels. Our fused input is [B,6272,896], whereas the ViT-L
+two-segment input is [B,4096,1024]. Head architecture is reused, but parameter
+count and input token count are different.
+
+The V-JEPA2 public ViT-L probe result (73.7%) also includes a hyperparameter
+search over multiple classifiers. This runner trains only one fixed head and
+does not claim to reproduce that search budget or accuracy. A matched baseline
+should use the same one-head training budget. This runner trains only our fused head;
 V-JEPA2's existing inference entry can evaluate its supplied local checkpoint
 separately once those weights are available. No baseline download is triggered.

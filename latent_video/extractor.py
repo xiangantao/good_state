@@ -303,6 +303,17 @@ class WanLatentExtractor:
         finally:
             self.pipeline.vae.clear_cache()
 
+    def replica(self) -> WanLatentExtractor:
+        """Copy an idle, uncompiled extractor without reloading the text encoder."""
+        return type(self)(
+            copy.deepcopy(self.pipeline),
+            self.prompt_embeds.clone(),
+            self.channels,
+            copy.deepcopy(self.branches),
+            config=self.config,
+            provenance=self.provenance,
+        )
+
     def _clean_latents(
         self, posterior: DiagonalGaussianDistribution, generator: torch.Generator
     ) -> Tensor:

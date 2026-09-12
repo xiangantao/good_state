@@ -7,7 +7,11 @@ output_dir: ../runs/ssv2_wan_fused_online
 seed: 42
 num_workers: 4
 # Independent clips per frozen-encoder forward; classifier batch size is unchanged.
-extract_batch_size: 1
+extract_batch_size: 32
+extract_lanes: 2
+compile_blocks: true
+# Save every epoch for a separate evaluation process.
+validate_every: 0
 num_heads: 16
 num_probe_blocks: 4
 wandb:
@@ -21,7 +25,7 @@ wandb:
   # Records locally; no connection or credentials needed during training.
 clip:
   frames: 16
-  resolution: [480, 832]
+  resolution: [256, 256]
   grid: [14, 14]
   stop_after_capture: true
 data:
@@ -36,7 +40,7 @@ data:
   frame_step: 4
   crop_size: 256
 optimization:
-  batch_size: 4
+  batch_size: 32
   num_epochs: 20
   lr: 0.0003
   weight_decay: 0.1

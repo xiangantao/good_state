@@ -119,6 +119,9 @@ class RunConfig:
     seed: int = 42
     num_workers: int = 4
     extract_batch_size: int = 1
+    extract_lanes: int = 1
+    compile_blocks: bool = False
+    validate_every: int = 1
     num_heads: int = 16
     num_probe_blocks: int = 4
     clip: ClipConfig = field(default_factory=ClipConfig)
@@ -132,6 +135,15 @@ class RunConfig:
             raise ValueError("num_workers must be a non-negative integer")
         positive_int("num_heads", self.num_heads)
         positive_int("extract_batch_size", self.extract_batch_size)
+        positive_int("extract_lanes", self.extract_lanes)
+        if self.extract_lanes > 2:
+            raise ValueError("At most two extraction lanes per GPU are supported")
+        if type(self.compile_blocks) is not bool:
+            raise TypeError("compile_blocks must be a boolean")
+        if type(self.validate_every) is not int or self.validate_every < 0:
+            raise ValueError(
+                "validate_every must be a non-negative integer; zero disables in-loop validation"
+            )
         positive_int("num_probe_blocks", self.num_probe_blocks)
         if 896 % self.num_heads:
             raise ValueError("num_heads must divide the 896 fused channels")

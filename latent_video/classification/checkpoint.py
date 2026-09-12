@@ -15,6 +15,16 @@ from .engine import ProbeOptimization, unwrap
 SCHEMA = "heft.latent_video.online_probe.v1"
 
 
+def publish_checkpoint_alias(source: Path, destination: Path):
+    """Atomically point latest/best at a completed immutable epoch checkpoint."""
+    temporary = destination.with_name(destination.name + f".{os.getpid()}.tmp")
+    try:
+        os.link(source, temporary)
+        os.replace(temporary, destination)
+    finally:
+        temporary.unlink(missing_ok=True)
+
+
 def rng_state(device) -> dict:
     return {
         "python": random.getstate(),

@@ -13,12 +13,13 @@ FUSION_ORDER = tuple(CANDIDATES)
 
 
 class OnlineWanEncoder:
-    def __init__(self, extractor, *, extract_batch_size: int = 1):
+    def __init__(self, extractor, *, extract_batch_size: int = 1, pool=None):
         positive_int("extract_batch_size", extract_batch_size)
         self.extractor = extractor
         self.extract_batch_size = extract_batch_size
         self.device = extractor.device
         self.embed_dim = 5 * extractor.head_channels + 256
+        self.pool = pool
 
     @torch.no_grad()
     def encode_view(self, batch: dict, view: int) -> torch.Tensor:
@@ -29,24 +30,35 @@ class OnlineWanEncoder:
             for sample in range(count)
             for segment in range(len(segments))
         ]
-        tokens = []
+        requests = []
         for start in range(0, len(entries), self.extract_batch_size):
             group = entries[start : start + self.extract_batch_size]
-            with torch.autocast(device_type=self.device.type, enabled=False):
-                results = self.extractor.extract_batch(
-                    [segments[segment][view][sample] for sample, segment in group],
-                    seeds=[
+            requests.append(
+                {
+                    "frames": [
+                        segments[segment][view][sample] for sample, segment in group
+                    ],
+                    "seeds": [
                         int(batch["feature_seeds"][sample, segment, view])
                         for sample, segment in group
                     ],
-                    frame_ids=[
+                    "frame_ids": [
                         batch["frame_indices"][segment][sample].tolist()
                         for sample, segment in group
                     ],
-                    clip_ids=[batch["id"][sample] for sample, _ in group],
-                    output_device=self.device,
-                )
-            if len(results) != len(group):
+                    "clip_ids": [batch["id"][sample] for sample, _ in group],
+                    "output_device": self.device,
+                }
+            )
+        with torch.autocast(device_type=self.device.type, enabled=False):
+            groups = (
+                self.pool.extract_groups(requests)
+                if self.pool is not None
+                else [self.extractor.extract_batch(**request) for request in requests]
+            )
+        tokens = []
+        for request, results in zip(requests, groups, strict=True):
+            if len(results) != len(request["frames"]):
                 raise ValueError("Extractor returned the wrong number of clips")
             for result in results:
                 fused = torch.cat(
@@ -72,6 +84,9 @@ class OnlineWanEncoder:
             "fusion_order": list(FUSION_ORDER),
             "embed_dim": self.embed_dim,
             "extract_batch_size": self.extract_batch_size,
+            "execution": self.pool.metadata()
+            if self.pool is not None
+            else {"lanes": 1, "compiled_blocks": [], "vae_layout": "native"},
             "feature_device": "encoder",
             "latent_cache": False,
             "frozen_encoder": True,
