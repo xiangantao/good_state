@@ -6,6 +6,8 @@ channel_mask: reports/scannet_channels/73f4e810824b58cb/global_256/masks.json
 output_dir: ../runs/ssv2_wan_fused_online
 seed: 42
 num_workers: 4
+# Independent clips per frozen-encoder forward; classifier batch size is unchanged.
+extract_batch_size: 1
 num_heads: 16
 num_probe_blocks: 4
 wandb:

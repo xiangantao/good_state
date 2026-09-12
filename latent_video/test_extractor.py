@@ -1,5 +1,6 @@
 """CPU regressions with real, randomly initialized small Wan models."""
 
+import copy
 import json
 from dataclasses import replace
 
@@ -13,7 +14,7 @@ from diffusers.schedulers.scheduling_unipc_multistep import UniPCMultistepSchedu
 
 from heft.extraction.config import WAN_2_1, ChunkJob
 from heft.extraction.worker import _prepare_input_video
-from scripts.scannet.video_extract import WanVideoExtractor
+from scripts.scannet.video_extract import WanVideoExtractor, pool_video_tokens
 from scripts.scannet.video_noise import video_scheduler
 
 from .config import (
@@ -92,6 +93,27 @@ def make_extractor(components, *, frames=16, stop=True):
         ),
         provenance={"model": "small random CPU Wan models"},
     )
+
+
+def test_bf16_checkpoint_preserves_fp32_tables_and_extracts(components, tmp_path):
+    root, pipeline, prompt, frames, channels = components
+    checkpoint = tmp_path / "transformer"
+    pipeline.transformer.save_pretrained(checkpoint)
+    transformer = WanTransformer3DModel.from_pretrained(
+        checkpoint, torch_dtype=torch.bfloat16, local_files_only=True
+    )
+    assert next(transformer.parameters()).dtype == torch.float32
+    assert transformer.dtype == torch.bfloat16
+    pipe = copy.deepcopy(pipeline)
+    pipe.register_modules(transformer=transformer)
+    pipe.vae.to(dtype=torch.bfloat16)
+    extractor = make_extractor((root, pipe, prompt, frames, channels))
+    assert extractor.dtype == torch.bfloat16
+    assert extractor.prompt_embeds.dtype == torch.bfloat16
+    result = extractor.extract(frames[:16], seed=7)
+    assert len(result.tensors) == 6
+    assert all(torch.isfinite(value).all() for value in result.tensors.values())
+    assert transformer.scale_shift_table.dtype == torch.float32
 
 
 def test_channel_selection_requires_a_named_fold_and_keeps_order(tmp_path):
@@ -339,3 +361,108 @@ def test_invalid_clip_fails_before_vae_encoding(components, monkeypatch):
         extractor.extract(torch.zeros(16, 3, 16, 16))
     with pytest.raises(ValueError, match="frame_ids"):
         extractor.extract(components[3][:16], frame_ids=[0])
+
+
+def test_selected_channel_pooling_matches_original_full_width_pool(components):
+    extractor = make_extractor(components)
+    extractor.config = replace(extractor.config, resolution=(32, 48), grid=(2, 2))
+    extractor.spatial = (2, 3)
+    references = []
+
+    def capture(module, inputs, tensor):
+        references.append(
+            pool_video_tokens(tensor, 16, (2, 3), (2, 2), 16)[
+                :, extractor.channels.indices
+            ].to(torch.bfloat16)
+        )
+
+    handle = extractor.pipeline.transformer.blocks[15].register_forward_hook(capture)
+    try:
+        result = extractor.extract(components[3][:16], seed=19)
+    finally:
+        handle.remove()
+    torch.testing.assert_close(
+        result.tensors[HIDDEN_NAME], references[1], rtol=0, atol=0
+    )
+
+
+@pytest.mark.parametrize("frames", [16, 25])
+def test_batch_matches_single_clips_and_preserves_noise_streams(
+    components, monkeypatch, frames
+):
+    from . import extractor as implementation
+
+    extractor = make_extractor(components, frames=frames)
+    clips = [components[3][:frames], 255 - components[3][:frames]]
+    seeds = [73, 91]
+    noises, states, calls = [], [], []
+    original_noise = implementation.randn_tensor
+    original_clean = extractor._clean_latents
+
+    def noise(*args, **kwargs):
+        value = original_noise(*args, **kwargs)
+        noises.append(value.clone())
+        return value
+
+    def clean(posterior, generator):
+        value = original_clean(posterior, generator)
+        states.append(generator.get_state().clone())
+        return value
+
+    monkeypatch.setattr(implementation, "randn_tensor", noise)
+    monkeypatch.setattr(extractor, "_clean_latents", clean)
+    before = torch.random.get_rng_state().clone()
+    singles = [extractor.extract(clip, seed=seed) for clip, seed in zip(clips, seeds)]
+    handle = extractor.pipeline.vae.quant_conv.register_forward_pre_hook(
+        lambda module, inputs: calls.append(inputs[0].shape[0])
+    )
+    try:
+        batched = extractor.extract_batch(
+            clips,
+            seeds=seeds,
+            clip_ids=["a", "b"],
+            frame_ids=[list(range(frames)), list(range(1, frames + 1))],
+            output_device=extractor.device,
+        )
+    finally:
+        handle.remove()
+    assert calls == [2]
+    assert torch.equal(before, torch.random.get_rng_state())
+    for sample, (single, actual) in enumerate(zip(singles, batched)):
+        assert torch.equal(noises[sample], noises[sample + 2])
+        assert torch.equal(states[sample], states[sample + 2])
+        assert actual.metadata["clip_id"] == ("a", "b")[sample]
+        assert actual.metadata["batch_index"] == sample
+        assert actual.metadata["extraction_batch_size"] == 2
+        for branch in actual.metadata["noise_branches"].values():
+            assert branch["forward"]["shape"][0] == 2
+        for name in single.tensors:
+            torch.testing.assert_close(
+                single.tensors[name], actual.tensors[name], rtol=0.008, atol=0.0001
+            )
+    assert all(value is None for value in extractor.pipeline.vae._enc_feat_map)
+    reversed_batch = extractor.extract_batch(clips[::-1], seeds=seeds[::-1])
+    for left, right in zip(batched, reversed_batch[::-1]):
+        for name in left.tensors:
+            torch.testing.assert_close(
+                left.tensors[name], right.tensors[name], rtol=0, atol=0
+            )
+
+
+def test_invalid_batch_fails_before_vae(components, monkeypatch):
+    extractor = make_extractor(components)
+    clips = [components[3][:16]] * 2
+
+    def forbidden(*args, **kwargs):
+        pytest.fail("Invalid batch reached the VAE")
+
+    monkeypatch.setattr(extractor.pipeline.vae, "encode", forbidden)
+    for kwargs in ({"seeds": [1]}, {"frame_ids": [None]}, {"clip_ids": ["a"]}):
+        with pytest.raises(ValueError, match="clip count"):
+            extractor.extract_batch(clips, **kwargs)
+    with pytest.raises(ValueError, match="at least one"):
+        extractor.extract_batch([])
+    with pytest.raises(ValueError, match="seed"):
+        extractor.extract_batch(clips, seeds=[1, True])
+    with pytest.raises(ValueError, match="output_device"):
+        extractor.extract_batch(clips, output_device="meta")

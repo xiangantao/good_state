@@ -215,7 +215,9 @@ def run(config: RunConfig, *, resume: Path | None = None, evaluate: Path | None 
             device=str(device),
             config=config.clip,
         )
-        encoder = OnlineWanEncoder(extractor)
+        encoder = OnlineWanEncoder(
+            extractor, extract_batch_size=config.extract_batch_size
+        )
         random.seed(config.seed)
         np.random.seed(config.seed % 2**32)
         torch.manual_seed(config.seed)

@@ -32,8 +32,10 @@ hash. Dependency installation and model downloads are never automatic.
 - Each segment contains 16 frames, jointly encoded at 480x832, pooled to 14x14.
   The two recorded noise settings and B15 early-stop switch remain unchanged.
 - One VAE encoding and two noise-branch Transformer forwards per segment/view.
-  Segments and samples are extracted sequentially on each GPU to bound backbone
-  memory. Only the classifier participates in DDP or backpropagation.
+  `extract_batch_size` groups independent clips on each GPU; it is separate from
+  the classifier's video batch size. Features are selected, pooled, and fused on
+  the encoder device without CPU round trips. Only the classifier participates
+  in DDP or backpropagation.
 - Two temporal segments yield `[B,6272,896]` per spatial view. The default probe
   has four blocks, sixteen internal attention heads, and 174 output classes.
   Sixteen attention heads do not mean sixteen separately trained classifiers.
@@ -55,6 +57,18 @@ Wan extraction stays BF16 and executes outside classifier autocast. The default
 classifier precision is explicitly `float16`, matching what the upstream
 `use_bfloat16: true` flag actually does. `bfloat16` and `float32` classifier modes
 are configurable and recorded as different optimization settings.
+
+Set `extract_batch_size` to 1, 2, or 4 according to available GPU memory and
+measured throughput. The supplied recipe and omitted settings default to 1.
+The local A800 trial found little additional throughput from 2/4-clip groups,
+with higher memory use and BF16 numerical differences. A classifier batch of four
+videos with two temporal segments produces eight clips, processed in groups of
+this size, including a smaller final group when needed. All clips retain their
+own temporal sequence, posterior/noise RNG stream, and metadata. Both noise
+branches share the same clean latent and noise for each clip. VAE state is cleared
+between groups. Selecting channels before pooling and using batched kernels can
+introduce floating-point differences; the extraction batch size is recorded in
+checkpoint protocol compatibility checks.
 
 ## Setup
 
@@ -94,6 +108,8 @@ Configure `configs/ssv2.yaml` before the first real run:
    No `held_out` setting is needed. The five LOSO tables are retained for
    reproducing the earlier validation experiment, not choosing a deployment mask.
 3. Choose a new `output_dir`. Relative config paths resolve from the HeFT root.
+4. Set `extract_batch_size` independently of `optimization.batch_size`. Increasing
+   it uses more backbone memory without changing the classifier's batch or LR.
 
 The supplied optimization is one fixed choice from the official grid:
 20 epochs, AdamW LR 0.0003, weight decay 0.1, and no warmup. Batch size is four

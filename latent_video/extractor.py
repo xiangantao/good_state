@@ -1,15 +1,17 @@
-"""Single-clip, two-noise Wan extraction with a shared video VAE encoding."""
+"""Batched, two-noise Wan extraction with a shared video VAE encoding."""
 
 from __future__ import annotations
 
 import copy
 import hashlib
 import inspect
+from collections.abc import Sequence
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
 import cv2
 import torch
+import torch.nn.functional as F
 from diffusers.models.autoencoders.vae import DiagonalGaussianDistribution
 from diffusers.pipelines.wan.pipeline_wan import WanPipeline
 from diffusers.utils.torch_utils import randn_tensor
@@ -105,7 +107,7 @@ def _require_workspace_runtime():
 
 @dataclass
 class ClipLatents:
-    """Six CPU BF16 tensors representing five candidates, plus JSON metadata."""
+    """Six BF16 tensors representing five candidates, plus JSON metadata."""
 
     tensors: dict[str, Tensor]
     metadata: dict
@@ -122,8 +124,8 @@ class _CaptureComplete(Exception):
 class WanLatentExtractor:
     """Use from_local for the checkpoint, or inject prepared components for tests.
 
-    Calls are sequential: the VAE caches and the attention capture state are owned
-    by this instance. A later multi-GPU runner should own one instance per worker.
+    Each call may batch independent clips. Calls on one instance remain sequential
+    because it owns the VAE caches and attention capture state.
     """
 
     def __init__(
@@ -155,8 +157,11 @@ class WanLatentExtractor:
                 raise ValueError(f"Changed noise configuration for {spec.name}")
         pipeline.vae.eval().requires_grad_(False)
         pipeline.transformer.eval().requires_grad_(False)
-        parameter = next(pipeline.transformer.parameters())
-        self.device, self.dtype = parameter.device, parameter.dtype
+        # Wan keeps modulation tables in FP32; ModelMixin.dtype skips those tables.
+        self.device, self.dtype = (
+            pipeline.transformer.device,
+            pipeline.transformer.dtype,
+        )
         if self.dtype not in (torch.float32, torch.bfloat16):
             raise ValueError(
                 "Use BF16 production inference or FP32 reference components"
@@ -195,6 +200,7 @@ class WanLatentExtractor:
         ):
             raise ValueError("Expected one precomputed empty-prompt embedding")
         self.prompt_embeds = prompt_embeds.detach().to(self.device, self.dtype)
+        self._channel_indices = torch.tensor(channels.indices, device=self.device)
         if not torch.isfinite(self.prompt_embeds).all():
             raise ValueError("Non-finite prompt embedding")
         self.provenance = copy.deepcopy(provenance or {})
@@ -259,22 +265,32 @@ class WanLatentExtractor:
         )
 
     def _prepare_posterior(
-        self, frames: Tensor
+        self, frames: Tensor | Sequence[Tensor]
     ) -> tuple[DiagonalGaussianDistribution, int]:
+        clips = [frames] if isinstance(frames, Tensor) else frames
         count = self.config.frames
         padding = (1 - count) % 4
-        prepared = _prepare_input_video(frames, self.config.resolution)
-        assert prepared is not None
-        if padding:
-            prepared = torch.cat((prepared, prepared[-1:].expand(padding, -1, -1, -1)))
-        video = self.pipeline.video_processor.preprocess_video(
-            prepared, height=self.config.resolution[0], width=self.config.resolution[1]
-        ).to(device=self.device, dtype=self.dtype)
+        videos = []
+        for clip in clips:
+            prepared = _prepare_input_video(clip, self.config.resolution)
+            assert prepared is not None
+            if padding:
+                prepared = torch.cat(
+                    (prepared, prepared[-1:].expand(padding, -1, -1, -1))
+                )
+            videos.append(
+                self.pipeline.video_processor.preprocess_video(
+                    prepared,
+                    height=self.config.resolution[0],
+                    width=self.config.resolution[1],
+                ).to(device=self.device, dtype=self.dtype)
+            )
+        video = videos[0] if len(videos) == 1 else torch.cat(videos)
         try:
             posterior = self.pipeline.vae.encode(video).latent_dist
             parameters = posterior.parameters
             if parameters.shape[:3] != (
-                1,
+                len(clips),
                 2 * self.pipeline.vae.config.z_dim,
                 count + padding,
             ):
@@ -307,17 +323,21 @@ class WanLatentExtractor:
     def _capture_branch(
         self, noisy: Tensor, timestep: Tensor, name: str, info: dict
     ) -> tuple[dict, dict]:
+        batch_size = noisy.shape[0]
         targets = QK_TARGETS[name]
         outputs, observed, handles = {}, [], []
 
         def pool(tensor):
-            return pool_video_tokens(
-                tensor,
-                self.config.frames,
-                self.spatial,
-                self.config.grid,
-                self.config.frames,
+            height, width = self.spatial
+            frames = self.config.frames
+            if tensor.shape[:2] != (batch_size, frames * height * width):
+                raise ValueError(f"Unexpected batched video tokens: {tensor.shape}")
+            channels = tensor.shape[-1]
+            maps = tensor.reshape(batch_size * frames, height, width, channels)
+            pooled = F.adaptive_avg_pool2d(
+                maps.permute(0, 3, 1, 2).float(), self.config.grid
             )
+            return pooled.reshape(batch_size, frames, channels, *self.config.grid)
 
         def sink(feature):
             key = (feature.layer, feature.kind.value, feature.head)
@@ -335,7 +355,9 @@ class WanLatentExtractor:
             if tensor.shape[-1] != self.hidden_channels:
                 raise ValueError("Unexpected block output width")
             outputs[HIDDEN_NAME] = (
-                pool(tensor)[:, self.channels.indices].to(torch.bfloat16).contiguous()
+                pool(tensor.index_select(-1, self._channel_indices))
+                .to(torch.bfloat16)
+                .contiguous()
             )
 
         def observe(module, inputs, kwargs):
@@ -344,7 +366,7 @@ class WanLatentExtractor:
             if (
                 shape != list(noisy.shape)
                 or shape[2] != self.config.frames
-                or actual != [info["actual_timestep"]]
+                or actual != [info["actual_timestep"]] * batch_size
             ):
                 raise ValueError("Unexpected Transformer input shape or timestep")
             observed.append({"shape": shape, "timestep": actual[0]})
@@ -389,7 +411,9 @@ class WanLatentExtractor:
                     self.pipeline.transformer(
                         hidden_states=noisy,
                         timestep=timestep,
-                        encoder_hidden_states=self.prompt_embeds,
+                        encoder_hidden_states=self.prompt_embeds.expand(
+                            batch_size, -1, -1
+                        ),
                         return_dict=False,
                     )
                 except _CaptureComplete:
@@ -419,35 +443,88 @@ class WanLatentExtractor:
         seed: int = 42,
         frame_ids: list[int] | tuple[int, ...] | None = None,
         clip_id: str | None = None,
+        output_device: str | torch.device = "cpu",
     ) -> ClipLatents:
-        """Extract one CPU uint8 RGB clip [T,3,H,W], returning six CPU BF16 tensors."""
-        if (
-            frames.ndim != 4
-            or frames.shape[:2] != (self.config.frames, 3)
-            or min(frames.shape[-2:]) < 1
-            or frames.device.type != "cpu"
-            or frames.dtype != torch.uint8
+        """Extract one CPU uint8 RGB clip [T,3,H,W]; return CPU BF16 by default."""
+        return self.extract_batch(
+            [frames],
+            seeds=[seed],
+            frame_ids=[frame_ids],
+            clip_ids=[clip_id],
+            output_device=output_device,
+        )[0]
+
+    @torch.inference_mode()
+    def extract_batch(
+        self,
+        frames: Sequence[Tensor],
+        *,
+        seeds: Sequence[int] | None = None,
+        frame_ids: Sequence[Sequence[int] | None] | None = None,
+        clip_ids: Sequence[str | None] | None = None,
+        output_device: str | torch.device = "cpu",
+    ) -> list[ClipLatents]:
+        """Batch independent clips; each seed consumes the same draws as extract()."""
+        frames = list(frames)
+        batch_size = len(frames)
+        if not batch_size:
+            raise ValueError("Require at least one clip")
+        seeds = [42] * batch_size if seeds is None else list(seeds)
+        frame_ids = [None] * batch_size if frame_ids is None else list(frame_ids)
+        clip_ids = [None] * batch_size if clip_ids is None else list(clip_ids)
+        if any(len(items) != batch_size for items in (seeds, frame_ids, clip_ids)):
+            raise ValueError("seeds, frame_ids, and clip_ids must match the clip count")
+        destination = torch.device(output_device)
+        if destination.type == self.device.type and destination.index is None:
+            destination = self.device
+        if destination.type != "cpu" and destination != self.device:
+            raise ValueError("output_device must be CPU or the extractor device")
+        for clip, seed, indices, identifier in zip(
+            frames, seeds, frame_ids, clip_ids, strict=True
         ):
-            raise ValueError(
-                f"Expected CPU uint8 RGB frames [{self.config.frames},3,H,W]"
-            )
-        if type(seed) is not int or not 0 <= seed < 2**63:
-            raise ValueError("seed must be an integer in [0,2**63)")
-        if frame_ids is not None and (
-            len(frame_ids) != self.config.frames
-            or any(type(i) is not int or i < 0 for i in frame_ids)
-        ):
-            raise ValueError(
-                "frame_ids must contain one non-negative integer per input frame"
-            )
-        if clip_id is not None and (not isinstance(clip_id, str) or not clip_id):
-            raise ValueError("clip_id must be a non-empty string when supplied")
-        generator = torch.Generator(device="cpu").manual_seed(seed)
+            if (
+                not isinstance(clip, Tensor)
+                or clip.ndim != 4
+                or clip.shape[:2] != (self.config.frames, 3)
+                or min(clip.shape[-2:]) < 1
+                or clip.device.type != "cpu"
+                or clip.dtype != torch.uint8
+            ):
+                raise ValueError(
+                    f"Expected CPU uint8 RGB frames [{self.config.frames},3,H,W]"
+                )
+            if type(seed) is not int or not 0 <= seed < 2**63:
+                raise ValueError("seed must be an integer in [0,2**63)")
+            if indices is not None and (
+                len(indices) != self.config.frames
+                or any(type(i) is not int or i < 0 for i in indices)
+            ):
+                raise ValueError(
+                    "frame_ids must contain one non-negative integer per input frame"
+                )
+            if identifier is not None and (
+                not isinstance(identifier, str) or not identifier
+            ):
+                raise ValueError("clip_id must be a non-empty string when supplied")
         posterior, padding = self._prepare_posterior(frames)
-        clean = self._clean_latents(posterior, generator)
-        noise = randn_tensor(
-            clean.shape, generator=generator, device=self.device, dtype=self.dtype
-        )
+        clean_parts, noise_parts = [], []
+        # Preserve per-clip CPU RNG shape/order, including posterior sampling first.
+        for sample, seed in enumerate(seeds):
+            generator = torch.Generator(device="cpu").manual_seed(seed)
+            distribution = DiagonalGaussianDistribution(
+                posterior.parameters[sample : sample + 1]
+            )
+            latent = self._clean_latents(distribution, generator)
+            clean_parts.append(latent)
+            noise_parts.append(
+                randn_tensor(
+                    latent.shape,
+                    generator=generator,
+                    device=self.device,
+                    dtype=self.dtype,
+                )
+            )
+        clean, noise = torch.cat(clean_parts), torch.cat(noise_parts)
         if not torch.isfinite(clean).all():
             raise ValueError("Non-finite VAE latent")
         tensors, branch_records = {}, {}
@@ -467,7 +544,9 @@ class WanLatentExtractor:
                     f"Scheduler did not reset to the recorded {spec.name} noise point"
                 )
             noisy = scheduler.add_noise(clean, noise, timestep)
-            outputs, forward = self._capture_branch(noisy, timestep, spec.name, info)
+            outputs, forward = self._capture_branch(
+                noisy, timestep.expand(batch_size), spec.name, info
+            )
             tensors.update(outputs)
             branch_records[spec.name] = {
                 **copy.deepcopy(info),
@@ -481,19 +560,16 @@ class WanLatentExtractor:
         for name, tensor in tensors.items():
             width = 256 if name == HIDDEN_NAME else self.head_channels
             if (
-                tensor.shape != (self.config.frames, width, *self.config.grid)
+                tensor.shape
+                != (batch_size, self.config.frames, width, *self.config.grid)
                 or not torch.isfinite(tensor).all()
             ):
                 raise ValueError(f"Invalid output feature: {name}")
+        tensors = {name: value.to(destination) for name, value in tensors.items()}
         metadata = {
             "schema": "heft.latent_video.clip",
             "schema_version": 1,
-            "clip_id": clip_id,
             "config": asdict(self.config),
-            "seed": seed,
-            "frame_ids": None if frame_ids is None else list(frame_ids),
-            "input_shape": list(frames.shape),
-            "input_sha256": _tensor_hash(frames),
             "vae_input_frames": self.config.frames + padding,
             "padding_frames": padding,
             "padding": "repeat final RGB frame for VAE only; crop posterior before sampling",
@@ -501,10 +577,12 @@ class WanLatentExtractor:
             "latent_distribution": "sample",
             "shared_clean_latent": True,
             "shared_gaussian_noise": True,
-            "latent_shape": list(clean.shape),
+            "latent_shape": [1, *clean.shape[1:]],
+            "extraction_batch_size": batch_size,
             "inference_dtype": str(self.dtype),
             "storage_dtype": "torch.bfloat16",
             "device": str(self.device),
+            "output_device": str(destination),
             "qk_capture": "post-normalization, post-RoPE",
             "hidden_capture": "complete block 15 output",
             "extra_position_encoding": False,
@@ -512,8 +590,26 @@ class WanLatentExtractor:
             "noise_branches": branch_records,
             "candidates": {name: list(parts) for name, parts in CANDIDATES.items()},
             "tensor_shapes": {
-                name: list(tensor.shape) for name, tensor in tensors.items()
+                name: list(tensor.shape[1:]) for name, tensor in tensors.items()
             },
             "provenance": copy.deepcopy(self.provenance),
         }
-        return ClipLatents(tensors, metadata)
+        results = []
+        for sample, (clip, seed, indices, identifier) in enumerate(
+            zip(frames, seeds, frame_ids, clip_ids, strict=True)
+        ):
+            record = copy.deepcopy(metadata)
+            record.update(
+                clip_id=identifier,
+                seed=seed,
+                frame_ids=None if indices is None else list(indices),
+                input_shape=list(clip.shape),
+                input_sha256=_tensor_hash(clip),
+                batch_index=sample,
+            )
+            results.append(
+                ClipLatents(
+                    {name: value[sample] for name, value in tensors.items()}, record
+                )
+            )
+        return results

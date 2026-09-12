@@ -1,7 +1,7 @@
 # Video Latent Experiments
 
 Workspace for the video latent extraction and downstream classification experiments.
-The single-clip extractor accepts an already sampled RGB clip and returns pooled
+The extractor accepts already sampled RGB clips and returns pooled
 features with protocol metadata. The [online classification runner](classification/README.md)
 reuses V-JEPA2 video processing and its attentive classifier, extracts features on
 every batch, and trains one head on the five concatenated candidates. It does not
@@ -39,8 +39,9 @@ without an unconditional forward, scheduler update, or VAE decoding.
 Preserve the existing BF16 add_noise arithmetic, including sigma conversion to
 the latent dtype. Record both scheduler sigma and the effective BF16 value.
 
-Pool each frame from 30x52 to 14x14 using the existing FP32 average-pooling helper,
-then store BF16 tensors. Apply the existing 256-channel selection to block hidden.
+Pool each frame from 30x52 to 14x14 using FP32 adaptive average pooling, then
+return BF16 tensors. Select the fixed 256 hidden channels before pooling; this
+preserves the per-channel pooling operation and avoids pooling unused channels.
 Each output has shape [16,C,14,14]. Five candidates total 896 channels and
 5.359375 MiB per clip, excluding metadata. Storing Q/K separately has the same
 tensor payload as storing their concatenation.
@@ -112,7 +113,27 @@ qk = result.candidate("l15h7_qk_t57")  # [16,256,14,14], concatenated Q then K
 hidden = result.candidate("b15_hidden256_t299")  # [16,256,14,14]
 ```
 
-All `result.tensors` values are CPU BF16 tensors, ready for a later cache writer:
+The single-clip call defaults to CPU BF16 outputs. Online consumers can keep the
+outputs on the model device and batch independent clips:
+
+```python
+results = extractor.extract_batch(
+    [frames_a, frames_b],
+    seeds=[42, 91],
+    output_device=extractor.device,
+)
+```
+
+`seeds`, `frame_ids`, and `clip_ids`, when supplied, must each contain one entry
+per clip. Each clip uses its own CPU generator, sampling the cropped posterior
+before drawing the shared diffusion noise. Batch order does not change these
+random draws. Calls on an extractor instance must remain sequential because
+it owns the VAE state and capture hooks. Grouping and selecting channels before
+pooling can change floating-point rounding; metadata records the actual batch
+size and sample index.
+No features are persisted by either extraction method.
+
+Each result contains these tensors on the requested output device:
 
 | Tensor name | Shape |
 | --- | --- |
@@ -144,7 +165,7 @@ pipeline or extraction helper imported from a different checkout.
 | [AttentionFeatureCapture and CaptureSpec](../src/heft/attn_hook/capture.py) | Capture per-head Q/K. Begin a fresh capture session/chunk for each noise branch, since the Wan capture adapter tracks alternating conditional/unconditional calls. |
 | [_prepare_input_video](../src/heft/extraction/worker.py) | Preserve the existing resize interpolation, tensor layout, and uint8-to-float conversion. This is a private helper, so include it in dependency identity and regression coverage. |
 | [video_scheduler](../scripts/scannet/video_noise.py), including [selected_noise](../scripts/scannet/extract.py) | Resolve the original checkpoint step 49 and the legacy requested timestep 300 exactly. Reuse the scheduler's add_noise implementation; distinguish capture indices 49/0 from actual timesteps 57/299. |
-| [pool_video_tokens](../scripts/scannet/video_extract.py) | Restore frame/spatial layout and apply the same per-frame FP32 adaptive average pooling. |
+| [pool_video_tokens](../scripts/scannet/video_extract.py) | Regression reference for frame/spatial layout and FP32 adaptive average pooling. The batched adapter preserves those operations on the model device. |
 | [Fixed channel mask](../reports/scannet_channels/73f4e810824b58cb/global_256/masks.json) | Read the single ablation_iterative_256 table fitted on all five calibration scenes. Validate 256 unique indices, their bounds and order, and record its source/key/hash. All clips and datasets reuse this same table. |
 
 The experiment package can call the existing scripts as modules when launched
@@ -163,7 +184,7 @@ this first step does not require relocating their implementations.
   Its uniform per-head grouping does not represent this heterogeneous feature
   bundle, which includes selected block channels and two noise protocols.
 - [FeatureExtractionPool](../src/heft/extraction/pool.py): use its persistent
-  per-GPU worker approach as a reference when adding batch extraction. Its current
+  per-GPU worker approach as a reference for a future extraction service. Its current
   output metadata describes a homogeneous, single-step tracking feature volume;
   integrating the new bundle needs an explicit metadata adapter or a dedicated
   batch entry point. It is not a drop-in executor replacement.
@@ -189,6 +210,7 @@ The new implementation owns:
 4. Validation of the selected channel table and metadata identifying it.
 5. Targeted tests for the causal prefix, the 16-frame Transformer input, capture
    resets across branches, output shapes, and existing 25-frame reference behavior.
+6. Independent clip batching, per-clip random streams, and CPU/GPU output selection.
 
 ## Verification
 

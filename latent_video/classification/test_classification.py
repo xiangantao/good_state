@@ -73,6 +73,9 @@ def test_configuration_has_one_optimizer_and_rejects_wrong_protocol(tmp_path):
         replace(cfg, clip=ClipConfig(frames=17))
     with pytest.raises(ValueError, match="divide"):
         replace(cfg, num_heads=12)
+    for value in (0, -1, True, 1.5):
+        with pytest.raises(ValueError, match="extract_batch_size"):
+            replace(cfg, extract_batch_size=value)
     with pytest.raises(ValueError, match="finite"):
         OptimizationConfig(lr=float("nan"))
     path = tmp_path / "invalid.yaml"
@@ -195,6 +198,17 @@ class SyntheticExtractor:
 
     def __init__(self):
         self.calls = []
+        self.batch_sizes = []
+
+    def extract_batch(self, frames, *, seeds, frame_ids, clip_ids, output_device):
+        assert output_device == self.device
+        self.batch_sizes.append(len(frames))
+        return [
+            self.extract(clip, seed=seed, frame_ids=indices, clip_id=identifier)
+            for clip, seed, indices, identifier in zip(
+                frames, seeds, frame_ids, clip_ids, strict=True
+            )
+        ]
 
     @torch.inference_mode()
     def extract(self, frames, *, seed, frame_ids, clip_id):
@@ -231,14 +245,27 @@ def online_batch():
     }
 
 
-def test_online_fusion_keeps_channel_and_segment_order_and_reextracts():
+@pytest.mark.parametrize("extract_batch_size", [1, 2, 3, 4, 8])
+def test_online_fusion_keeps_channel_and_segment_order_and_reextracts(
+    extract_batch_size,
+):
     extractor = SyntheticExtractor()
-    encoder = OnlineWanEncoder(extractor)
+    encoder = OnlineWanEncoder(extractor, extract_batch_size=extract_batch_size)
     batch = online_batch()
     first = encoder.encode_view(batch, 0)
     second = encoder.encode_view(batch, 0)
     assert encoder.embed_dim == 896 and first.shape == (2, 8, 896)
     assert len(extractor.calls) == 8
+    assert extractor.calls[:4] == [
+        (0, [0, 1], "a"),
+        (1, [0, 1], "a"),
+        (2, [2, 3], "b"),
+        (3, [2, 3], "b"),
+    ]
+    expected_batches = [
+        min(extract_batch_size, 4 - start) for start in range(0, 4, extract_batch_size)
+    ]
+    assert extractor.batch_sizes == expected_batches * 2
     assert torch.equal(first, second) and not first.is_inference()
     assert torch.equal(
         first[0, 0, torch.tensor([0, 128, 256, 384, 512, 768])].float(),

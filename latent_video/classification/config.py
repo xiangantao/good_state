@@ -111,11 +111,14 @@ class RunConfig:
     data: DataConfig
     model_path: str = "../models/Wan2.1-T2V-1.3B-Diffusers"
     vjepa_root: str = "../vjepa2"
-    channel_mask: str = "reports/scannet_channels/73f4e810824b58cb/global_256/masks.json"
+    channel_mask: str = (
+        "reports/scannet_channels/73f4e810824b58cb/global_256/masks.json"
+    )
     held_out: str | None = None
     output_dir: str = "../runs/ssv2_wan_fused_online"
     seed: int = 42
     num_workers: int = 4
+    extract_batch_size: int = 1
     num_heads: int = 16
     num_probe_blocks: int = 4
     clip: ClipConfig = field(default_factory=ClipConfig)
@@ -128,6 +131,7 @@ class RunConfig:
         if type(self.num_workers) is not int or self.num_workers < 0:
             raise ValueError("num_workers must be a non-negative integer")
         positive_int("num_heads", self.num_heads)
+        positive_int("extract_batch_size", self.extract_batch_size)
         positive_int("num_probe_blocks", self.num_probe_blocks)
         if 896 % self.num_heads:
             raise ValueError("num_heads must divide the 896 fused channels")
