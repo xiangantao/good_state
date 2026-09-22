@@ -1,0 +1,16 @@
+{
+  "schema": "heft.wan_jepa.stride8.operators.v1",
+  "files": {
+    "jepa_supervised256.npz": "227844cfa742554ee0bd7556e99af7758da5660584c48f63d56a0b1d16ced537",
+    "projection_origin.json": "609b0b870b4499ba16f3b2eca23416ff19a1820ed28d73f24505b379467c40bb",
+    "wan_group_zca.npz": "598d95282afc66b6f922b55426780e17644731f1137b939e379e227d6e0f6b96"
+  },
+  "calvin_plan_sha256": "76770280420ddcc0f0f48a9ba762bbf1948d24b37936de5694a2bbeba2040c04",
+  "required_jepa_weights_sha256": "5346856ec9df69487fe72a25bf2632aaa8112df33fb67708e3f7374edc1f7012",
+  "required_channel_mask_sha256": "f57316f20690c139317a962460df910621ec8fd67af40abe230b10aec3892324",
+  "source_wan_operator_sha256": "d327a60f7c1a80c5f8afbc417601d5b49e3b4a59da644538f5a6f7898b538476",
+  "source_jepa_operator_sha256": "227844cfa742554ee0bd7556e99af7758da5660584c48f63d56a0b1d16ced537",
+  "wan_export": "Lossless selection of wan_mean,wan_std,group_zca arrays; no refitting or dtype change",
+  "jepa_export": "Byte-identical supervised_0.001_256; JEPA-only CALVIN fit400/select100; same projection at every token",
+  "reference_run": "ssv2_wan_stride8_supervised256_2gpu_100_20260922_035406"
+}

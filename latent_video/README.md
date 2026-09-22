@@ -1,6 +1,9 @@
 # Video Latent Experiments
 
 Workspace for the video latent extraction and downstream classification experiments.
+The current promoted Wan + JEPA representation is documented in
+[Wan stride8 + supervised JEPA256](wan_jepa/README.md), including its standalone
+extractor, frozen operators, eight-GPU training and separate checkpoint evaluation.
 The extractor accepts already sampled RGB clips and returns pooled
 features with protocol metadata. The [online classification runner](classification/README.md)
 reuses V-JEPA2 video processing and its attentive classifier, extracts features on

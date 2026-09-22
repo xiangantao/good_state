@@ -1,0 +1,4 @@
+# Additional packages on top of the shared HEFT environment. No auto-install.
+-r ../classification/requirements.txt
+einops==0.8.1
+# scipy==1.16.2 is needed only by export_projection.py, not extraction/training.

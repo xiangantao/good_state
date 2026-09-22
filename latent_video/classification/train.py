@@ -149,7 +149,12 @@ def protocol_record(config, encoder, runtime, train_records, val_records, world_
     }
 
 
-def run(config: RunConfig, *, resume: Path | None = None, evaluate: Path | None = None):
+def run(
+    config: RunConfig, *, resume: Path | None = None, evaluate: Path | None = None,
+    extractor_class=None, encoder_factory=None,
+):
+    extractor_class = WanLatentExtractor if extractor_class is None else extractor_class
+    encoder_factory = OnlineWanEncoder if encoder_factory is None else encoder_factory
     issues = preflight(config, evaluation=evaluate is not None)
     if issues:
         raise ValueError("\n".join(issues))
@@ -215,7 +220,7 @@ def run(config: RunConfig, *, resume: Path | None = None, evaluate: Path | None 
             train_loader, train_sampler = make_loader(
                 train_dataset, config, rank=rank, world_size=world_size, training=True
             )
-        extractor = WanLatentExtractor.from_local(
+        extractor = extractor_class.from_local(
             config.path(config.model_path),
             channel_mask=config.path(config.channel_mask),
             held_out=config.held_out,
@@ -227,14 +232,14 @@ def run(config: RunConfig, *, resume: Path | None = None, evaluate: Path | None 
             extractor.replica() for _ in range(config.extract_lanes - 1)
         ]
         pool = ExtractionPool(extractors, compile_blocks=config.compile_blocks)
-        encoder = OnlineWanEncoder(
+        encoder = encoder_factory(
             extractor, extract_batch_size=config.extract_batch_size, pool=pool
         )
         random.seed(config.seed)
         np.random.seed(config.seed % 2**32)
         torch.manual_seed(config.seed)
         classifier = runtime.classifier(
-            embed_dim=896,
+            embed_dim=encoder.embed_dim,
             num_heads=config.num_heads,
             depth=config.num_probe_blocks,
             num_classes=config.data.num_classes,

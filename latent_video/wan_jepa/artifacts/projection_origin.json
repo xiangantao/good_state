@@ -1,0 +1,19 @@
+{
+  "sha256": "227844cfa742554ee0bd7556e99af7758da5660584c48f63d56a0b1d16ced537",
+  "shape": [
+    2048,
+    256
+  ],
+  "candidate": {
+    "name": "supervised_0.001_256",
+    "alpha": 0.1,
+    "select_loss": 3.8076500899051693
+  },
+  "select_loss_reproduced": 3.8076500899051693,
+  "fit_videos": 400,
+  "select_videos": 100,
+  "wan_used_in_fit_or_selection": false,
+  "source_sha256": "d9c68b33aba8ad0ee69d4a44ca94d850d9cfb6c929271629126ff8a9dc80e8e3",
+  "normalization": "CALVIN fit-only channel mean/std, fixed linear projection; no output whitening",
+  "note": "User requested this pre-existing256 candidate. No heldout scoring or SSv2-based selection."
+}
