@@ -75,7 +75,8 @@ PYTHONPATH=.:src:diffusers/src:../vjepa2 OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=
 这是选定的两卡100步stride8实验实际使用的微批；早期八卡Wan配置是两路各32 clips。
 每卡每步32视频×2segments＝64clips：2×16分两轮提取，2×32分一轮提取，
 不改变分类头的训练batch。当前融合版本尚未验证2×32的显存及吞吐，因此默认保持2×16。
-20 epochs，约660 steps/epoch；LR3e-4、WD0.1、FP16分类头、冻结编码器BF16。
+30 epochs，约660 steps/epoch，共约19,800次更新；学习率日程覆盖完整30轮。
+LR3e-4、WD0.1、FP16分类头、冻结编码器BF16。
 每轮保存不可覆盖的`epoch_XXXX.pt`并更新`latest.pt`，**训练期间不验证**；W&B offline。
 `monitoring.jsonl`为每10步窗口，`metrics.jsonl`为每轮统计。终端输出可用tee另存。
 
